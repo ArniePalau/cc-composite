@@ -1,6 +1,7 @@
 {
     "name": "arniepalau/cc-composite",
     "description": "Layered PERSCOM soldier composite images for forumify.",
+    "keywords": ["symfony-ux"],
     "type": "forumify-plugin",
     "license": "OSL-3.0",
     "require": {

@@ -41,6 +41,7 @@ final class PackageIntegrityTest extends TestCase
 
         self::assertArrayHasKey('ext-gd', $composer['require']);
         self::assertArrayNotHasKey('ext-imagick', $composer['require']);
+        self::assertContains('symfony-ux', $composer['keywords']);
     }
 
     public function testLifecycleListenerUsesCurrentDoctrineEventTypes(): void

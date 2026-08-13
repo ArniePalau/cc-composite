@@ -113,7 +113,8 @@ final class CompositeGeneratorTest extends TestCase
         imagepng($ribbon);
         $ribbonBlob = ob_get_clean();
         self::assertIsString($ribbonBlob);
-        $storage->write('award/shared.png', $ribbonBlob);
+        $storage->write('award/repeat-one.png', $ribbonBlob);
+        $storage->write('award/repeat-two.png', $ribbonBlob);
 
         $user = new PerscomUser();
         (new \ReflectionProperty(PerscomUser::class, 'id'))->setValue($user, 43);
@@ -123,7 +124,7 @@ final class CompositeGeneratorTest extends TestCase
             $award = new Award();
             $award->setName('Repeat ' . $position);
             $award->setPosition($position);
-            $award->setImage('award/shared.png');
+            $award->setImage('award/repeat-' . ($position === 1 ? 'one' : 'two') . '.png');
             $record = new AwardRecord();
             $record->setUser($user);
             $record->setAward($award);
