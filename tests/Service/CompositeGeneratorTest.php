@@ -24,8 +24,8 @@ final class CompositeGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
-        if (!extension_loaded('imagick')) {
-            self::markTestSkipped('Imagick is required.');
+        if (!extension_loaded('gd')) {
+            self::markTestSkipped('GD is required.');
         }
         $this->outputDirectory = sys_get_temp_dir() . '/cc-composite-' . bin2hex(random_bytes(6));
         mkdir($this->outputDirectory, 0777, true);
@@ -94,8 +94,9 @@ final class CompositeGeneratorTest extends TestCase
 
         $path = $this->outputDirectory . '/' . $user->getUniform();
         self::assertFileExists($path);
-        $image = new \Imagick($path);
-        self::assertSame(1080, $image->getImageWidth());
-        self::assertSame(530, $image->getImageHeight());
+        $size = getimagesize($path);
+        self::assertIsArray($size);
+        self::assertSame(1080, $size[0]);
+        self::assertSame(530, $size[1]);
     }
 }

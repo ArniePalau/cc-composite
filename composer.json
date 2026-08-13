@@ -5,7 +5,7 @@
     "license": "OSL-3.0",
     "require": {
         "php": ">=8.4",
-        "ext-imagick": "*",
+        "ext-gd": "*",
         "forumify/forumify-platform": "^1.0",
         "forumify/forumify-perscom-plugin": "^2.2.8"
     },

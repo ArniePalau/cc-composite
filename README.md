@@ -29,7 +29,7 @@ bus, so keep the normal Forumify worker process running in production.
 
 - Forumify with `forumify/forumify-perscom-plugin` 2.2.8 or newer compatible 2.x.
 - PHP 8.4 or newer.
-- PHP Imagick and the DejaVu Sans fonts (the normal Forumify Docker image already
+- PHP GD and the DejaVu Sans fonts (the normal Forumify Docker image already
   provides the font path used by the legacy layout; a font fallback is used if
   it is absent).
 

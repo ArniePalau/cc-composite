@@ -18,13 +18,13 @@ foreach ($manifest['layers'] as $layer) {
         throw new RuntimeException('Missing legacy layer: ' . $path);
     }
 
-    $image = new Imagick($path);
-    if ($image->getImageWidth() !== 1080 || $image->getImageHeight() !== 530) {
+    $size = getimagesize($path);
+    if ($size === false || $size[0] !== 1080 || $size[1] !== 530) {
         throw new RuntimeException(sprintf(
             '%s is %dx%d; expected 1080x530.',
             $path,
-            $image->getImageWidth(),
-            $image->getImageHeight(),
+            $size[0] ?? 0,
+            $size[1] ?? 0,
         ));
     }
 }

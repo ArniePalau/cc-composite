@@ -12,7 +12,7 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.4'
-                  extensions: dom, gd, imagick, intl, mbstring, xml, xmlwriter, zip
+                  extensions: dom, gd, intl, mbstring, xml, xmlwriter, zip
                   coverage: none
             - uses: ramsey/composer-install@v3
               env:

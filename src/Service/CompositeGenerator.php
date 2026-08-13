@@ -9,15 +9,13 @@ use ArniePalau\CcComposite\Enum\AwardCategory;
 use ArniePalau\CcComposite\Enum\LayerCategory;
 use ArniePalau\CcComposite\Repository\AwardPlacementRepository;
 use ArniePalau\CcComposite\Repository\CompositeLayerRepository;
-use Exception;
 use Forumify\PerscomPlugin\Perscom\Entity\Award;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
 use Forumify\PerscomPlugin\Perscom\Repository\AwardRecordRepository;
-use Imagick;
-use ImagickDraw;
-use ImagickPixel;
+use GdImage;
 use League\Flysystem\FilesystemOperator;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 final class CompositeGenerator
 {
@@ -29,6 +27,7 @@ final class CompositeGenerator
     private const int RIBBONS_PER_ROW = 3;
     private const int GRID_GAP = 4;
     private const string OUTPUT_PREFIX = 'user/uniform/cc-composite/';
+    private const string FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
 
     public function __construct(
         private readonly FilesystemOperator $layerStorage,
@@ -43,25 +42,21 @@ final class CompositeGenerator
 
     public function generate(PerscomUser $user, CompositeSelection $selection): bool
     {
-        if (!extension_loaded('imagick')) {
-            $this->logger->error('CC Composite requires the Imagick PHP extension.');
+        if (!extension_loaded('gd')) {
+            $this->logger->error('CC Composite requires the GD PHP extension.');
             return false;
         }
 
-        $canvas = new Imagick();
+        $canvas = $this->createTransparentImage(self::CANVAS_WIDTH, self::CANVAS_HEIGHT);
         try {
-            $canvas->newImage(self::CANVAS_WIDTH, self::CANVAS_HEIGHT, new ImagickPixel('transparent'));
-            $canvas->setImageFormat('png');
-
             $this->renderLayers($user, $selection, $canvas);
             $this->renderAwards($user, $canvas);
+            $blob = $this->encodePng($canvas);
 
-            $hash = substr(hash('sha256', $canvas->getImageBlob()), 0, 16);
-            $userId = $user->getId();
-
-            $outputPath = sprintf('%s%d_%s.png', self::OUTPUT_PREFIX, $userId, $hash);
+            $hash = substr(hash('sha256', $blob), 0, 16);
+            $outputPath = sprintf('%s%d_%s.png', self::OUTPUT_PREFIX, $user->getId(), $hash);
             if (!$this->perscomAssetStorage->fileExists($outputPath)) {
-                $this->perscomAssetStorage->write($outputPath, $canvas->getImageBlob());
+                $this->perscomAssetStorage->write($outputPath, $blob);
             }
 
             $oldPath = $selection->getGeneratedPath();
@@ -78,19 +73,18 @@ final class CompositeGenerator
             }
 
             return true;
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $this->logger->error('Failed to generate PERSCOM composite.', [
                 'user' => $user->getId(),
                 'exception' => $exception,
             ]);
             return false;
         } finally {
-            $canvas->clear();
-            $canvas->destroy();
+            imagedestroy($canvas);
         }
     }
 
-    private function renderLayers(PerscomUser $user, CompositeSelection $selection, Imagick $canvas): void
+    private function renderLayers(PerscomUser $user, CompositeSelection $selection, GdImage $canvas): void
     {
         $resolved = $this->selectionService->resolveLayers($user, $selection);
         foreach (LayerCategory::cases() as $category) {
@@ -112,7 +106,7 @@ final class CompositeGenerator
         }
     }
 
-    private function renderAwards(PerscomUser $user, Imagick $canvas): void
+    private function renderAwards(PerscomUser $user, GdImage $canvas): void
     {
         $records = $this->awardRecordRepository->findBy(['user' => $user]);
         if ($records === []) {
@@ -149,7 +143,7 @@ final class CompositeGenerator
                     continue;
                 }
 
-                $this->drawCategoryTitle($canvas, $category, $category->panelX(), $currentY);
+                $this->drawText($canvas, $category->label(), $category->panelX(), $currentY + 10, 10);
                 $currentY += 15;
                 $this->renderRibbonGrid($canvas, $grouped[$category->value], $category->panelX(), $currentY);
                 $rows = (int) ceil(count($grouped[$category->value]) / self::RIBBONS_PER_ROW);
@@ -158,21 +152,8 @@ final class CompositeGenerator
         }
     }
 
-    private function drawCategoryTitle(Imagick $canvas, AwardCategory $category, int $x, int $y): void
-    {
-        $draw = new ImagickDraw();
-        $font = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
-        if (is_file($font)) {
-            $draw->setFont($font);
-        }
-        $draw->setFillColor(new ImagickPixel('white'));
-        $draw->setFontSize(10);
-        $draw->setTextAlignment(Imagick::ALIGN_LEFT);
-        $canvas->annotateImage($draw, $x, $y + 10, 0, $category->label());
-    }
-
     /** @param array<int, array{award: Award, count: int}> $awards */
-    private function renderRibbonGrid(Imagick $canvas, array $awards, int $startX, int $startY): void
+    private function renderRibbonGrid(GdImage $canvas, array $awards, int $startX, int $startY): void
     {
         $index = 0;
         foreach ($awards as $item) {
@@ -182,31 +163,40 @@ final class CompositeGenerator
                 continue;
             }
 
+            $ribbon = null;
+            $resized = null;
             try {
-                $ribbon = new Imagick();
-                $ribbon->readImageBlob($this->perscomAssetStorage->read($imagePath));
-                $ribbon->resizeImage(self::RIBBON_WIDTH, self::RIBBON_HEIGHT, Imagick::FILTER_LANCZOS, 1, true);
+                $ribbon = $this->decodeImage($this->perscomAssetStorage->read($imagePath));
+                [$width, $height] = $this->fitDimensions(
+                    imagesx($ribbon),
+                    imagesy($ribbon),
+                    self::RIBBON_WIDTH,
+                    self::RIBBON_HEIGHT,
+                );
+                $resized = $this->resize($ribbon, $width, $height);
 
                 if ($item['count'] > 1) {
-                    $this->drawAwardCount($ribbon, $item['count']);
+                    $this->drawAwardCount($resized, $item['count']);
                 }
 
                 $column = $index % self::RIBBONS_PER_ROW;
                 $row = intdiv($index, self::RIBBONS_PER_ROW);
                 $x = $startX + $column * (self::RIBBON_WIDTH + self::GRID_GAP);
                 $y = $startY + $row * (self::RIBBON_HEIGHT + self::GRID_GAP);
-                $x += (int) ((self::RIBBON_WIDTH - $ribbon->getImageWidth()) / 2);
-                $y += (int) ((self::RIBBON_HEIGHT - $ribbon->getImageHeight()) / 2);
-                $canvas->compositeImage($ribbon, Imagick::COMPOSITE_OVER, $x, $y);
-            } catch (Exception $exception) {
+                $x += intdiv(self::RIBBON_WIDTH - $width, 2);
+                $y += intdiv(self::RIBBON_HEIGHT - $height, 2);
+                imagecopy($canvas, $resized, $x, $y, 0, 0, $width, $height);
+            } catch (Throwable $exception) {
                 $this->logger->warning('Unable to render award image.', [
                     'path' => $imagePath,
                     'exception' => $exception,
                 ]);
             } finally {
-                if (isset($ribbon)) {
-                    $ribbon->clear();
-                    $ribbon->destroy();
+                if ($resized instanceof GdImage) {
+                    imagedestroy($resized);
+                }
+                if ($ribbon instanceof GdImage) {
+                    imagedestroy($ribbon);
                 }
             }
 
@@ -214,33 +204,115 @@ final class CompositeGenerator
         }
     }
 
-    private function drawAwardCount(Imagick $image, int $count): void
+    private function drawAwardCount(GdImage $image, int $count): void
     {
-        $draw = new ImagickDraw();
-        $font = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
-        if (is_file($font)) {
-            $draw->setFont($font);
+        $text = 'x' . $count;
+        if (is_file(self::FONT) && function_exists('imagettfbbox')) {
+            $box = imagettfbbox(12, 0, self::FONT, $text);
+            $width = $box === false ? 16 : abs($box[2] - $box[0]);
+            $x = max(1, imagesx($image) - $width - 3);
+            $y = max(13, imagesy($image) - 3);
+            $black = imagecolorallocate($image, 0, 0, 0);
+            $white = imagecolorallocate($image, 255, 255, 255);
+            foreach ([[-1, 0], [1, 0], [0, -1], [0, 1]] as [$dx, $dy]) {
+                imagettftext($image, 12, 0, $x + $dx, $y + $dy, $black, self::FONT, $text);
+            }
+            imagettftext($image, 12, 0, $x, $y, $white, self::FONT, $text);
+            return;
         }
-        $draw->setFillColor(new ImagickPixel('white'));
-        $draw->setStrokeColor(new ImagickPixel('black'));
-        $draw->setStrokeWidth(1);
-        $draw->setFontSize(16);
-        $draw->setGravity(Imagick::GRAVITY_SOUTHEAST);
-        $image->annotateImage($draw, 4, 2, 0, 'x' . $count);
+
+        $font = 3;
+        $x = max(0, imagesx($image) - imagefontwidth($font) * strlen($text) - 2);
+        $y = max(0, imagesy($image) - imagefontheight($font) - 1);
+        imagestring($image, $font, $x + 1, $y + 1, $text, imagecolorallocate($image, 0, 0, 0));
+        imagestring($image, $font, $x, $y, $text, imagecolorallocate($image, 255, 255, 255));
     }
 
-    private function compositeBlob(Imagick $canvas, string $blob, int $x, int $y): void
+    private function drawText(GdImage $image, string $text, int $x, int $baselineY, int $size): void
     {
-        $image = new Imagick();
+        $white = imagecolorallocate($image, 255, 255, 255);
+        if (is_file(self::FONT) && function_exists('imagettftext')) {
+            imagettftext($image, $size, 0, $x, $baselineY, $white, self::FONT, $text);
+            return;
+        }
+        imagestring($image, 2, $x, max(0, $baselineY - imagefontheight(2)), $text, $white);
+    }
+
+    private function compositeBlob(GdImage $canvas, string $blob, int $x, int $y): void
+    {
+        $image = $this->decodeImage($blob);
         try {
-            $image->readImageBlob($blob);
-            if ($image->getImageWidth() !== self::CANVAS_WIDTH || $image->getImageHeight() !== self::CANVAS_HEIGHT) {
-                $image->resizeImage(self::CANVAS_WIDTH, self::CANVAS_HEIGHT, Imagick::FILTER_LANCZOS, 1);
+            if (imagesx($image) === self::CANVAS_WIDTH && imagesy($image) === self::CANVAS_HEIGHT) {
+                imagecopy($canvas, $image, $x, $y, 0, 0, imagesx($image), imagesy($image));
+                return;
             }
-            $canvas->compositeImage($image, Imagick::COMPOSITE_OVER, $x, $y);
+
+            imagecopyresampled(
+                $canvas,
+                $image,
+                $x,
+                $y,
+                0,
+                0,
+                self::CANVAS_WIDTH,
+                self::CANVAS_HEIGHT,
+                imagesx($image),
+                imagesy($image),
+            );
         } finally {
-            $image->clear();
-            $image->destroy();
+            imagedestroy($image);
+        }
+    }
+
+    private function decodeImage(string $blob): GdImage
+    {
+        $image = @imagecreatefromstring($blob);
+        if (!$image instanceof GdImage) {
+            throw new \RuntimeException('Unsupported or invalid image data.');
+        }
+        imagealphablending($image, true);
+        imagesavealpha($image, true);
+        return $image;
+    }
+
+    private function createTransparentImage(int $width, int $height): GdImage
+    {
+        $image = imagecreatetruecolor($width, $height);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+        imagefill($image, 0, 0, imagecolorallocatealpha($image, 0, 0, 0, 127));
+        imagealphablending($image, true);
+        return $image;
+    }
+
+    private function resize(GdImage $source, int $width, int $height): GdImage
+    {
+        $target = $this->createTransparentImage($width, $height);
+        imagecopyresampled($target, $source, 0, 0, 0, 0, $width, $height, imagesx($source), imagesy($source));
+        return $target;
+    }
+
+    /** @return array{int, int} */
+    private function fitDimensions(int $width, int $height, int $maxWidth, int $maxHeight): array
+    {
+        $scale = min($maxWidth / $width, $maxHeight / $height);
+        return [max(1, (int) round($width * $scale)), max(1, (int) round($height * $scale))];
+    }
+
+    private function encodePng(GdImage $image): string
+    {
+        ob_start();
+        try {
+            if (!imagepng($image)) {
+                throw new \RuntimeException('Unable to encode the composite PNG.');
+            }
+            $blob = ob_get_contents();
+            if (!is_string($blob)) {
+                throw new \RuntimeException('Unable to read the encoded composite PNG.');
+            }
+            return $blob;
+        } finally {
+            ob_end_clean();
         }
     }
 }

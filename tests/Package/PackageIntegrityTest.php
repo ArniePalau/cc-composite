@@ -27,6 +27,19 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(PerscomUser::class));
     }
 
+    public function testComposerUsesForumifyAvailableGdRenderer(): void
+    {
+        $composer = json_decode(
+            file_get_contents(dirname(__DIR__, 2) . '/composer.json'),
+            true,
+            512,
+            JSON_THROW_ON_ERROR,
+        );
+
+        self::assertArrayHasKey('ext-gd', $composer['require']);
+        self::assertArrayNotHasKey('ext-imagick', $composer['require']);
+    }
+
     public function testConfigurationFilesAreValidYaml(): void
     {
         $root = dirname(__DIR__, 2);
