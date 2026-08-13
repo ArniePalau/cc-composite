@@ -104,7 +104,7 @@ final class CompositeGeneratorTest extends TestCase
         self::assertSame(530, $size[1]);
     }
 
-    public function testAwardsSharingAnImageRenderOnceWithRepeatCount(): void
+    public function testRepeatedRecordsForTheSameAwardRenderOnceWithRepeatCount(): void
     {
         $storage = new Filesystem(new LocalFilesystemAdapter($this->outputDirectory));
         $ribbon = imagecreatetruecolor(80, 28);
@@ -113,18 +113,19 @@ final class CompositeGeneratorTest extends TestCase
         imagepng($ribbon);
         $ribbonBlob = ob_get_clean();
         self::assertIsString($ribbonBlob);
-        $storage->write('award/repeat-one.png', $ribbonBlob);
-        $storage->write('award/repeat-two.png', $ribbonBlob);
+        $storage->write('award/repeat.png', $ribbonBlob);
 
         $user = new PerscomUser();
         (new \ReflectionProperty(PerscomUser::class, 'id'))->setValue($user, 43);
 
+        $award = new Award();
+        (new \ReflectionProperty(Award::class, 'id'))->setValue($award, 1);
+        $award->setName('Bravery');
+        $award->setPosition(1);
+        $award->setImage('award/repeat.png');
+
         $records = [];
-        foreach ([1, 2] as $position) {
-            $award = new Award();
-            $award->setName('Repeat ' . $position);
-            $award->setPosition($position);
-            $award->setImage('award/repeat-' . ($position === 1 ? 'one' : 'two') . '.png');
+        foreach ([1, 2] as $recordNumber) {
             $record = new AwardRecord();
             $record->setUser($user);
             $record->setAward($award);
@@ -160,6 +161,66 @@ final class CompositeGeneratorTest extends TestCase
         $firstRibbon = imagecolorsforindex($result, imagecolorat($result, 46, 56));
         $secondSlot = imagecolorsforindex($result, imagecolorat($result, 130, 56));
         self::assertSame(0, $firstRibbon['alpha']);
-        self::assertSame(127, $secondSlot['alpha'], 'Shared-image awards must occupy one ribbon slot.');
+        self::assertSame(127, $secondSlot['alpha'], 'Repeated records for one award must occupy one ribbon slot.');
+    }
+
+    public function testDistinctAwardsSharingAnImageRenderInSeparateSlots(): void
+    {
+        $storage = new Filesystem(new LocalFilesystemAdapter($this->outputDirectory));
+        $ribbon = imagecreatetruecolor(80, 28);
+        imagefill($ribbon, 0, 0, imagecolorallocate($ribbon, 180, 20, 20));
+        ob_start();
+        imagepng($ribbon);
+        $ribbonBlob = ob_get_clean();
+        self::assertIsString($ribbonBlob);
+        $storage->write('award/distinct-one.png', $ribbonBlob);
+        $storage->write('award/distinct-two.png', $ribbonBlob);
+
+        $user = new PerscomUser();
+        (new \ReflectionProperty(PerscomUser::class, 'id'))->setValue($user, 44);
+
+        $records = [];
+        foreach ([1, 2] as $position) {
+            $award = new Award();
+            (new \ReflectionProperty(Award::class, 'id'))->setValue($award, $position);
+            $award->setName('Distinct ' . $position);
+            $award->setPosition($position);
+            $award->setImage('award/distinct-' . ($position === 1 ? 'one' : 'two') . '.png');
+            $record = new AwardRecord();
+            $record->setUser($user);
+            $record->setAward($award);
+            $records[] = $record;
+        }
+
+        $placement = new AwardPlacement();
+        $placement->setCategory(AwardCategory::OPERATIONS);
+        $placementRepository = $this->createMock(AwardPlacementRepository::class);
+        $placementRepository->method('findForAward')->willReturn($placement);
+
+        $recordRepository = $this->createMock(AwardRecordRepository::class);
+        $recordRepository->method('findBy')->willReturn($records);
+        $selectionService = $this->createMock(SelectionService::class);
+        $selectionService->method('resolveLayers')->willReturn([]);
+
+        $generator = new CompositeGenerator(
+            new Filesystem(new LocalFilesystemAdapter(dirname(__DIR__, 2) . '/resources/legacy')),
+            $storage,
+            $this->createMock(CompositeLayerRepository::class),
+            $placementRepository,
+            $recordRepository,
+            $selectionService,
+            new NullLogger(),
+        );
+
+        $selection = new CompositeSelection();
+        $selection->setUser($user);
+        self::assertTrue($generator->generate($user, $selection));
+
+        $result = imagecreatefrompng($this->outputDirectory . '/' . $user->getUniform());
+        self::assertInstanceOf(\GdImage::class, $result);
+        $firstRibbon = imagecolorsforindex($result, imagecolorat($result, 46, 56));
+        $secondRibbon = imagecolorsforindex($result, imagecolorat($result, 130, 56));
+        self::assertSame(0, $firstRibbon['alpha']);
+        self::assertSame(0, $secondRibbon['alpha'], 'Distinct awards must occupy separate ribbon slots even when their images match.');
     }
 }

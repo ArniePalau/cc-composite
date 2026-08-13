@@ -76,7 +76,7 @@ final class PackageIntegrityTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $environment = new Environment(new ArrayLoader());
-        foreach (['asset', 'csrf_token', 'form', 'form_end', 'form_rest', 'form_row', 'form_start', 'path', 'stimulus_controller'] as $function) {
+        foreach (['asset', 'csrf_token', 'form', 'form_end', 'form_rest', 'form_row', 'form_start', 'is_granted', 'path', 'stimulus_controller'] as $function) {
             $environment->addFunction(new TwigFunction($function, static fn (): string => ''));
         }
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root . '/templates'));

@@ -103,6 +103,20 @@ final class LayerController extends AbstractController
         return $this->redirectToRoute('cc_composite_admin_layers_index');
     }
 
+    #[Route('/regenerate-all', name: '_regenerate_all', methods: ['POST'])]
+    public function regenerateAll(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('cc_composite.admin.manage');
+        if (!$this->isCsrfTokenValid('cc-composite-regenerate-all', (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $count = $this->regenerationService->regenerateAll();
+        $this->addFlash('success', sprintf('Regenerated %d soldier composite(s).', $count));
+
+        return $this->redirectToRoute('cc_composite_admin_layers_index');
+    }
+
     #[Route('/{id}/edit', name: '_edit', methods: ['GET', 'POST'])]
     public function edit(CompositeLayer $layer, Request $request): Response
     {

@@ -3,6 +3,19 @@
 {% block title_page %}CC Composite layers{% endblock %}
 
 {% block body %}
+    {% if is_granted('cc_composite.admin.manage') %}
+        <div class="box mb-6">
+            <h2 class="box-title">Composite maintenance</h2>
+            <div class="box-content flex items-center justify-between gap-4 flex-wrap">
+                <p>Regenerate the Uniform composite for every PERSCOM soldier using their current layers, awards, and defaults.</p>
+                <form action="{{ path('cc_composite_admin_layers_regenerate_all') }}" method="post" onsubmit="return confirm('Regenerate composites for every soldier?')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-regenerate-all') }}">
+                    <button class="btn-primary" type="submit"><i class="ph ph-arrows-clockwise"></i> Regenerate all composites</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="box mb-6">
         <h2 class="box-title">Upload a 1080 × 530 layer</h2>
         <div class="box-content">

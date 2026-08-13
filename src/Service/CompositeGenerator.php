@@ -119,7 +119,6 @@ final class CompositeGenerator
             $grouped[$category->value] = [];
         }
 
-        $imageHashes = [];
         foreach ($records as $record) {
             $award = $record->getAward();
             $placement = $this->placementRepository->findForAward($award);
@@ -127,7 +126,7 @@ final class CompositeGenerator
                 continue;
             }
 
-            $key = $this->awardGroupKey($award, $imageHashes);
+            $key = 'award_' . ($award->getId() ?? spl_object_id($award));
             $category = $placement->getCategory()->value;
             if (!isset($grouped[$category][$key])) {
                 $grouped[$category][$key] = ['award' => $award, 'count' => 0];
@@ -218,32 +217,6 @@ final class CompositeGenerator
         $y = max(0, imagesy($image) - imagefontheight($font) - 1);
         imagestring($image, $font, $x + 1, $y + 1, $text, imagecolorallocate($image, 0, 0, 0));
         imagestring($image, $font, $x, $y, $text, imagecolorallocate($image, 255, 255, 255));
-    }
-
-    /** @param array<string, string> $imageHashes */
-    private function awardGroupKey(Award $award, array &$imageHashes): string
-    {
-        $path = $award->getImage();
-        if ($path === null || $path === '' || !$this->perscomAssetStorage->fileExists($path)) {
-            return 'id_' . ($award->getId() ?? spl_object_id($award));
-        }
-
-        if (!isset($imageHashes[$path])) {
-            try {
-                $source = $this->decodeImage($this->perscomAssetStorage->read($path));
-                $normalized = $this->createTransparentImage(imagesx($source), imagesy($source));
-                imagecopy($normalized, $source, 0, 0, 0, 0, imagesx($source), imagesy($source));
-                $imageHashes[$path] = hash('sha256', $this->encodePng($normalized));
-            } catch (Throwable $exception) {
-                $this->logger->warning('Unable to fingerprint award image.', [
-                    'path' => $path,
-                    'exception' => $exception,
-                ]);
-                $imageHashes[$path] = 'path_' . $path;
-            }
-        }
-
-        return 'image_' . $imageHashes[$path];
     }
 
     private function drawText(GdImage $image, string $text, int $x, int $baselineY, int $size): void
