@@ -38,8 +38,7 @@ bus, so keep the normal Forumify worker process running in production.
 Back up the database and `public/storage/perscom` first. From the Forumify app:
 
 ```bash
-composer config repositories.cc-composite vcs https://github.com/ArniePalau/cc-composite.git
-composer require arniepalau/cc-composite:dev-main
+composer require arniepalau/cc-composite
 php bin/console forumify:plugins:refresh
 php bin/console doctrine:migrations:migrate --no-interaction
 php bin/console assets:install public
@@ -50,7 +49,7 @@ For the production Docker layout used by Forumify, prefix the PHP commands with
 `docker exec forumify` and run Composer in the same container, for example:
 
 ```bash
-docker exec forumify composer require arniepalau/cc-composite:dev-main
+docker exec forumify composer require arniepalau/cc-composite
 docker exec forumify php bin/console forumify:plugins:refresh
 docker exec forumify php bin/console doctrine:migrations:migrate --no-interaction
 docker exec forumify php bin/console assets:install public
