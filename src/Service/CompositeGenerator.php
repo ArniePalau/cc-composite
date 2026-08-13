@@ -79,8 +79,6 @@ final class CompositeGenerator
                 'exception' => $exception,
             ]);
             return false;
-        } finally {
-            imagedestroy($canvas);
         }
     }
 
@@ -191,13 +189,6 @@ final class CompositeGenerator
                     'path' => $imagePath,
                     'exception' => $exception,
                 ]);
-            } finally {
-                if ($resized instanceof GdImage) {
-                    imagedestroy($resized);
-                }
-                if ($ribbon instanceof GdImage) {
-                    imagedestroy($ribbon);
-                }
             }
 
             ++$index;
@@ -241,27 +232,23 @@ final class CompositeGenerator
     private function compositeBlob(GdImage $canvas, string $blob, int $x, int $y): void
     {
         $image = $this->decodeImage($blob);
-        try {
-            if (imagesx($image) === self::CANVAS_WIDTH && imagesy($image) === self::CANVAS_HEIGHT) {
-                imagecopy($canvas, $image, $x, $y, 0, 0, imagesx($image), imagesy($image));
-                return;
-            }
-
-            imagecopyresampled(
-                $canvas,
-                $image,
-                $x,
-                $y,
-                0,
-                0,
-                self::CANVAS_WIDTH,
-                self::CANVAS_HEIGHT,
-                imagesx($image),
-                imagesy($image),
-            );
-        } finally {
-            imagedestroy($image);
+        if (imagesx($image) === self::CANVAS_WIDTH && imagesy($image) === self::CANVAS_HEIGHT) {
+            imagecopy($canvas, $image, $x, $y, 0, 0, imagesx($image), imagesy($image));
+            return;
         }
+
+        imagecopyresampled(
+            $canvas,
+            $image,
+            $x,
+            $y,
+            0,
+            0,
+            self::CANVAS_WIDTH,
+            self::CANVAS_HEIGHT,
+            imagesx($image),
+            imagesy($image),
+        );
     }
 
     private function decodeImage(string $blob): GdImage
