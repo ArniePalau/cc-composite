@@ -18,4 +18,11 @@ final class AwardCategoryTest extends TestCase
         self::assertFalse(AwardCategory::EXEMPLARY->isLeftPanel());
         self::assertFalse(AwardCategory::SPECIAL->isLeftPanel());
     }
+
+    public function testCatalanLabelsUseCorrectUtf8Text(): void
+    {
+        self::assertSame('MÈRIT A LA UNITAT', AwardCategory::UNIT_MERIT->label());
+        self::assertSame('INSÍGNIES', AwardCategory::INSIGNIA->label());
+        self::assertSame('MÈRIT PERSONAL', AwardCategory::PERSONAL_MERIT->label());
+    }
 }

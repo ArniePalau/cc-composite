@@ -27,7 +27,7 @@ final class CompositeGenerator
     private const int RIBBONS_PER_ROW = 3;
     private const int GRID_GAP = 4;
     private const string OUTPUT_PREFIX = 'user/uniform/cc-composite/';
-    private const string FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf';
+    private const string FONT = __DIR__ . '/../../assets/fonts/DejaVuSans-Bold.ttf';
 
     public function __construct(
         private readonly FilesystemOperator $layerStorage,
@@ -126,7 +126,9 @@ final class CompositeGenerator
                 continue;
             }
 
-            $key = $award->getId() ?? spl_object_id($award);
+            // Match the legacy behavior: separate award definitions that use
+            // the same ribbon image represent repeat awards.
+            $key = $award->getImage() ?: 'id_' . ($award->getId() ?? spl_object_id($award));
             $category = $placement->getCategory()->value;
             if (!isset($grouped[$category][$key])) {
                 $grouped[$category][$key] = ['award' => $award, 'count' => 0];
@@ -199,16 +201,16 @@ final class CompositeGenerator
     {
         $text = 'x' . $count;
         if (is_file(self::FONT) && function_exists('imagettfbbox')) {
-            $box = imagettfbbox(12, 0, self::FONT, $text);
+            $box = imagettfbbox(16, 0, self::FONT, $text);
             $width = $box === false ? 16 : abs($box[2] - $box[0]);
-            $x = max(1, imagesx($image) - $width - 3);
-            $y = max(13, imagesy($image) - 3);
+            $x = max(1, imagesx($image) - $width - 4);
+            $y = max(17, imagesy($image) - 2);
             $black = imagecolorallocate($image, 0, 0, 0);
             $white = imagecolorallocate($image, 255, 255, 255);
-            foreach ([[-1, 0], [1, 0], [0, -1], [0, 1]] as [$dx, $dy]) {
-                imagettftext($image, 12, 0, $x + $dx, $y + $dy, $black, self::FONT, $text);
+            foreach ([[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]] as [$dx, $dy]) {
+                imagettftext($image, 16, 0, $x + $dx, $y + $dy, $black, self::FONT, $text);
             }
-            imagettftext($image, 12, 0, $x, $y, $white, self::FONT, $text);
+            imagettftext($image, 16, 0, $x, $y, $white, self::FONT, $text);
             return;
         }
 

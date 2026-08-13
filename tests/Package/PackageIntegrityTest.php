@@ -52,6 +52,14 @@ final class PackageIntegrityTest extends TestCase
         self::assertSame(PostRemoveEventArgs::class, (string) $postRemove->getParameters()[0]->getType());
     }
 
+    public function testOriginalCompositeFontIsBundled(): void
+    {
+        $font = dirname(__DIR__, 2) . '/assets/fonts/DejaVuSans-Bold.ttf';
+
+        self::assertFileExists($font);
+        self::assertGreaterThan(100_000, filesize($font));
+    }
+
     public function testConfigurationFilesAreValidYaml(): void
     {
         $root = dirname(__DIR__, 2);

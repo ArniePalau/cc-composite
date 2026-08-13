@@ -6,12 +6,16 @@ namespace ArniePalau\CcComposite\Tests\Service;
 
 use ArniePalau\CcComposite\Entity\CompositeLayer;
 use ArniePalau\CcComposite\Entity\CompositeSelection;
+use ArniePalau\CcComposite\Entity\AwardPlacement;
+use ArniePalau\CcComposite\Enum\AwardCategory;
 use ArniePalau\CcComposite\Enum\LayerCategory;
 use ArniePalau\CcComposite\Repository\AwardPlacementRepository;
 use ArniePalau\CcComposite\Repository\CompositeLayerRepository;
 use ArniePalau\CcComposite\Service\CompositeGenerator;
 use ArniePalau\CcComposite\Service\SelectionService;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
+use Forumify\PerscomPlugin\Perscom\Entity\Award;
+use Forumify\PerscomPlugin\Perscom\Entity\Record\AwardRecord;
 use Forumify\PerscomPlugin\Perscom\Repository\AwardRecordRepository;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -98,5 +102,63 @@ final class CompositeGeneratorTest extends TestCase
         self::assertIsArray($size);
         self::assertSame(1080, $size[0]);
         self::assertSame(530, $size[1]);
+    }
+
+    public function testAwardsSharingAnImageRenderOnceWithRepeatCount(): void
+    {
+        $storage = new Filesystem(new LocalFilesystemAdapter($this->outputDirectory));
+        $ribbon = imagecreatetruecolor(80, 28);
+        imagefill($ribbon, 0, 0, imagecolorallocate($ribbon, 180, 20, 20));
+        ob_start();
+        imagepng($ribbon);
+        $ribbonBlob = ob_get_clean();
+        self::assertIsString($ribbonBlob);
+        $storage->write('award/shared.png', $ribbonBlob);
+
+        $user = new PerscomUser();
+        (new \ReflectionProperty(PerscomUser::class, 'id'))->setValue($user, 43);
+
+        $records = [];
+        foreach ([1, 2] as $position) {
+            $award = new Award();
+            $award->setName('Repeat ' . $position);
+            $award->setPosition($position);
+            $award->setImage('award/shared.png');
+            $record = new AwardRecord();
+            $record->setUser($user);
+            $record->setAward($award);
+            $records[] = $record;
+        }
+
+        $placement = new AwardPlacement();
+        $placement->setCategory(AwardCategory::OPERATIONS);
+        $placementRepository = $this->createMock(AwardPlacementRepository::class);
+        $placementRepository->method('findForAward')->willReturn($placement);
+
+        $recordRepository = $this->createMock(AwardRecordRepository::class);
+        $recordRepository->method('findBy')->willReturn($records);
+        $selectionService = $this->createMock(SelectionService::class);
+        $selectionService->method('resolveLayers')->willReturn([]);
+
+        $generator = new CompositeGenerator(
+            new Filesystem(new LocalFilesystemAdapter(dirname(__DIR__, 2) . '/resources/legacy')),
+            $storage,
+            $this->createMock(CompositeLayerRepository::class),
+            $placementRepository,
+            $recordRepository,
+            $selectionService,
+            new NullLogger(),
+        );
+
+        $selection = new CompositeSelection();
+        $selection->setUser($user);
+        self::assertTrue($generator->generate($user, $selection));
+
+        $result = imagecreatefrompng($this->outputDirectory . '/' . $user->getUniform());
+        self::assertInstanceOf(\GdImage::class, $result);
+        $firstRibbon = imagecolorsforindex($result, imagecolorat($result, 46, 56));
+        $secondSlot = imagecolorsforindex($result, imagecolorat($result, 130, 56));
+        self::assertSame(0, $firstRibbon['alpha']);
+        self::assertSame(127, $secondSlot['alpha'], 'Shared-image awards must occupy one ribbon slot.');
     }
 }
