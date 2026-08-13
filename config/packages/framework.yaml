@@ -1,0 +1,5 @@
+framework:
+    assets:
+        packages:
+            cc_composite.asset:
+                base_path: '/storage/cc-composite'

@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "layers": [
+    {
+      "filename": "airfield1.png",
+      "category": "background",
+      "allowed_units": [
+        "esquadró IL2"
+      ]
+    },
+    {
+      "filename": "background-militar.jpg",
+      "category": "background"
+    },
+    {
+      "filename": "background-senyera.jpg",
+      "category": "background"
+    },
+    {
+      "filename": "1.1.png",
+      "category": "face"
+    },
+    {
+      "filename": "1.png",
+      "category": "face"
+    },
+    {
+      "filename": "2.2.png",
+      "category": "face"
+    },
+    {
+      "filename": "2.png",
+      "category": "face"
+    },
+    {
+      "filename": "3.3.png",
+      "category": "face"
+    },
+    {
+      "filename": "3.png",
+      "category": "face"
+    },
+    {
+      "filename": "4.4.png",
+      "category": "face"
+    },
+    {
+      "filename": "4.png",
+      "category": "face"
+    },
+    {
+      "filename": "unkown.png",
+      "category": "face"
+    },
+    {
+      "filename": "b1.png",
+      "category": "hair"
+    },
+    {
+      "filename": "pilot1.png",
+      "category": "uniform",
+      "allowed_units": [
+        "esquadró IL2"
+      ]
+    },
+    {
+      "filename": "u1.png",
+      "category": "uniform"
+    },
+    {
+      "filename": "u3.png",
+      "category": "uniform"
+    },
+    {
+      "filename": "mallorca.png",
+      "category": "amulet",
+      "allowed_users": [
+        "Strayson (R)"
+      ]
+    },
+    {
+      "filename": "moreneta.png",
+      "category": "amulet",
+      "allowed_users": [
+        "Via (E)"
+      ]
+    },
+    {
+      "filename": "tunyina.png",
+      "category": "amulet",
+      "allowed_users": [
+        "Atunero",
+        "Atunero (L)"
+      ]
+    }
+  ],
+  "defaults": {
+    "global": {
+      "background": "background-militar.jpg",
+      "face": "unkown.png",
+      "uniform": "u3.png",
+      "hair": "",
+      "amulet": ""
+    },
+    "1er Regiment Amfibi (1RA)": {
+      "background": "background-militar.jpg",
+      "face": "unkown.png",
+      "uniform": "u3.png",
+      "hair": "",
+      "amulet": ""
+    },
+    "esquadró IL2": {
+      "background": "airfield1.png",
+      "face": "",
+      "uniform": "pilot1.png",
+      "hair": "",
+      "amulet": ""
+    }
+  },
+  "selections": {
+    "Arnie (E)": {
+      "background": "background-militar.jpg",
+      "face": "4.4.png",
+      "uniform": "u3.png"
+    },
+    "Atunero (L)": {
+      "background": "background-militar.jpg",
+      "face": "2.2.png",
+      "uniform": "u1.png",
+      "hair": "b1.png",
+      "amulet": "tunyina.png"
+    },
+    "Mulafrancis (R)": {
+      "face": "unkown.png"
+    },
+    "Strayson (R)": {
+      "amulet": "mallorca.png"
+    },
+    "Via (E)": {
+      "background": "background-militar.jpg",
+      "face": "4.4.png",
+      "uniform": "u1.png",
+      "hair": "b1.png",
+      "amulet": "moreneta.png"
+    }
+  },
+  "award_categories": {
+    "Creu de la unitat": "personal_merit",
+    "Creu Unitat": "personal_merit",
+    "Estrella de plata": "personal_merit",
+    "Servei Distingit": "personal_merit",
+    "Estrella de bronze": "personal_merit",
+    "Estrellaplata": "personal_merit",
+    "Servei distingit al grup": "personal_merit",
+    "Staff": "personal_merit",
+    "Legiomerit": "personal_merit",
+    "Servei superior al grup": "personal_merit",
+    "Estrellabronze": "personal_merit",
+    "Legió del mèrit": "personal_merit",
+    "Cinta a la gesta": "personal_merit",
+    "Estrellabronze 1B": "personal_merit",
+    "Cinta a l'acció en combat": "personal_merit",
+    "Gesta": "personal_merit",
+    "Gesta 1E": "personal_merit",
+    "Medalla al valor de la unitat": "unit_merit",
+    "Gesta 2E": "personal_merit",
+    "Medalla al mèrit de la unitat": "unit_merit",
+    "Cinta a l'eficiència naval": "exemplary",
+    "Combat": "personal_merit",
+    "Cinta a la bona conducta": "exemplary",
+    "Valorunitat": "unit_merit",
+    "Cinta a la fidelitat": "exemplary",
+    "Meritunitat": "unit_merit",
+    "Eficiencia": "exemplary",
+    "Menció a la Participació (5 Missions)": "exemplary",
+    "Conducta": "exemplary",
+    "Menció a la Participació (10 Missions)": "exemplary",
+    "Fidelitat": "exemplary",
+    "Menció a la Participació (25 Missions)": "exemplary",
+    "Fidelitat 1E": "exemplary",
+    "Menció a la Participació (50 Missions)": "exemplary",
+    "Fidelitat 2E": "exemplary",
+    "Menció a la Participació (100 Missions)": "exemplary",
+    "Menció a la Participació (150+ Missions)": "exemplary",
+    "Sgm": "operations",
+    "Sgm Pac": "operations",
+    "Expedicio": "operations",
+    "Nam": "operations",
+    "Sudoest Asia": "operations",
+    "Kosovo": "operations",
+    "Astan": "operations",
+    "Astan 1E": "operations",
+    "Astan 2E": "operations",
+    "Astan 3E": "operations",
+    "Iraq": "operations",
+    "Global": "operations",
+    "Global 1E": "operations",
+    "Global 2E": "operations",
+    "Desplegament": "operations",
+    "Arctic": "operations",
+    "Exterior": "operations",
+    "Exterior 1E": "operations",
+    "Exterior 2E": "operations",
+    "Exterior 3E": "operations",
+    "Reclutador": "special",
+    "Instructor": "special",
+    "Reserva": "special",
+    "Un": "special",
+    "Nato": "special",
+    "Vergonyatak": "special",
+    "Vergonya Kujari": "special",
+    "Vergonyatobruk": "special",
+    "Buceig": "insignia",
+    "Ales Plata": "insignia",
+    "Ales Or": "insignia",
+    "Mo 5": "exemplary",
+    "Mo 10": "exemplary",
+    "Mo 20": "exemplary",
+    "Mo 50": "exemplary",
+    "Mo 100": "exemplary",
+    "Mo 200": "exemplary",
+    "Mo 300": "exemplary",
+    "Mo 400": "exemplary",
+    "Mo 500": "exemplary",
+    "Mo 1000": "exemplary",
+    "Div 5": "exemplary",
+    "Div 10": "exemplary",
+    "Div 20": "exemplary",
+    "Div 50": "exemplary",
+    "1Ereadr": "operations",
+    "Hendersonfield": "operations",
+    "Redvsblue": "operations",
+    "Kingslayer": "operations",
+    "Pacificblues": "operations",
+    "Batsangin": "operations",
+    "Midnightfalcon": "operations",
+    "Raventalesb": "operations",
+    "Ravenastan1": "operations",
+    "Zugzwang": "operations",
+    "Owlswatch": "operations",
+    "Entwicklung": "operations",
+    "Pilgrimage": "operations",
+    "Odin88": "operations",
+    "Phantomfury": "operations",
+    "Ravenreport": "operations",
+    "Ocell Trencat": "operations",
+    "Silent Kill": "operations",
+    "Op Torb": "operations",
+    "Super Cobra": "operations",
+    "Cinta Mo5 80": "personal_merit",
+    "Cinta Mo10 80": "personal_merit",
+    "Cinta As 80": "personal_merit",
+    "Cinta Kuban 80": "operations",
+    "Cinta Asbomb 80": "personal_merit"
+  }
+}

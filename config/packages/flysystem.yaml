@@ -1,0 +1,6 @@
+flysystem:
+    storages:
+        cc_composite_layer.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public/storage/cc-composite'

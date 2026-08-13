@@ -1,0 +1,23 @@
+{% block cc_composite_appearance_widget %}
+    <div {{ stimulus_controller('arniepalau/cc-composite/appearance_preview', {
+        baseUrl: asset('layers/', 'cc_composite.asset'),
+        inheritedLayers: inherited_layers|default({})
+    }) }}>
+        <div class="mb-6 flex flex-col items-center">
+            <h4 class="font-bold text-lg mb-2 self-start">Live preview</h4>
+            <div class="border border-base-300 rounded overflow-hidden bg-base-200"
+                 style="position:relative;width:100%;max-width:720px;aspect-ratio:1080/530">
+                {% for category in ['background', 'face', 'uniform', 'hair', 'amulet'] %}
+                    <img data-arniepalau--cc-composite--appearance-preview-target="{{ category }}"
+                         alt=""
+                         style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none">
+                {% endfor %}
+            </div>
+            <p class="text-sm text-muted mt-2">Awards are added by the server when the final Uniform image is generated.</p>
+        </div>
+
+        {% for child in form %}
+            {{ form_row(child) }}
+        {% endfor %}
+    </div>
+{% endblock %}

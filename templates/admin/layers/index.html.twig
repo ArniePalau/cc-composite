@@ -1,0 +1,50 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}CC Composite layers{% endblock %}
+
+{% block body %}
+    <div class="box mb-6">
+        <h2 class="box-title">Upload a 1080 × 530 layer</h2>
+        <div class="box-content">
+            <form action="{{ path('cc_composite_admin_layers_upload') }}" method="post" enctype="multipart/form-data" class="flex items-end gap-4 flex-wrap">
+                <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-layer-upload') }}">
+                <div class="form-group">
+                    <label class="form-label" for="cc-layer-category">Category</label>
+                    <select class="form-control" id="cc-layer-category" name="category" required>
+                        {% for category in categories %}
+                            <option value="{{ category.value }}">{{ category.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group flex-1">
+                    <label class="form-label" for="cc-layer-file">PNG or JPEG</label>
+                    <input class="form-control" id="cc-layer-file" type="file" name="file" accept="image/png,image/jpeg" required>
+                </div>
+                <button class="btn-primary" type="submit"><i class="ph ph-upload-simple"></i> Upload</button>
+            </form>
+        </div>
+    </div>
+
+    {% for category in categories %}
+        <h2 class="text-2xl font-bold mb-3">{{ category.label }}</h2>
+        <div class="flex flex-wrap gap-4 mb-8">
+            {% for layer in layers[category.value] %}
+                <div class="box p-4 text-center" style="width:220px">
+                    <div class="bg-base-200 rounded mb-3 flex items-center justify-center" style="height:120px;overflow:hidden">
+                        <img src="{{ asset(layer.assetPath, 'cc_composite.asset') }}" alt="{{ layer.filename }}" style="max-width:100%;max-height:100%;object-fit:contain">
+                    </div>
+                    <div class="truncate mb-3" title="{{ layer.filename }}">{{ layer.filename }}</div>
+                    <div class="flex gap-2">
+                        <a class="btn-secondary btn-small flex-1" href="{{ path('cc_composite_admin_layers_edit', {id: layer.id}) }}"><i class="ph ph-pencil"></i> Permissions</a>
+                        <form action="{{ path('cc_composite_admin_layers_delete', {id: layer.id}) }}" method="post" onsubmit="return confirm('Delete this layer?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-layer-delete-' ~ layer.id) }}">
+                            <button class="btn-danger btn-small" type="submit" aria-label="Delete"><i class="ph ph-trash"></i></button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert-info w-full">No layers in this category.</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

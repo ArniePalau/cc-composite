@@ -1,0 +1,22 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}CC Composite defaults{% endblock %}
+
+{% block body %}
+    <div class="box mb-6">
+        <h2 class="box-title">Default scope</h2>
+        <div class="box-content flex gap-2 flex-wrap">
+            <a class="{{ selectedUnit is null ? 'btn-primary' : 'btn-secondary' }}" href="{{ path('cc_composite_admin_defaults_edit') }}">Global fallback</a>
+            {% for unit in units %}
+                <a class="{{ selectedUnit and selectedUnit.id == unit.id ? 'btn-primary' : 'btn-secondary' }}" href="{{ path('cc_composite_admin_defaults_edit', {unit: unit.id}) }}">{{ unit.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="box">
+        <h2 class="box-title">{{ selectedUnit ? selectedUnit.name : 'Global fallback for new soldiers' }}</h2>
+        <div class="box-content">
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}

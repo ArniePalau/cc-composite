@@ -1,0 +1,18 @@
+{
+    "name": "@arniepalau/cc-composite",
+    "description": "Frontend assets for the CC Composite forumify plugin",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "appearance_preview": {
+                "main": "dist/appearance_preview_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    }
+}

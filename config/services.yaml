@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    ArniePalau\CcComposite\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+
+    ArniePalau\CcComposite\Service\CompositeGenerator:
+        arguments:
+            $layerStorage: '@cc_composite_layer.storage'
+            $perscomAssetStorage: '@perscom_asset.storage'
+
+    ArniePalau\CcComposite\Command\ImportLegacyLibraryCommand:
+        arguments:
+            $layerStorage: '@cc_composite_layer.storage'
+
+    ArniePalau\CcComposite\Admin\Controller\LayerController:
+        arguments:
+            $layerStorage: '@cc_composite_layer.storage'

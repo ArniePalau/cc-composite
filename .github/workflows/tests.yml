@@ -1,0 +1,23 @@
+name: tests
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    phpunit:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: dom, gd, imagick, intl, mbstring, xml, xmlwriter, zip
+                  coverage: none
+            - uses: ramsey/composer-install@v3
+              env:
+                  COMPOSER_NO_SECURITY_BLOCKING: 1
+              with:
+                  composer-options: '--no-audit'
+            - run: vendor/bin/phpunit
+            - run: php tests/verify_legacy_assets.php

@@ -1,0 +1,3 @@
+doctrine_migrations:
+    migrations_paths:
+        'CcCompositeMigrations': '%kernel.project_dir%/vendor/arniepalau/cc-composite/migrations'

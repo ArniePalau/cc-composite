@@ -1,0 +1,9 @@
+doctrine:
+    orm:
+        mappings:
+            cc_composite:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/arniepalau/cc-composite/src/Entity'
+                prefix: ArniePalau\CcComposite\Entity
+                alias: CcCompositeEntity
