@@ -6,8 +6,9 @@ namespace ArniePalau\CcComposite\EventListener;
 
 use ArniePalau\CcComposite\Message\RegenerateUserMessage;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
@@ -42,7 +43,7 @@ final class PerscomRecordLifecycleSubscriber
         }
     }
 
-    public function postPersist(LifecycleEventArgs $event): void
+    public function postPersist(PostPersistEventArgs $event): void
     {
         $entity = $event->getObject();
         if ($entity instanceof PerscomUser) {
@@ -52,7 +53,7 @@ final class PerscomRecordLifecycleSubscriber
         $this->queueRecordOwner($entity);
     }
 
-    public function postRemove(LifecycleEventArgs $event): void
+    public function postRemove(PostRemoveEventArgs $event): void
     {
         $this->queueRecordOwner($event->getObject());
     }

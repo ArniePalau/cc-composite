@@ -7,7 +7,10 @@ namespace ArniePalau\CcComposite\Tests\Package;
 use ArniePalau\CcComposite\CcCompositePlugin;
 use ArniePalau\CcComposite\Command\GenerateCompositeCommand;
 use ArniePalau\CcComposite\Command\ImportLegacyLibraryCommand;
+use ArniePalau\CcComposite\EventListener\PerscomRecordLifecycleSubscriber;
 use ArniePalau\CcComposite\Service\CompositeGenerator;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
@@ -38,6 +41,15 @@ final class PackageIntegrityTest extends TestCase
 
         self::assertArrayHasKey('ext-gd', $composer['require']);
         self::assertArrayNotHasKey('ext-imagick', $composer['require']);
+    }
+
+    public function testLifecycleListenerUsesCurrentDoctrineEventTypes(): void
+    {
+        $postPersist = new \ReflectionMethod(PerscomRecordLifecycleSubscriber::class, 'postPersist');
+        $postRemove = new \ReflectionMethod(PerscomRecordLifecycleSubscriber::class, 'postRemove');
+
+        self::assertSame(PostPersistEventArgs::class, (string) $postPersist->getParameters()[0]->getType());
+        self::assertSame(PostRemoveEventArgs::class, (string) $postRemove->getParameters()[0]->getType());
     }
 
     public function testConfigurationFilesAreValidYaml(): void
