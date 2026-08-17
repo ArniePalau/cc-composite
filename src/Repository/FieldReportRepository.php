@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ArniePalau\CcComposite\Repository;
 
 use ArniePalau\CcComposite\Entity\FieldReport;
+use ArniePalau\CcComposite\Entity\Campaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -34,6 +35,12 @@ final class FieldReportRepository extends ServiceEntityRepository
             ->select('COUNT(report.id)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /** @return list<FieldReport> */
+    public function findForCampaign(Campaign $campaign): array
+    {
+        return $this->findBy(['campaign' => $campaign], ['startedAt' => 'DESC']);
     }
 
     public function findOneWithMapForWorld(string $world): ?FieldReport

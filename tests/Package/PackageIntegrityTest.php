@@ -15,6 +15,7 @@ use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
+use ArniePalau\CcComposite\Entity\Campaign;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
@@ -39,7 +40,18 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
         self::assertTrue(class_exists(FieldReportPlayerProfileResolver::class));
         self::assertTrue(class_exists(AdminNewUser::class));
+        self::assertTrue(class_exists(Campaign::class));
         self::assertTrue(class_exists(PerscomUser::class));
+    }
+
+    public function testCampaignArchiveAndManagerArePackaged(): void
+    {
+        $root = dirname(__DIR__, 2);
+        self::assertFileExists($root . '/migrations/Version20260818000000.php');
+        self::assertFileExists($root . '/templates/admin/campaigns/index.html.twig');
+        self::assertFileExists($root . '/templates/frontend/field_report/campaign.html.twig');
+        self::assertStringContainsString('Manage campaigns', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
+        self::assertStringContainsString('Campanyes', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
     }
 
     public function testComposerUsesForumifyAvailableGdRenderer(): void

@@ -7,6 +7,7 @@
         <h2 class="box-title">Import a mission report</h2>
         <div class="box-content">
             <div class="flex justify-end mb-4"><a class="btn-secondary" href="{{ path('cc_composite_admin_field_report_players_index') }}"><i class="ph ph-link"></i> Link report players</a></div>
+            <div class="flex justify-end mb-4"><a class="btn-secondary" href="{{ path('cc_composite_admin_campaigns_index') }}"><i class="ph ph-flag-banner"></i> Manage campaigns</a></div>
             <p class="mb-4">Paste a public Arma Server Manager report URL. Importing the same report again refreshes its local snapshot.</p>
             <form action="{{ path('cc_composite_admin_field_reports_import') }}" method="post" class="flex items-end gap-4 flex-wrap">
                 <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-import') }}">
@@ -29,6 +30,7 @@
                         <th>Mission</th>
                         <th>Map</th>
                         <th>Players</th>
+                        <th>Campaign</th>
                         <th>Local map</th>
                         <th class="text-right">Actions</th>
                     </tr>
@@ -40,6 +42,7 @@
                         <td><a class="btn-link" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">{{ report.missionName }}</a></td>
                         <td>{{ report.worldDisplayName|default(report.world) }}</td>
                         <td>{{ report.playerCount }}</td>
+                        <td><form action="{{ path('cc_composite_admin_field_reports_campaign', {id: report.id}) }}" method="post" class="flex gap-2"><input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-campaign-' ~ report.id) }}"><select class="form-control" name="campaign"><option value="0">No campaign</option>{% for campaign in campaigns %}<option value="{{ campaign.id }}"{% if report.campaign and report.campaign.id == campaign.id %} selected{% endif %}>{{ campaign.name }}</option>{% endfor %}</select><button class="btn-secondary btn-small" type="submit">Save</button></form></td>
                         <td>{% if report.payload._ccMap is defined %}<span class="text-success">Live tiles</span>{% elseif report.mapPath %}<span class="text-muted">Legacy image</span>{% else %}<span class="text-muted">Unavailable</span>{% endif %}</td>
                         <td>
                             <div class="flex justify-end gap-2">
@@ -55,7 +58,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="6" class="text-center p-6">No field reports have been imported yet.</td></tr>
+                    <tr><td colspan="7" class="text-center p-6">No field reports have been imported yet.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
