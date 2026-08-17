@@ -56,6 +56,8 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('campaign.imagePath', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
         self::assertStringContainsString('cc-report-card__campaign', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
         self::assertStringContainsString('cc-report-card--image', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
+        self::assertStringContainsString('var(--cdc-font-display', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
+        self::assertStringContainsString('cc-campaign-card--image', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
     }
 
     public function testComposerUsesForumifyAvailableGdRenderer(): void
