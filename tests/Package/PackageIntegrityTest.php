@@ -127,6 +127,9 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('cc-feed__arrow', $template);
         self::assertStringContainsString('cc-person--civilian', $template);
         self::assertStringContainsString('cc-player-avatar', $template);
+        self::assertStringContainsString("@Forumify/components/avatar.html.twig", $template);
+        self::assertStringContainsString('color:#60a5fa', $template);
+        self::assertStringContainsString('resolvedMapSize', $template);
         self::assertStringContainsString('rankingValue', $template);
         self::assertStringNotContainsString('text-decoration:underline', $template);
     }
