@@ -15,10 +15,12 @@ final class CampaignTest extends TestCase
         $campaign->setName('  Operació Llevant  ');
         $campaign->setDescription('   ');
         $campaign->setSlug('operacio-llevant');
+        $campaign->setImagePath('campaigns/operacio-llevant.webp');
 
         self::assertSame('Operació Llevant', $campaign->getName());
         self::assertNull($campaign->getDescription());
         self::assertSame('operacio-llevant', $campaign->getSlug());
+        self::assertSame('campaigns/operacio-llevant.webp', $campaign->getImagePath());
         self::assertCount(0, $campaign->getReports());
     }
 }

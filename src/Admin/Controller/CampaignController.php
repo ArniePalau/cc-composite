@@ -8,15 +8,21 @@ use ArniePalau\CcComposite\Entity\Campaign;
 use ArniePalau\CcComposite\Form\CampaignType;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('campaigns', name: 'campaigns')]
 final class CampaignController extends AbstractController
 {
+    public function __construct(private readonly FilesystemOperator $campaignStorage)
+    {
+    }
+
     #[Route('', name: '_index', methods: ['GET', 'POST'])]
     public function index(Request $request, CampaignRepository $repository, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -26,6 +32,7 @@ final class CampaignController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $campaign->setSlug($this->uniqueSlug($campaign->getName(), $repository, $slugger));
+            $this->saveImage($campaign, $form->get('image')->getData());
             $entityManager->persist($campaign);
             $entityManager->flush();
             $this->addFlash('success', 'Campaign created.');
@@ -35,7 +42,7 @@ final class CampaignController extends AbstractController
 
         return $this->render('@CcCompositePlugin/admin/campaigns/index.html.twig', [
             'campaigns' => $repository->findBy([], ['name' => 'ASC']),
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -47,13 +54,14 @@ final class CampaignController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $campaign->setSlug($this->uniqueSlug($campaign->getName(), $repository, $slugger, $campaign));
+            $this->saveImage($campaign, $form->get('image')->getData());
             $entityManager->flush();
             $this->addFlash('success', 'Campaign updated.');
 
             return $this->redirectToRoute('cc_composite_admin_campaigns_index');
         }
 
-        return $this->render('@CcCompositePlugin/admin/campaigns/edit.html.twig', ['campaign' => $campaign, 'form' => $form]);
+        return $this->render('@CcCompositePlugin/admin/campaigns/edit.html.twig', ['campaign' => $campaign, 'form' => $form->createView()]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: ['POST'])]
@@ -62,6 +70,9 @@ final class CampaignController extends AbstractController
         $this->denyAccessUnlessGranted('cc_composite.admin.manage');
         if (!$this->isCsrfTokenValid('cc-composite-campaign-delete-' . $campaign->getId(), (string) $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+        if ($campaign->getImagePath() !== null && $this->campaignStorage->fileExists($campaign->getImagePath())) {
+            $this->campaignStorage->delete($campaign->getImagePath());
         }
         $entityManager->remove($campaign);
         $entityManager->flush();
@@ -81,5 +92,28 @@ final class CampaignController extends AbstractController
         }
 
         return $slug;
+    }
+
+    private function saveImage(Campaign $campaign, mixed $file): void
+    {
+        if (!$file instanceof UploadedFile) {
+            return;
+        }
+        $extension = strtolower($file->guessExtension() ?? 'jpg');
+        $path = sprintf('campaigns/%s-%s.%s', $campaign->getSlug(), bin2hex(random_bytes(6)), $extension);
+        $stream = fopen($file->getPathname(), 'rb');
+        if ($stream === false) {
+            throw new \RuntimeException('Unable to read the campaign image.');
+        }
+        try {
+            $this->campaignStorage->writeStream($path, $stream);
+        } finally {
+            fclose($stream);
+        }
+        $previous = $campaign->getImagePath();
+        $campaign->setImagePath($path);
+        if ($previous !== null && $previous !== $path && $this->campaignStorage->fileExists($previous)) {
+            $this->campaignStorage->delete($previous);
+        }
     }
 }

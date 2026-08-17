@@ -48,10 +48,12 @@ final class PackageIntegrityTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         self::assertFileExists($root . '/migrations/Version20260818000000.php');
+        self::assertFileExists($root . '/migrations/Version20260818010000.php');
         self::assertFileExists($root . '/templates/admin/campaigns/index.html.twig');
         self::assertFileExists($root . '/templates/frontend/field_report/campaign.html.twig');
         self::assertStringContainsString('Manage campaigns', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
         self::assertStringContainsString('Campanyes', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
+        self::assertStringContainsString('campaign.imagePath', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
     }
 
     public function testComposerUsesForumifyAvailableGdRenderer(): void
