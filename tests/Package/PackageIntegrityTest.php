@@ -143,6 +143,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('color:#60a5fa', $template);
         self::assertStringContainsString('resolvedMapSize', $template);
         self::assertStringContainsString('rankingValue', $template);
+        self::assertStringContainsString('.cc-ranking__entry>strong', $template);
         self::assertStringNotContainsString('text-decoration:underline', $template);
     }
 }
