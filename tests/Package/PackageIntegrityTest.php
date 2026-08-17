@@ -16,6 +16,7 @@ use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Entity\Campaign;
 use ArniePalau\CcComposite\Entity\GalleryImage;
+use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
 use ArniePalau\CcComposite\MenuBuilder\GalleryMenuType;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
