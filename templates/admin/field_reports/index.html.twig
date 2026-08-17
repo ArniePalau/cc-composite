@@ -1,0 +1,63 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}Field reports{% endblock %}
+
+{% block body %}
+    <div class="box mb-6">
+        <h2 class="box-title">Import a mission report</h2>
+        <div class="box-content">
+            <p class="mb-4">Paste a public Arma Server Manager report URL. Importing the same report again refreshes its local snapshot.</p>
+            <form action="{{ path('cc_composite_admin_field_reports_import') }}" method="post" class="flex items-end gap-4 flex-wrap">
+                <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-import') }}">
+                <div class="form-group flex-1">
+                    <label class="form-label" for="cc-field-report-url">Public report URL</label>
+                    <input class="form-control" id="cc-field-report-url" type="url" name="url" placeholder="http://server.example:8080/r/REPORT_CODE" required>
+                </div>
+                <button class="btn-primary" type="submit"><i class="ph ph-download-simple"></i> Import report</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2 class="box-title">Imported reports</h2>
+        <div class="box-content overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Mission</th>
+                        <th>Map</th>
+                        <th>Players</th>
+                        <th>Local map</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>{{ report.startedAt|date('d/m/Y H:i') }}</td>
+                        <td><a class="btn-link" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">{{ report.missionName }}</a></td>
+                        <td>{{ report.worldDisplayName|default(report.world) }}</td>
+                        <td>{{ report.playerCount }}</td>
+                        <td>{% if report.mapPath %}<span class="text-success">Cached</span>{% else %}<span class="text-muted">Unavailable</span>{% endif %}</td>
+                        <td>
+                            <div class="flex justify-end gap-2">
+                                <form action="{{ path('cc_composite_admin_field_reports_refresh', {id: report.id}) }}" method="post">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-refresh-' ~ report.id) }}">
+                                    <button class="btn-secondary btn-small" type="submit"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
+                                </form>
+                                <form action="{{ path('cc_composite_admin_field_reports_delete', {id: report.id}) }}" method="post" onsubmit="return confirm('Delete this field report?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-delete-' ~ report.id) }}">
+                                    <button class="btn-danger btn-small" type="submit" aria-label="Delete"><i class="ph ph-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="text-center p-6">No field reports have been imported yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

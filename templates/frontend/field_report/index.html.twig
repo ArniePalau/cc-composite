@@ -1,0 +1,57 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+
+{% block title_page %}Informes de camp{% endblock %}
+
+{% block body %}
+<style>
+.cc-reports{--cc-gold:#e5ac00;--cc-line:rgba(229,172,0,.24);--cc-panel:rgba(10,14,23,.88);max-width:1200px;margin:2rem auto;padding:0 1rem}
+.cc-reports__head{margin-bottom:1.5rem}.cc-reports__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.cc-reports h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1;margin:.35rem 0}.cc-reports__intro{color:var(--c-text-secondary,#a0a8b0);max-width:720px}
+.cc-report-list{display:grid;gap:1rem}.cc-report-card{display:grid;grid-template-columns:150px 1fr auto;gap:1.25rem;align-items:center;padding:1.25rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);transition:border-color .2s,transform .2s}
+.cc-report-card:hover{border-color:var(--cc-gold);transform:translateY(-2px)}.cc-report-card__date{font-weight:700;color:var(--cc-gold)}.cc-report-card__date small{display:block;color:var(--c-text-secondary,#a0a8b0);font-weight:400}
+.cc-report-card h2{font-size:1.25rem;margin:0 0 .4rem}.cc-report-card__meta{display:flex;gap:1rem;flex-wrap:wrap;color:var(--c-text-secondary,#a0a8b0);font-size:.9rem}.cc-report-card__arrow{font-size:1.5rem;color:var(--cc-gold)}
+.cc-pagination{display:flex;justify-content:center;align-items:center;gap:.4rem;margin-top:1.5rem}.cc-pagination a,.cc-pagination span{display:grid;place-items:center;min-width:38px;height:38px;border:1px solid var(--cc-line);border-radius:8px}.cc-pagination a:hover,.cc-pagination .active{background:var(--cc-gold);color:#05080f;border-color:var(--cc-gold)}
+.cc-empty{padding:3rem;text-align:center;border:1px dashed var(--cc-line);border-radius:12px;color:var(--c-text-secondary,#a0a8b0)}
+@media(max-width:700px){.cc-report-card{grid-template-columns:1fr auto}.cc-report-card__date{grid-column:1/-1}.cc-report-card__meta{gap:.5rem}}
+</style>
+<section class="cc-reports">
+    <header class="cc-reports__head">
+        <div class="cc-reports__eyebrow">Arxiu operacional</div>
+        <h1>Informes de camp</h1>
+        <p class="cc-reports__intro">Resultats, participants i cronologia de les missions de Cavallers del Cel.</p>
+    </header>
+
+    <div class="cc-report-list">
+        {% for report in reports %}
+            <a class="cc-report-card" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">
+                <div class="cc-report-card__date">{{ report.startedAt|date('d M Y') }}<small>{{ report.startedAt|date('H:i') }}</small></div>
+                <div>
+                    <h2>{{ report.missionName|replace({'_':' '}) }}</h2>
+                    <div class="cc-report-card__meta">
+                        <span><i class="ph ph-map-trifold"></i> {{ report.worldDisplayName|default(report.world) }}</span>
+                        <span><i class="ph ph-clock"></i> {{ report.durationLabel }}</span>
+                        <span><i class="ph ph-users"></i> {{ report.playerCount }} participants</span>
+                    </div>
+                </div>
+                <i class="ph ph-arrow-right cc-report-card__arrow"></i>
+            </a>
+        {% else %}
+            <div class="cc-empty">Encara no hi ha informes de camp publicats.</div>
+        {% endfor %}
+    </div>
+
+    {% if lastPage > 1 %}
+        <nav class="cc-pagination" aria-label="Paginació d'informes">
+            {% if page > 1 %}<a href="{{ path('cc_composite_field_reports_index', {page: page - 1}) }}" aria-label="Pàgina anterior"><i class="ph ph-caret-left"></i></a>{% endif %}
+            {% set firstVisible = max(1, page - 2) %}
+            {% set lastVisible = min(lastPage, page + 2) %}
+            {% if firstVisible > 1 %}<a href="{{ path('cc_composite_field_reports_index', {page: 1}) }}">1</a>{% if firstVisible > 2 %}<span>…</span>{% endif %}{% endif %}
+            {% for pageNumber in firstVisible..lastVisible %}
+                {% if pageNumber == page %}<span class="active" aria-current="page">{{ pageNumber }}</span>{% else %}<a href="{{ path('cc_composite_field_reports_index', {page: pageNumber}) }}">{{ pageNumber }}</a>{% endif %}
+            {% endfor %}
+            {% if lastVisible < lastPage %}{% if lastVisible < lastPage - 1 %}<span>…</span>{% endif %}<a href="{{ path('cc_composite_field_reports_index', {page: lastPage}) }}">{{ lastPage }}</a>{% endif %}
+            {% if page < lastPage %}<a href="{{ path('cc_composite_field_reports_index', {page: page + 1}) }}" aria-label="Pàgina següent"><i class="ph ph-caret-right"></i></a>{% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

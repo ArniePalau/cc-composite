@@ -14,7 +14,7 @@ final class CcCompositePlugin extends AbstractForumifyPlugin
         return new PluginMetadata(
             'CC Composite',
             'ArniePalau',
-            'Layered uniforms, awards and insignia for PERSCOM soldiers.',
+            'Layered PERSCOM uniforms and locally archived mission field reports.',
             'https://github.com/ArniePalau/cc-composite',
             'cc_composite_admin_layers_index',
         );

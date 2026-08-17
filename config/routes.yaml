@@ -3,3 +3,7 @@ admin:
     type: attribute
     prefix: admin/cc-composite/
     name_prefix: cc_composite_admin_
+
+frontend:
+    resource: ../src/Controller
+    type: attribute

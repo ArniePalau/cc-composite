@@ -1,0 +1,127 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+
+{% block title_page %}{{ report.missionName|replace({'_':' '}) }}{% endblock %}
+
+{% block body %}
+<style>
+.cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
+.cc-field a{color:inherit}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
+.cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 1rem;position:relative;z-index:1}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
+.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{font-size:1.6rem;color:#fff}
+.cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
+.cc-map{position:relative;aspect-ratio:1/1;max-height:760px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}
+.cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
+.cc-feed{display:grid;gap:.65rem}.cc-feed__row{display:grid;grid-template-columns:64px 1fr auto;gap:.75rem;padding:.75rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold)}.cc-feed__weapon{color:var(--c-text-secondary,#a0a8b0);font-size:.85rem}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__entry{display:flex;justify-content:space-between;gap:.5rem;padding:.3rem 0}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
+@media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:560px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 1fr}.cc-feed__weapon{grid-column:2}.cc-field__meta{gap:.6rem}}
+</style>
+<article class="cc-field">
+    <a class="cc-field__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a>
+
+    <header class="cc-field__hero">
+        <div class="cc-field__eyebrow">Informe de missió · {{ report.code }}</div>
+        <h1>{{ report.missionName|replace({'_':' '}) }}</h1>
+        <div class="cc-field__meta">
+            <span><i class="ph ph-calendar"></i> {{ report.startedAt|date('d/m/Y · H:i') }}</span>
+            <span><i class="ph ph-map-trifold"></i> {{ report.worldDisplayName|default(report.world) }}</span>
+            <span><i class="ph ph-clock"></i> {{ report.durationLabel }}</span>
+            {% if report.serverName %}<span><i class="ph ph-server"></i> {{ report.serverName }}</span>{% endif %}
+        </div>
+    </header>
+
+    <div class="cc-field__stats">
+        <div class="cc-stat"><span>Participants</span><strong>{{ report.playerCount }}</strong></div>
+        <div class="cc-stat"><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div>
+        <div class="cc-stat"><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div>
+        <div class="cc-stat"><span>Trets</span><strong>{{ report.totalShots }}</strong></div>
+        <div class="cc-stat"><span>Durada</span><strong>{{ report.durationLabel }}</strong></div>
+        <div class="cc-stat"><span>MVP</span><strong>{{ data.mvp.name|default('—') }}</strong></div>
+    </div>
+
+    {% if report.mapPath and report.mapSizeMeters %}
+        <section class="cc-section">
+            <div class="cc-section__title">
+                <h2><i class="ph ph-map-trifold"></i> Mapa tàctic</h2>
+                <div class="cc-map__legend">
+                    <span><i class="cc-dot" style="background:#3f8ce8"></i>Moviment</span>
+                    <span><i class="cc-dot" style="background:#e8434b"></i>Morts</span>
+                    <span><i class="cc-dot" style="background:#e5ac00"></i>Baixes</span>
+                </div>
+            </div>
+            <div class="cc-section__body">
+                <div class="cc-map">
+                    <img src="{{ asset(report.mapPath, 'cc_composite.asset') }}" alt="Mapa topogràfic de {{ report.worldDisplayName|default(report.world) }}">
+                    <div class="cc-map__overlay">
+                        {% for point in data.movementHeat|default([]) %}
+                            <i class="cc-map__point cc-map__movement" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%;width:{{ min(26, 7 + point.weight) }}px;height:{{ min(26, 7 + point.weight) }}px"></i>
+                        {% endfor %}
+                        {% for point in data.deathHeat|default([]) %}
+                            <i class="cc-map__point cc-map__death" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>
+                        {% endfor %}
+                        {% for kill in data.killFeed|default([]) %}
+                            {% if kill.x is defined and kill.y is defined and not kill.suicide %}<i class="cc-map__point cc-map__kill" title="{{ kill.killer|default('Desconegut') }} → {{ kill.victim|default('Desconegut') }}" style="left:{{ (kill.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - kill.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
+                        {% endfor %}
+                        {% for marker in data.markers|default([]) %}
+                            {% if not marker.deleted|default(false) %}<i class="cc-map__point cc-map__marker" title="{{ marker.text|default(marker.name|default('Marcador')) }}" style="left:{{ (marker.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - marker.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    <div class="cc-grid-2">
+        <section class="cc-section">
+            <div class="cc-section__title"><h2><i class="ph ph-users"></i> Participants</h2></div>
+            <div class="cc-table-wrap">
+                <table class="cc-table">
+                    <thead><tr><th>Nom</th><th>Baixes</th><th>Morts</th><th>Precisió</th><th>Distància</th><th>Punts</th></tr></thead>
+                    <tbody>
+                    {% for player in data.players|default([]) %}
+                        <tr><td><strong>{{ player.name }}</strong></td><td>{{ player.kills|default(0) }}</td><td>{{ player.deaths|default(0) }}</td><td>{{ ((player.accuracy|default(0)) * 100)|number_format(1) }}%</td><td>{{ player.distanceMeters|default(0) }} m</td><td>{{ player.mvpPoints|default(0)|number_format(1) }}</td></tr>
+                    {% else %}<tr><td colspan="6">No hi ha participants registrats.</td></tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="cc-section">
+            <div class="cc-section__title"><h2><i class="ph ph-trophy"></i> Classificacions</h2></div>
+            <div class="cc-section__body cc-ranking">
+                {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
+                {% for ranking in data.rankings|default([]) %}
+                    {% if ranking.entries|default([]) is not empty %}
+                        <div class="cc-ranking__card"><h3>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ entry.name }}</span><strong>{{ entry.value|number_format(2) }}</strong></div>{% endfor %}</div>
+                    {% endif %}
+                {% else %}<p class="cc-muted">No hi ha classificacions disponibles.</p>{% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <section class="cc-section">
+        <div class="cc-section__title"><h2><i class="ph ph-crosshair"></i> Cronologia de baixes</h2></div>
+        <div class="cc-section__body cc-feed">
+            {% for kill in data.killFeed|default([]) %}
+                <div class="cc-feed__row{% if kill.friendlyFire|default(false) %} cc-feed__row--friendly{% endif %}">
+                    <span class="cc-feed__time">{{ '%02d:%02d'|format((kill.missionTime / 60)|round(0, 'floor'), kill.missionTime % 60) }}</span>
+                    <span><strong>{{ kill.killer|default('IA / entorn') }}</strong> → {{ kill.victim|default('Desconegut') }}{% if kill.suicide|default(false) %} <em>(suïcidi)</em>{% endif %}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</span>
+                    <span class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('')) }}</span>
+                </div>
+            {% else %}<p class="cc-muted">No hi ha baixes registrades.</p>{% endfor %}
+        </div>
+    </section>
+
+    <section class="cc-section">
+        <div class="cc-section__title"><h2><i class="ph ph-gun"></i> Armament</h2></div>
+        <div class="cc-table-wrap">
+            <table class="cc-table"><thead><tr><th>Arma</th><th>Classe</th><th>Trets</th><th>Baixes</th></tr></thead><tbody>
+            {% for weapon in data.weapons|default([]) %}<tr><td><strong>{{ weapon.weaponName|default(weapon.weaponClass) }}</strong></td><td class="cc-muted">{{ weapon.weaponClass }}</td><td>{{ weapon.shots|default(0) }}</td><td>{{ weapon.kills|default(0) }}</td></tr>{% else %}<tr><td colspan="4">No hi ha dades d'armament.</td></tr>{% endfor %}
+            </tbody></table>
+        </div>
+    </section>
+
+    <footer class="cc-field__source">
+        <span>Mapa topogràfic: <a href="https://atlas.plan-ops.fr/maps/arma3" target="_blank" rel="noopener noreferrer">PLANOPS Atlas</a> · Contingut cartogràfic © Bohemia Interactive</span>
+        <a href="{{ report.sourceUrl }}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-square-out"></i> Informe original</a>
+    </footer>
+</article>
+{% endblock %}

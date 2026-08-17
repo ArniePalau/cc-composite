@@ -21,6 +21,12 @@ It does not patch Forumify or PERSCOM source code.
   marked dirty for the normal PERSCOM synchronization workflow.
 - Bundled legacy library importer with 19 valid layers, legacy defaults,
   explicit soldier selections, layer permissions and 107 award placements.
+- Native **Field reports** Menu Builder item with a six-report paginated archive.
+- Admin import and refresh of public Arma Server Manager report URLs. JSON is
+  stored locally so published reports do not depend on a live page request.
+- Mission overview, players, rankings, weapons, kill feed and tactical heatmap.
+- On-demand PLANOPS Atlas topographic map cache. A moderate-resolution map is
+  assembled once per world and reused by later reports.
 
 Rank/unit/record lifecycle regeneration is queued through Forumify's Messenger
 bus, so keep the normal Forumify worker process running in production.
@@ -78,6 +84,11 @@ Then review these admin pages:
 - **CC Composite → Layers**: upload/delete layers and edit rank/unit/user access.
 - **CC Composite → Defaults**: configure the global fallback and each unit.
 - **CC Composite → Award layout**: choose the panel category for every award.
+- **CC Composite → Field reports**: paste, refresh or remove mission reports.
+
+To publish the archive in the frontend navigation, add a **Field Reports** item
+in Forumify's Menu Builder. Its normal Menu Builder ACL controls whether the
+item is public or limited to selected roles.
 
 ## Commands
 
