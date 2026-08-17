@@ -124,5 +124,8 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('player.shotsFired', $template);
         self::assertStringContainsString('cc-icon-skull', $template);
         self::assertStringContainsString('rankingIcons', $template);
+        self::assertStringContainsString('cc-feed__arrow', $template);
+        self::assertStringContainsString('cc-person--civilian', $template);
+        self::assertStringNotContainsString('text-decoration:underline', $template);
     }
 }
