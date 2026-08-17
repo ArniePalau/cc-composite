@@ -113,7 +113,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('data-cc-interactive-map', $template);
         self::assertStringContainsString('data-map-time', $template);
         self::assertStringContainsString('player.shotsFired', $template);
-        self::assertStringContainsString('ph-skull', $template);
+        self::assertStringContainsString('cc-icon-skull', $template);
         self::assertStringContainsString('rankingIcons', $template);
     }
 }

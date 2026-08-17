@@ -65,13 +65,13 @@ final class AtlasMapCacheTest extends TestCase
         $first = $cache->cache('Malden');
         $second = $cache->cache('Malden');
 
-        self::assertSame('maps/malden.png', $first->path);
+        self::assertSame('maps/malden-z4.png', $first->path);
         self::assertSame(12800, $first->sizeMeters);
         self::assertSame($first->path, $second->path);
-        self::assertTrue($storage->fileExists('maps/malden.png'));
-        self::assertCount(16, array_filter($requestedUrls, static fn (string $url): bool => str_contains($url, '/data/68/')));
-        $dimensions = getimagesize($this->directory . '/maps/malden.png');
+        self::assertTrue($storage->fileExists('maps/malden-z4.png'));
+        self::assertCount(256, array_filter($requestedUrls, static fn (string $url): bool => str_contains($url, '/data/68/')));
+        $dimensions = getimagesize($this->directory . '/maps/malden-z4.png');
         self::assertIsArray($dimensions);
-        self::assertSame([16, 16], [$dimensions[0], $dimensions[1]]);
+        self::assertSame([64, 64], [$dimensions[0], $dimensions[1]]);
     }
 }

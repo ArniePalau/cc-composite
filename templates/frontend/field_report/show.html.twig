@@ -7,7 +7,7 @@
 .cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
 .cc-field a{color:inherit}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
 .cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 1rem;position:relative;z-index:1}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
-.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
+.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
 .cc-map{position:relative;aspect-ratio:1/1;max-height:760px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px;cursor:grab;touch-action:none;user-select:none}.cc-map.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
@@ -15,6 +15,19 @@
 @media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:560px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 34px 1fr}.cc-feed__weapon{grid-column:3}.cc-field__meta{gap:.6rem}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}}
 </style>
 <article class="cc-field">
+    <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+        <symbol id="cc-icon-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-4 2.5-6 6-6s6 2 6 6M16 5a3 3 0 0 1 0 6M17 14c2.5.5 4 2.5 4 6"/></symbol>
+        <symbol id="cc-icon-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol>
+        <symbol id="cc-icon-warning" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 9v5M12 17.5h.01"/></symbol>
+        <symbol id="cc-icon-shots" viewBox="0 0 24 24"><path d="M3 15h10l3-3h3l2 2-2 2h-2l-2 5h-4l1-4H3z"/><path d="M5 12l-2-2M8 10V7M11 11l2-2"/></symbol>
+        <symbol id="cc-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+        <symbol id="cc-icon-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4c0 4-2 7-5 7s-5-3-5-7zM9 21h6M12 15v6"/><path d="M7 6H3v2c0 3 2 5 5 5M17 6h4v2c0 3-2 5-5 5"/></symbol>
+        <symbol id="cc-icon-skull" viewBox="0 0 24 24"><path d="M5 11a7 7 0 1 1 14 0c0 3-1.5 4.5-3 5.5V21H8v-4.5C6.5 15.5 5 14 5 11z"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><path d="M10 16h4M10 21v-3M14 21v-3"/></symbol>
+        <symbol id="cc-icon-scales" viewBox="0 0 24 24"><path d="M12 3v18M6 21h12M4 7h16M6 7l-3 6h6zM18 7l-3 6h6z"/></symbol>
+        <symbol id="cc-icon-heart" viewBox="0 0 24 24"><path d="M12 21S3 16 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 7-9 12-9 12z"/><path d="m8 12 2-2 2 4 2-4 2 2"/></symbol>
+        <symbol id="cc-icon-footprints" viewBox="0 0 24 24"><ellipse cx="8" cy="7" rx="3" ry="5"/><ellipse cx="16" cy="17" rx="3" ry="5"/></symbol>
+        <symbol id="cc-icon-binoculars" viewBox="0 0 24 24"><path d="M7 6h3l1 5v6H3l2-9zM17 6h-3l-1 5v6h8l-2-9zM11 12h2"/><circle cx="7" cy="17" r="4"/><circle cx="17" cy="17" r="4"/></symbol>
+    </svg>
     <a class="cc-field__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a>
 
     <header class="cc-field__hero">
@@ -29,14 +42,15 @@
     </header>
 
     <div class="cc-field__stats">
-        <div class="cc-stat"><i class="ph ph-users cc-stat__icon"></i><div><span>Participants</span><strong>{{ report.playerCount }}</strong></div></div>
-        <div class="cc-stat"><i class="ph ph-crosshair cc-stat__icon"></i><div><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div></div>
-        <div class="cc-stat"><i class="ph ph-warning cc-stat__icon"></i><div><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div></div>
-        <div class="cc-stat"><i class="ph ph-gun cc-stat__icon"></i><div><span>Trets</span><strong>{{ report.totalShots }}</strong></div></div>
-        <div class="cc-stat"><i class="ph ph-clock cc-stat__icon"></i><div><span>Durada</span><strong>{{ report.durationLabel }}</strong></div></div>
-        <div class="cc-stat"><i class="ph ph-trophy cc-stat__icon"></i><div><span>MVP</span><strong>{{ data.mvp.name|default('—') }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-users"/></svg><div><span>Participants</span><strong>{{ report.playerCount }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-target"/></svg><div><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg><div><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg><div><span>Trets</span><strong>{{ report.totalShots }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-clock"/></svg><div><span>Durada</span><strong>{{ report.durationLabel }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-trophy"/></svg><div><span>MVP</span><strong>{{ data.mvp.name|default('—') }}</strong></div></div>
     </div>
 
+    {% set tacticalMap %}
     {% if report.mapPath and report.mapSizeMeters %}
         <section class="cc-section">
             <div class="cc-section__title">
@@ -80,6 +94,7 @@
             </div>
         </section>
     {% endif %}
+    {% endset %}
 
     <div class="cc-grid-2">
         <section class="cc-section">
@@ -100,10 +115,10 @@
             <div class="cc-section__title"><h2><i class="ph ph-trophy"></i> Classificacions</h2></div>
             <div class="cc-section__body cc-ranking">
                 {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
-                {% set rankingIcons = {kills:'ph-crosshair', kd:'ph-scales', accuracy:'ph-target', damage:'ph-heart-break', distance:'ph-footprints', longest_kill:'ph-binoculars', survival:'ph-heartbeat', friendly_fire:'ph-warning'} %}
+                {% set rankingIcons = {kills:'target', kd:'scales', accuracy:'target', damage:'heart', distance:'footprints', longest_kill:'binoculars', survival:'heart', friendly_fire:'warning'} %}
                 {% for ranking in data.rankings|default([]) %}
                     {% if ranking.entries|default([]) is not empty %}
-                        <div class="cc-ranking__card"><h3><i class="ph {{ rankingIcons[ranking.key]|default('ph-medal') }}"></i>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ entry.name }}</span><strong>{{ entry.value|number_format(2) }}</strong></div>{% endfor %}</div>
+                        <div class="cc-ranking__card"><h3><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-{{ rankingIcons[ranking.key]|default('trophy') }}"/></svg>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ entry.name }}</span><strong>{{ entry.value|number_format(2) }}</strong></div>{% endfor %}</div>
                     {% endif %}
                 {% else %}<p class="cc-muted">No hi ha classificacions disponibles.</p>{% endfor %}
             </div>
@@ -116,7 +131,7 @@
             {% for kill in data.killFeed|default([]) %}
                 <div class="cc-feed__row{% if kill.friendlyFire|default(false) %} cc-feed__row--friendly{% endif %}">
                     <span class="cc-feed__time">{{ '%02d:%02d'|format((kill.missionTime / 60)|round(0, 'floor'), kill.missionTime % 60) }}</span>
-                    {% if kill.suicide|default(false) %}<span class="cc-feed__icon cc-feed__icon--suicide" title="Suïcidi"><i class="ph ph-skull"></i></span>{% elseif kill.friendlyFire|default(false) %}<span class="cc-feed__icon" title="Foc amic"><i class="ph ph-warning"></i></span>{% else %}<span class="cc-feed__icon" title="Baixa per arma"><i class="ph ph-gun"></i></span>{% endif %}
+                    {% if kill.suicide|default(false) %}<span class="cc-feed__icon cc-feed__icon--suicide" title="Suïcidi"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-skull"/></svg></span>{% elseif kill.friendlyFire|default(false) %}<span class="cc-feed__icon" title="Foc amic"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg></span>{% else %}<span class="cc-feed__icon" title="Baixa per arma"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg></span>{% endif %}
                     <span><strong>{{ kill.killer|default('IA / entorn') }}</strong> → {{ kill.victim|default('Desconegut') }}{% if kill.suicide|default(false) %} <em>(suïcidi)</em>{% endif %}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</span>
                     <span class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('')) }}</span>
                 </div>
@@ -124,8 +139,10 @@
         </div>
     </section>
 
+    {{ tacticalMap|raw }}
+
     <section class="cc-section">
-        <div class="cc-section__title"><h2><i class="ph ph-gun"></i> Armament</h2></div>
+        <div class="cc-section__title"><h2><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg> Armament</h2></div>
         <div class="cc-table-wrap">
             <table class="cc-table"><thead><tr><th>Arma</th><th>Classe</th><th>Trets</th><th>Baixes</th></tr></thead><tbody>
             {% for weapon in data.weapons|default([]) %}<tr><td><strong>{{ weapon.weaponName|default(weapon.weaponClass) }}</strong></td><td class="cc-muted">{{ weapon.weaponClass }}</td><td>{{ weapon.shots|default(0) }}</td><td>{{ weapon.kills|default(0) }}</td></tr>{% else %}<tr><td colspan="4">No hi ha dades d'armament.</td></tr>{% endfor %}
