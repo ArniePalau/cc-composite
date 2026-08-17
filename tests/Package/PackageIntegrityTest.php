@@ -105,4 +105,15 @@ final class PackageIntegrityTest extends TestCase
         self::assertCount(107, $manifest['award_categories']);
         self::assertArrayHasKey('Via (E)', $manifest['selections']);
     }
+
+    public function testFieldReportIncludesInteractiveMapAndRichStatistics(): void
+    {
+        $template = file_get_contents(dirname(__DIR__, 2) . '/templates/frontend/field_report/show.html.twig');
+
+        self::assertStringContainsString('data-cc-interactive-map', $template);
+        self::assertStringContainsString('data-map-time', $template);
+        self::assertStringContainsString('player.shotsFired', $template);
+        self::assertStringContainsString('ph-skull', $template);
+        self::assertStringContainsString('rankingIcons', $template);
+    }
 }

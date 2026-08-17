@@ -7,12 +7,12 @@
 .cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
 .cc-field a{color:inherit}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
 .cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 1rem;position:relative;z-index:1}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
-.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{font-size:1.6rem;color:#fff}
+.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
-.cc-map{position:relative;aspect-ratio:1/1;max-height:760px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}
+.cc-map{position:relative;aspect-ratio:1/1;max-height:760px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px;cursor:grab;touch-action:none;user-select:none}.cc-map.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
-.cc-feed{display:grid;gap:.65rem}.cc-feed__row{display:grid;grid-template-columns:64px 1fr auto;gap:.75rem;padding:.75rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold)}.cc-feed__weapon{color:var(--c-text-secondary,#a0a8b0);font-size:.85rem}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__entry{display:flex;justify-content:space-between;gap:.5rem;padding:.3rem 0}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
-@media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:560px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 1fr}.cc-feed__weapon{grid-column:2}.cc-field__meta{gap:.6rem}}
+.cc-feed{display:grid;gap:.65rem}.cc-feed__row{display:grid;grid-template-columns:64px 38px 1fr auto;align-items:center;gap:.75rem;padding:.75rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold)}.cc-feed__icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(63,140,232,.13);color:var(--cc-blue);font-size:1.25rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__weapon{color:var(--c-text-secondary,#a0a8b0);font-size:.85rem}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;justify-content:space-between;gap:.5rem;padding:.3rem 0}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
+@media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:560px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 34px 1fr}.cc-feed__weapon{grid-column:3}.cc-field__meta{gap:.6rem}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}}
 </style>
 <article class="cc-field">
     <a class="cc-field__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a>
@@ -29,12 +29,12 @@
     </header>
 
     <div class="cc-field__stats">
-        <div class="cc-stat"><span>Participants</span><strong>{{ report.playerCount }}</strong></div>
-        <div class="cc-stat"><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div>
-        <div class="cc-stat"><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div>
-        <div class="cc-stat"><span>Trets</span><strong>{{ report.totalShots }}</strong></div>
-        <div class="cc-stat"><span>Durada</span><strong>{{ report.durationLabel }}</strong></div>
-        <div class="cc-stat"><span>MVP</span><strong>{{ data.mvp.name|default('—') }}</strong></div>
+        <div class="cc-stat"><i class="ph ph-users cc-stat__icon"></i><div><span>Participants</span><strong>{{ report.playerCount }}</strong></div></div>
+        <div class="cc-stat"><i class="ph ph-crosshair cc-stat__icon"></i><div><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div></div>
+        <div class="cc-stat"><i class="ph ph-warning cc-stat__icon"></i><div><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div></div>
+        <div class="cc-stat"><i class="ph ph-gun cc-stat__icon"></i><div><span>Trets</span><strong>{{ report.totalShots }}</strong></div></div>
+        <div class="cc-stat"><i class="ph ph-clock cc-stat__icon"></i><div><span>Durada</span><strong>{{ report.durationLabel }}</strong></div></div>
+        <div class="cc-stat"><i class="ph ph-trophy cc-stat__icon"></i><div><span>MVP</span><strong>{{ data.mvp.name|default('—') }}</strong></div></div>
     </div>
 
     {% if report.mapPath and report.mapSizeMeters %}
@@ -48,9 +48,10 @@
                 </div>
             </div>
             <div class="cc-section__body">
-                <div class="cc-map">
-                    <img src="{{ asset(report.mapPath, 'cc_composite.asset') }}" alt="Mapa topogràfic de {{ report.worldDisplayName|default(report.world) }}">
-                    <div class="cc-map__overlay">
+                <div class="cc-map" data-cc-interactive-map>
+                    <div class="cc-map__stage" data-map-stage>
+                      <img src="{{ asset(report.mapPath, 'cc_composite.asset') }}" alt="Mapa topogràfic de {{ report.worldDisplayName|default(report.world) }}">
+                      <div class="cc-map__overlay">
                         {% for point in data.movementHeat|default([]) %}
                             <i class="cc-map__point cc-map__movement" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%;width:{{ min(26, 7 + point.weight) }}px;height:{{ min(26, 7 + point.weight) }}px"></i>
                         {% endfor %}
@@ -58,12 +59,23 @@
                             <i class="cc-map__point cc-map__death" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>
                         {% endfor %}
                         {% for kill in data.killFeed|default([]) %}
-                            {% if kill.x is defined and kill.y is defined and not kill.suicide %}<i class="cc-map__point cc-map__kill" title="{{ kill.killer|default('Desconegut') }} → {{ kill.victim|default('Desconegut') }}" style="left:{{ (kill.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - kill.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
+                            {% if kill.x is defined and kill.y is defined and not kill.suicide %}<i class="cc-map__point cc-map__kill" data-event-time="{{ kill.missionTime|default(0) }}" title="{{ kill.killer|default('Desconegut') }} → {{ kill.victim|default('Desconegut') }}" style="left:{{ (kill.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - kill.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
                         {% endfor %}
                         {% for marker in data.markers|default([]) %}
-                            {% if not marker.deleted|default(false) %}<i class="cc-map__point cc-map__marker" title="{{ marker.text|default(marker.name|default('Marcador')) }}" style="left:{{ (marker.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - marker.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
+                            {% if not marker.deleted|default(false) %}<i class="cc-map__point cc-map__marker"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} title="{{ marker.text|default(marker.name|default('Marcador')) }}" style="left:{{ (marker.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - marker.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
                         {% endfor %}
+                      </div>
                     </div>
+                    <div class="cc-map__controls" aria-label="Controls del mapa">
+                        <button type="button" data-map-zoom="in" title="Apropa"><i class="ph ph-plus"></i></button>
+                        <button type="button" data-map-zoom="out" title="Allunya"><i class="ph ph-minus"></i></button>
+                        <button type="button" data-map-zoom="reset" title="Restableix"><i class="ph ph-arrows-in"></i></button>
+                    </div>
+                </div>
+                <div class="cc-map__timeline">
+                    <label for="cc-map-time"><i class="ph ph-timer"></i> Temps de missió</label>
+                    <input id="cc-map-time" type="range" min="0" max="{{ report.durationSeconds }}" value="{{ report.durationSeconds }}" step="1" data-map-time>
+                    <output for="cc-map-time" data-map-time-label>{{ report.durationLabel }}</output>
                 </div>
             </div>
         </section>
@@ -74,11 +86,11 @@
             <div class="cc-section__title"><h2><i class="ph ph-users"></i> Participants</h2></div>
             <div class="cc-table-wrap">
                 <table class="cc-table">
-                    <thead><tr><th>Nom</th><th>Baixes</th><th>Morts</th><th>Precisió</th><th>Distància</th><th>Punts</th></tr></thead>
+                    <thead><tr><th>Nom</th><th>Baixes</th><th>Morts</th><th>Precisió</th><th>Distància</th><th>Trets</th><th>Punts</th></tr></thead>
                     <tbody>
                     {% for player in data.players|default([]) %}
-                        <tr><td><strong>{{ player.name }}</strong></td><td>{{ player.kills|default(0) }}</td><td>{{ player.deaths|default(0) }}</td><td>{{ ((player.accuracy|default(0)) * 100)|number_format(1) }}%</td><td>{{ player.distanceMeters|default(0) }} m</td><td>{{ player.mvpPoints|default(0)|number_format(1) }}</td></tr>
-                    {% else %}<tr><td colspan="6">No hi ha participants registrats.</td></tr>{% endfor %}
+                        <tr><td><strong>{{ player.name }}</strong></td><td>{{ player.kills|default(0) }}</td><td>{{ player.deaths|default(0) }}</td><td>{{ ((player.accuracy|default(0)) * 100)|number_format(1) }}%</td><td>{{ player.distanceMeters|default(0) }} m</td><td>{{ player.shotsFired|default(player.shots|default(0)) }}</td><td>{{ player.mvpPoints|default(0)|number_format(1) }}</td></tr>
+                    {% else %}<tr><td colspan="7">No hi ha participants registrats.</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -88,9 +100,10 @@
             <div class="cc-section__title"><h2><i class="ph ph-trophy"></i> Classificacions</h2></div>
             <div class="cc-section__body cc-ranking">
                 {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
+                {% set rankingIcons = {kills:'ph-crosshair', kd:'ph-scales', accuracy:'ph-target', damage:'ph-heart-break', distance:'ph-footprints', longest_kill:'ph-binoculars', survival:'ph-heartbeat', friendly_fire:'ph-warning'} %}
                 {% for ranking in data.rankings|default([]) %}
                     {% if ranking.entries|default([]) is not empty %}
-                        <div class="cc-ranking__card"><h3>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ entry.name }}</span><strong>{{ entry.value|number_format(2) }}</strong></div>{% endfor %}</div>
+                        <div class="cc-ranking__card"><h3><i class="ph {{ rankingIcons[ranking.key]|default('ph-medal') }}"></i>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ entry.name }}</span><strong>{{ entry.value|number_format(2) }}</strong></div>{% endfor %}</div>
                     {% endif %}
                 {% else %}<p class="cc-muted">No hi ha classificacions disponibles.</p>{% endfor %}
             </div>
@@ -103,6 +116,7 @@
             {% for kill in data.killFeed|default([]) %}
                 <div class="cc-feed__row{% if kill.friendlyFire|default(false) %} cc-feed__row--friendly{% endif %}">
                     <span class="cc-feed__time">{{ '%02d:%02d'|format((kill.missionTime / 60)|round(0, 'floor'), kill.missionTime % 60) }}</span>
+                    {% if kill.suicide|default(false) %}<span class="cc-feed__icon cc-feed__icon--suicide" title="Suïcidi"><i class="ph ph-skull"></i></span>{% elseif kill.friendlyFire|default(false) %}<span class="cc-feed__icon" title="Foc amic"><i class="ph ph-warning"></i></span>{% else %}<span class="cc-feed__icon" title="Baixa per arma"><i class="ph ph-gun"></i></span>{% endif %}
                     <span><strong>{{ kill.killer|default('IA / entorn') }}</strong> → {{ kill.victim|default('Desconegut') }}{% if kill.suicide|default(false) %} <em>(suïcidi)</em>{% endif %}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</span>
                     <span class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('')) }}</span>
                 </div>
@@ -124,4 +138,79 @@
         <a href="{{ report.sourceUrl }}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-square-out"></i> Informe original</a>
     </footer>
 </article>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.querySelectorAll('[data-cc-interactive-map]').forEach(function (map) {
+    var stage = map.querySelector('[data-map-stage]');
+    var timeline = map.parentElement.querySelector('[data-map-time]');
+    var timelineLabel = map.parentElement.querySelector('[data-map-time-label]');
+    var scale = 1;
+    var x = 0;
+    var y = 0;
+    var dragging = false;
+    var startX = 0;
+    var startY = 0;
+
+    function renderTransform() {
+        stage.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) scale(' + scale + ')';
+    }
+
+    function zoom(nextScale) {
+        scale = Math.max(1, Math.min(5, nextScale));
+        if (scale === 1) { x = 0; y = 0; }
+        renderTransform();
+    }
+
+    map.querySelectorAll('[data-map-zoom]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var action = button.dataset.mapZoom;
+            if (action === 'reset') { scale = 1; x = 0; y = 0; renderTransform(); return; }
+            zoom(scale + (action === 'in' ? .5 : -.5));
+        });
+    });
+
+    map.addEventListener('wheel', function (event) {
+        event.preventDefault();
+        zoom(scale + (event.deltaY < 0 ? .25 : -.25));
+    }, { passive: false });
+
+    map.addEventListener('pointerdown', function (event) {
+        if (event.target.closest('button') || scale <= 1) return;
+        dragging = true;
+        startX = event.clientX - x;
+        startY = event.clientY - y;
+        map.classList.add('is-dragging');
+        map.setPointerCapture(event.pointerId);
+    });
+    map.addEventListener('pointermove', function (event) {
+        if (!dragging) return;
+        x = event.clientX - startX;
+        y = event.clientY - startY;
+        renderTransform();
+    });
+    function stopDragging() { dragging = false; map.classList.remove('is-dragging'); }
+    map.addEventListener('pointerup', stopDragging);
+    map.addEventListener('pointercancel', stopDragging);
+
+    if (timeline) {
+        function formatTime(seconds) {
+            seconds = Math.max(0, Number(seconds) || 0);
+            return String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
+        }
+        function filterTimeline() {
+            var cutoff = Number(timeline.value);
+            map.querySelectorAll('[data-event-time]').forEach(function (point) {
+                point.hidden = Number(point.dataset.eventTime) > cutoff;
+            });
+            timelineLabel.value = formatTime(cutoff);
+            timelineLabel.textContent = formatTime(cutoff);
+        }
+        timeline.addEventListener('input', filterTimeline);
+        filterTimeline();
+    }
+});
+</script>
 {% endblock %}
