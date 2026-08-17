@@ -13,6 +13,7 @@ use ArniePalau\CcComposite\Service\CompositeGenerator;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
 use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
+use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
@@ -36,6 +37,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(FieldReportImporter::class));
         self::assertTrue(class_exists(FieldReportPlayerLink::class));
         self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
+        self::assertTrue(class_exists(FieldReportPlayerProfileResolver::class));
         self::assertTrue(class_exists(AdminNewUser::class));
         self::assertTrue(class_exists(PerscomUser::class));
     }

@@ -6,6 +6,7 @@ namespace ArniePalau\CcComposite\Controller;
 
 use ArniePalau\CcComposite\Entity\FieldReport;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
+use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,16 +33,19 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
-    public function show(string $code, FieldReportRepository $repository): Response
+    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver): Response
     {
         $report = $repository->findOneBy(['code' => $code]);
         if (!$report instanceof FieldReport) {
             throw $this->createNotFoundException('Field report not found.');
         }
 
+        $payload = $report->getPayload();
+
         return $this->render('@CcCompositePlugin/frontend/field_report/show.html.twig', [
             'report' => $report,
-            'data' => $report->getPayload(),
+            'data' => $payload,
+            'playerProfiles' => $profileResolver->resolve($payload),
         ]);
     }
 }
