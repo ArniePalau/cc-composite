@@ -169,6 +169,28 @@
         color: #ffffff;
     }
 
+    .cc-gallery-title {
+        font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #ffffff;
+        margin: 0.25rem 0 0.5rem 0;
+        line-height: 1.1;
+    }
+    .cc-gallery-eyebrow {
+        color: var(--cc-gold, #e5ac00);
+        font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
     /* Lightbox Modal */
     .cc-lightbox {
         display: none;
@@ -209,8 +231,11 @@
         color: #f3f4f6;
     }
     .cc-lightbox__title {
-        font-size: 1.15rem;
-        font-weight: 600;
+        font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
         margin-bottom: 0.25rem;
     }
     .cc-lightbox__sub {
@@ -273,13 +298,16 @@
         <div class="cc-gallery-hero__content">
             <div class="flex flex-wrap justify-between items-center gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold mb-2 text-white">
+                    <div class="cc-gallery-eyebrow">
+                        <i class="ph ph-images"></i> Arxiu Fotogràfic
+                    </div>
+                    <h1 class="cc-gallery-title">
                         {% if selectedReport %}
-                            📸 Galeria: {{ selectedReport.missionName }}
+                            Galeria: {{ selectedReport.missionName }}
                         {% elseif selectedCampaign %}
-                            📸 Galeria: {{ selectedCampaign.name }}
+                            Galeria: {{ selectedCampaign.name }}
                         {% else %}
-                            📸 Galeria de Campanyes i Missions
+                            Galeria de Campanyes i Missions
                         {% endif %}
                     </h1>
                     <p class="text-secondary max-w-3xl mb-0">
@@ -328,7 +356,7 @@
             </a>
             {% for m in campaignMissions %}
                 <a href="{{ path('cc_composite_galeria', { campaign: selectedCampaign.slug, mission: m.code }) }}" class="cc-mission-tab {% if selectedReport and selectedReport.id == m.id %}active{% endif %}">
-                    🎯 {{ m.missionName }} ({{ m.startedAt|date('d/m/Y') }})
+                    <i class="ph ph-crosshair"></i> {{ m.missionName }} ({{ m.startedAt|date('d/m/Y') }})
                 </a>
             {% endfor %}
         </div>
@@ -447,9 +475,9 @@
 
         let subText = item.date;
         if (item.mission) {
-            subText += ' • 🎯 ' + item.mission;
+            subText += ' • Missió: ' + item.mission;
         } else if (item.campaign) {
-            subText += ' • 🚩 ' + item.campaign;
+            subText += ' • Campanya: ' + item.campaign;
         }
         document.getElementById('lightboxSub').innerText = subText;
     }
