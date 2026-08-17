@@ -1,0 +1,45 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}Field-report player links{% endblock %}
+
+{% block body %}
+    <div class="box">
+        <h2 class="box-title">Link report players to Forumify users</h2>
+        <div class="box-content">
+            <p class="mb-4">Players are discovered from every imported report. A link applies to that player name across all current and future reports.</p>
+            {% if players is not empty %}
+                <form action="{{ path('cc_composite_admin_field_report_players_save') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-player-links') }}">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead><tr><th>Report player</th><th>Forumify user</th><th>Status</th></tr></thead>
+                            <tbody>
+                            {% for playerKey, playerName in players %}
+                                {% set linkedUser = links[playerKey].forumifyUser|default(null) %}
+                                <tr>
+                                    <td><strong>{{ playerName }}</strong></td>
+                                    <td>
+                                        <select class="form-control" name="links[{{ playerKey }}]">
+                                            <option value="">Not linked</option>
+                                            {% for user in users %}
+                                                <option value="{{ user.id }}"{% if linkedUser and linkedUser.id == user.id %} selected{% endif %}>{{ user.displayName }} (@{{ user.username }})</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>{% if linkedUser %}<span class="text-success">Linked</span>{% else %}<span class="text-muted">Not linked</span>{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <a class="btn-secondary" href="{{ path('cc_composite_admin_field_reports_index') }}">Back to reports</a>
+                        <button class="btn-primary" type="submit"><i class="ph ph-link"></i> Save player links</button>
+                    </div>
+                </form>
+            {% else %}
+                <p class="text-muted">Import a field report first. Its player names will appear here automatically.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

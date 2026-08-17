@@ -37,6 +37,10 @@ final class CompositeMenuBuilder implements AdminMenuBuilderInterface
                 'icon' => 'ph ph-file-text',
                 'permission' => 'cc_composite.admin.manage',
             ]),
+            new MenuItem('Report player links', $this->urlGenerator->generate('cc_composite_admin_field_report_players_index'), [
+                'icon' => 'ph ph-link',
+                'permission' => 'cc_composite.admin.manage',
+            ]),
         ]);
 
         $menu->addItem($composite);

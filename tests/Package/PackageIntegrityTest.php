@@ -11,6 +11,8 @@ use ArniePalau\CcComposite\EventListener\PerscomRecordLifecycleSubscriber;
 use ArniePalau\CcComposite\MenuBuilder\FieldReportsMenuType;
 use ArniePalau\CcComposite\Service\CompositeGenerator;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
+use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
+use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
@@ -31,6 +33,8 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(ImportLegacyLibraryCommand::class));
         self::assertTrue(class_exists(FieldReportsMenuType::class));
         self::assertTrue(class_exists(FieldReportImporter::class));
+        self::assertTrue(class_exists(FieldReportPlayerLink::class));
+        self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
         self::assertTrue(class_exists(PerscomUser::class));
     }
 

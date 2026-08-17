@@ -6,6 +6,7 @@
     <div class="box mb-6">
         <h2 class="box-title">Import a mission report</h2>
         <div class="box-content">
+            <div class="flex justify-end mb-4"><a class="btn-secondary" href="{{ path('cc_composite_admin_field_report_players_index') }}"><i class="ph ph-link"></i> Link report players</a></div>
             <p class="mb-4">Paste a public Arma Server Manager report URL. Importing the same report again refreshes its local snapshot.</p>
             <form action="{{ path('cc_composite_admin_field_reports_import') }}" method="post" class="flex items-end gap-4 flex-wrap">
                 <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-import') }}">
