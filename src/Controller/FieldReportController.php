@@ -9,6 +9,7 @@ use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Service\AtlasMapCache;
+use ArniePalau\CcComposite\Service\FieldReportMediaProxy;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,6 +50,21 @@ final class FieldReportController extends AbstractController
             'campaign' => $campaign,
             'reports' => $reportRepository->findForCampaign($campaign),
         ]);
+    }
+
+    #[Route('/{code}/media/{kind}/{assetClass}', name: 'media', requirements: ['code' => '[A-Za-z0-9_-]+', 'kind' => 'weapon|vehicle', 'assetClass' => '[A-Za-z0-9_.-]{1,120}'], methods: ['GET'])]
+    public function media(string $code, string $kind, string $assetClass, FieldReportRepository $repository, FieldReportMediaProxy $mediaProxy): Response
+    {
+        $report = $repository->findOneBy(['code' => $code]);
+        if (!$report instanceof FieldReport) {
+            throw $this->createNotFoundException('Field report not found.');
+        }
+
+        try {
+            return $mediaProxy->fetch($report, $kind, $assetClass);
+        } catch (Throwable) {
+            throw $this->createNotFoundException('Report media not found.');
+        }
     }
 
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]

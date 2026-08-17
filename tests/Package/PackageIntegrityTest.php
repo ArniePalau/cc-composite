@@ -157,6 +157,11 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('knownFallback', file_get_contents(dirname(__DIR__, 2) . '/src/Controller/FieldReportController.php'));
         self::assertStringContainsString('rankingValue', $template);
         self::assertStringContainsString('.cc-ranking__entry>strong', $template);
+        self::assertStringContainsString('cc-logistics', $template);
+        self::assertStringContainsString("entry.subject|default('')|lower in ['frago', 'fragord']", $template);
+        self::assertStringContainsString('cc_composite_field_reports_media', $template);
+        self::assertStringContainsString('data.vehicles', $template);
+        self::assertStringContainsString('FieldReportMediaProxy', file_get_contents(dirname(__DIR__, 2) . '/src/Controller/FieldReportController.php'));
         self::assertStringNotContainsString('text-decoration:underline', $template);
     }
 }
