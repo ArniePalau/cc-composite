@@ -118,7 +118,8 @@ final class PackageIntegrityTest extends TestCase
     {
         $template = file_get_contents(dirname(__DIR__, 2) . '/templates/frontend/field_report/show.html.twig');
 
-        self::assertStringContainsString('data-cc-interactive-map', $template);
+        self::assertStringContainsString('data-cc-tiled-map', $template);
+        self::assertStringContainsString('GameMapUtils.basicInit', $template);
         self::assertStringContainsString('data-map-time', $template);
         self::assertStringContainsString('player.shotsFired', $template);
         self::assertStringContainsString('cc-icon-skull', $template);

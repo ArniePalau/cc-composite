@@ -38,12 +38,20 @@ final class FieldReportRepository extends ServiceEntityRepository
 
     public function findOneWithMapForWorld(string $world): ?FieldReport
     {
-        return $this->createQueryBuilder('report')
+        $reports = $this->createQueryBuilder('report')
             ->andWhere('LOWER(report.world) = LOWER(:world)')
-            ->andWhere('report.mapPath IS NOT NULL')
+            ->andWhere('report.mapSizeMeters IS NOT NULL')
             ->setParameter('world', $world)
-            ->setMaxResults(1)
+            ->orderBy('report.importedAt', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
+
+        foreach ($reports as $report) {
+            if (is_array($report->getPayload()['_ccMap'] ?? null)) {
+                return $report;
+            }
+        }
+
+        return null;
     }
 }

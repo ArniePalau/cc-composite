@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace ArniePalau\CcComposite\Tests\Service;
 
 use ArniePalau\CcComposite\Service\AtlasMapCache;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -14,64 +12,28 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 final class AtlasMapCacheTest extends TestCase
 {
-    private string $directory;
-
-    protected function setUp(): void
+    public function testResolvesNativeTileMetadataWithoutDownloadingTiles(): void
     {
-        $this->directory = sys_get_temp_dir() . '/cc-atlas-' . bin2hex(random_bytes(6));
-        mkdir($this->directory, 0777, true);
-    }
-
-    protected function tearDown(): void
-    {
-        if (!is_dir($this->directory)) {
-            return;
-        }
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->directory, \FilesystemIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::CHILD_FIRST,
-        );
-        foreach ($files as $file) {
-            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
-        }
-        rmdir($this->directory);
-    }
-
-    public function testDownloadsTilesOnceAndReusesCachedMap(): void
-    {
-        $tile = imagecreatetruecolor(4, 4);
-        imagefill($tile, 0, 0, imagecolorallocate($tile, 20, 80, 140));
-        ob_start();
-        imagepng($tile);
-        $tilePng = ob_get_clean();
-        self::assertIsString($tilePng);
-
         $requestedUrls = [];
-        $client = new MockHttpClient(function (string $method, string $url) use (&$requestedUrls, $tilePng): MockResponse {
+        $client = new MockHttpClient(function (string $method, string $url) use (&$requestedUrls): MockResponse {
             $requestedUrls[] = $url;
             if (str_ends_with($url, '/maps/arma3/malden')) {
                 return new MockResponse('<a href="/maps/arma3/malden/68">Topographic</a>', ['response_headers' => ['content-type: text/html']]);
             }
-            if (str_ends_with($url, '/maps/arma3/malden/68')) {
-                $config = '{"maxZoom":5,"tileSize":4,"tilePattern":"/data/68/{z}/{x}/{y}.png","sizeInMeters":12800}';
-                return new MockResponse('<script>mapInit(' . $config . ');</script>', ['response_headers' => ['content-type: text/html']]);
-            }
+            $config = '{"minZoom":0,"maxZoom":5,"factorX":0.02475,"factorY":0.02475,"tileSize":317,"tilePattern":"/data/1/maps/68/68/{z}/{x}/{y}.png","sizeInMeters":12800,"originX":0,"originY":0}';
 
-            return new MockResponse($tilePng, ['response_headers' => ['content-type: image/png']]);
+            return new MockResponse('<script>mapInit(' . $config . ');</script>', ['response_headers' => ['content-type: text/html']]);
         });
-        $storage = new Filesystem(new LocalFilesystemAdapter($this->directory));
-        $cache = new AtlasMapCache($client, $storage, new AsciiSlugger());
+        $cache = new AtlasMapCache($client, new AsciiSlugger());
 
-        $first = $cache->cache('Malden');
-        $second = $cache->cache('Malden');
+        $result = $cache->cache('Malden');
 
-        self::assertSame('maps/malden-z4.png', $first->path);
-        self::assertSame(12800, $first->sizeMeters);
-        self::assertSame($first->path, $second->path);
-        self::assertTrue($storage->fileExists('maps/malden-z4.png'));
-        self::assertCount(256, array_filter($requestedUrls, static fn (string $url): bool => str_contains($url, '/data/68/')));
-        $dimensions = getimagesize($this->directory . '/maps/malden-z4.png');
-        self::assertIsArray($dimensions);
-        self::assertSame([64, 64], [$dimensions[0], $dimensions[1]]);
+        self::assertNull($result->path);
+        self::assertSame(12800, $result->sizeMeters);
+        self::assertSame(317, $result->config['tileSize']);
+        self::assertSame(5, $result->config['maxZoom']);
+        self::assertSame('https://atlas.plan-ops.fr/data/1/maps/68/68/{z}/{x}/{y}.png', $result->config['tilePattern']);
+        self::assertCount(2, $requestedUrls);
+        self::assertCount(0, array_filter($requestedUrls, static fn (string $url): bool => str_contains($url, '/data/')));
     }
 }

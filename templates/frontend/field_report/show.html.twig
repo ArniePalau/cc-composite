@@ -6,16 +6,17 @@
 {% block title_page %}{{ report.missionName|replace({'_':' '}) }}{% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="https://atlas.plan-ops.fr/lib/leaflet/leaflet.css">
 <style>
 .cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
 .cc-field a{color:inherit}.cc-field .cc-player-link{color:inherit;text-decoration:underline;text-decoration-color:rgba(229,172,0,.55);text-underline-offset:.18em}.cc-field .cc-player-link:hover{color:var(--cc-gold);text-decoration-color:var(--cc-gold)}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
 .cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 1rem;position:relative;z-index:1}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
 .cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
-.cc-map{position:relative;aspect-ratio:1/1;max-height:760px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px;cursor:grab;touch-action:none;user-select:none}.cc-map.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map a.cc-map__point{pointer-events:auto;cursor:pointer}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
+.cc-map{position:relative;width:min(100%,760px);height:min(760px,calc(100vw - 4rem));min-height:360px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map .leaflet-control-attribution{font-size:10px}.cc-map .leaflet-control-container a{color:#1d4ed8}.cc-map__data{display:none}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
-.cc-feed{display:grid;gap:.65rem}.cc-feed__row{display:grid;grid-template-columns:64px 38px 1fr auto;align-items:center;gap:.75rem;padding:.75rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold)}.cc-feed__icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(63,140,232,.13);color:var(--cc-blue);font-size:1.25rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__weapon{color:var(--c-text-secondary,#a0a8b0);font-size:.85rem}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;justify-content:space-between;gap:.5rem;padding:.3rem 0}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
-@media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:560px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 34px 1fr}.cc-feed__weapon{grid-column:3}.cc-field__meta{gap:.6rem}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}}
+.cc-feed{display:grid;gap:.65rem}.cc-feed__row{display:grid;grid-template-columns:64px minmax(120px,1fr) 42px minmax(140px,1.2fr);align-items:center;gap:.85rem;padding:.8rem 1rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold);font-weight:700}.cc-feed__attacker{color:#facc15;font-weight:700}.cc-feed__victim{color:#ff5733;font-weight:700}.cc-feed__icon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(63,140,232,.13);color:var(--cc-blue);font-size:1.35rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__result{min-width:0}.cc-feed__weapon{display:block;margin-top:.2rem;color:var(--c-text-secondary,#a0a8b0);font-size:.78rem;font-weight:400;white-space:normal}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;justify-content:space-between;gap:.5rem;padding:.3rem 0}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
+@media(max-width:900px){.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2{grid-template-columns:1fr}}@media(max-width:650px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 1fr 38px}.cc-feed__result{grid-column:2/-1}.cc-field__meta{gap:.6rem}.cc-map{min-height:300px}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}}
 </style>
 <article class="cc-field">
     <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
@@ -54,7 +55,7 @@
     </div>
 
     {% set tacticalMap %}
-    {% if report.mapPath and report.mapSizeMeters %}
+    {% if data._ccMap is defined and report.mapSizeMeters %}
         <section class="cc-section">
             <div class="cc-section__title">
                 <h2><i class="ph ph-map-trifold"></i> Mapa tàctic</h2>
@@ -65,29 +66,20 @@
                 </div>
             </div>
             <div class="cc-section__body">
-                <div class="cc-map" data-cc-interactive-map>
-                    <div class="cc-map__stage" data-map-stage>
-                      <img src="{{ asset(report.mapPath, 'cc_composite.asset') }}" alt="Mapa topogràfic de {{ report.worldDisplayName|default(report.world) }}">
-                      <div class="cc-map__overlay">
+                <div id="cc-field-map-{{ report.id }}" class="cc-map" data-cc-tiled-map data-map-config="{{ data._ccMap|json_encode|e('html_attr') }}" aria-label="Mapa topogràfic interactiu de {{ report.worldDisplayName|default(report.world) }}"></div>
+                <div class="cc-map__data" data-map-points>
                         {% for point in data.movementHeat|default([]) %}
-                            <i class="cc-map__point cc-map__movement" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%;width:{{ min(26, 7 + point.weight) }}px;height:{{ min(26, 7 + point.weight) }}px"></i>
+                            <i data-map-point data-kind="movement" data-x="{{ point.x }}" data-y="{{ point.y }}" data-weight="{{ point.weight|default(1) }}"></i>
                         {% endfor %}
                         {% for point in data.deathHeat|default([]) %}
-                            <i class="cc-map__point cc-map__death" style="left:{{ (point.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - point.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>
+                            <i data-map-point data-kind="death" data-x="{{ point.x }}" data-y="{{ point.y }}" data-weight="{{ point.weight|default(1) }}"></i>
                         {% endfor %}
                         {% for kill in data.killFeed|default([]) %}
-                            {% if kill.x is defined and kill.y is defined and not kill.suicide %}{% set mapProfileId = playerProfiles[kill.killer|default('')]|default(playerProfiles[kill.victim|default('')]|default(null)) %}{% if mapProfileId %}<a href="{{ path('perscom_user', {id: mapProfileId}) }}" class="cc-map__point cc-map__kill" data-event-time="{{ kill.missionTime|default(0) }}" title="{{ kill.killer|default('Desconegut') }} → {{ kill.victim|default('Desconegut') }} · Obre el perfil del roster" style="left:{{ (kill.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - kill.y / report.mapSizeMeters) * 100)|round(3) }}%"></a>{% else %}<i class="cc-map__point cc-map__kill" data-event-time="{{ kill.missionTime|default(0) }}" title="{{ kill.killer|default('Desconegut') }} → {{ kill.victim|default('Desconegut') }}" style="left:{{ (kill.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - kill.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}{% endif %}
+                            {% if kill.x is defined and kill.y is defined and not kill.suicide %}{% set mapProfileId = playerProfiles[kill.killer|default('')]|default(playerProfiles[kill.victim|default('')]|default(null)) %}<i data-map-point data-kind="kill" data-x="{{ kill.x }}" data-y="{{ kill.y }}" data-event-time="{{ kill.missionTime|default(0) }}" data-title="{{ (kill.killer|default('Desconegut') ~ ' → ' ~ kill.victim|default('Desconegut'))|e('html_attr') }}"{% if mapProfileId %} data-profile-url="{{ path('perscom_user', {id: mapProfileId}) }}"{% endif %}></i>{% endif %}
                         {% endfor %}
                         {% for marker in data.markers|default([]) %}
-                            {% if not marker.deleted|default(false) %}<i class="cc-map__point cc-map__marker"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} title="{{ marker.text|default(marker.name|default('Marcador')) }}" style="left:{{ (marker.x / report.mapSizeMeters * 100)|round(3) }}%;top:{{ ((1 - marker.y / report.mapSizeMeters) * 100)|round(3) }}%"></i>{% endif %}
+                            {% if not marker.deleted|default(false) %}<i data-map-point data-kind="marker" data-x="{{ marker.x }}" data-y="{{ marker.y }}"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} data-title="{{ marker.text|default(marker.name|default('Marcador'))|e('html_attr') }}"></i>{% endif %}
                         {% endfor %}
-                      </div>
-                    </div>
-                    <div class="cc-map__controls" aria-label="Controls del mapa">
-                        <button type="button" data-map-zoom="in" title="Apropa"><i class="ph ph-plus"></i></button>
-                        <button type="button" data-map-zoom="out" title="Allunya"><i class="ph ph-minus"></i></button>
-                        <button type="button" data-map-zoom="reset" title="Restableix"><i class="ph ph-arrows-in"></i></button>
-                    </div>
                 </div>
                 <div class="cc-map__timeline">
                     <label for="cc-map-time"><i class="ph ph-timer"></i> Temps de missió</label>
@@ -134,9 +126,9 @@
             {% for kill in data.killFeed|default([]) %}
                 <div class="cc-feed__row{% if kill.friendlyFire|default(false) %} cc-feed__row--friendly{% endif %}">
                     <span class="cc-feed__time">{{ '%02d:%02d'|format((kill.missionTime / 60)|round(0, 'floor'), kill.missionTime % 60) }}</span>
+                    <span class="cc-feed__attacker">{{ reportUi.player(kill.killer|default('IA / entorn'), playerProfiles, true) }}</span>
                     {% if kill.suicide|default(false) %}<span class="cc-feed__icon cc-feed__icon--suicide" title="Suïcidi"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-skull"/></svg></span>{% elseif kill.friendlyFire|default(false) %}<span class="cc-feed__icon" title="Foc amic"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg></span>{% else %}<span class="cc-feed__icon" title="Baixa per arma"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg></span>{% endif %}
-                    <span>{{ reportUi.player(kill.killer|default('IA / entorn'), playerProfiles, true) }} → {{ reportUi.player(kill.victim|default('Desconegut'), playerProfiles) }}{% if kill.suicide|default(false) %} <em>(suïcidi)</em>{% endif %}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</span>
-                    <span class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('')) }}</span>
+                    <span class="cc-feed__result">{% if kill.suicide|default(false) %}<span class="cc-feed__victim">Suïcidi</span>{% else %}<span class="cc-feed__victim">{{ reportUi.player(kill.victim|default('Desconegut'), playerProfiles, true) }}</span><small class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('Arma desconeguda')) }}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}{% if kill.friendlyFire|default(false) %} · Foc amic{% endif %}</small>{% endif %}</span>
                 </div>
             {% else %}<p class="cc-muted">No hi ha baixes registrades.</p>{% endfor %}
         </div>
@@ -162,75 +154,54 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="https://atlas.plan-ops.fr/lib/leaflet/leaflet.js"></script>
+<script src="https://atlas.plan-ops.fr/js/map-utils.js"></script>
 <script>
-document.querySelectorAll('[data-cc-interactive-map]').forEach(function (map) {
-    var stage = map.querySelector('[data-map-stage]');
-    var timeline = map.parentElement.querySelector('[data-map-time]');
-    var timelineLabel = map.parentElement.querySelector('[data-map-time-label]');
-    var scale = 1;
-    var x = 0;
-    var y = 0;
-    var dragging = false;
-    var startX = 0;
-    var startY = 0;
+document.querySelectorAll('[data-cc-tiled-map]').forEach(function (mapElement) {
+    if (!window.L || !window.GameMapUtils) return;
+    var config = JSON.parse(mapElement.dataset.mapConfig);
+    var map = GameMapUtils.basicInit(config, mapElement.id);
+    map.fitBounds([[0, 0], [config.sizeInMeters, config.sizeInMeters]], { padding: [12, 12] });
+    var pointData = mapElement.parentElement.querySelector('[data-map-points]');
+    var timedLayers = [];
 
-    function renderTransform() {
-        stage.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) scale(' + scale + ')';
+    pointData.querySelectorAll('[data-map-point]').forEach(function (point) {
+        var kind = point.dataset.kind;
+        var options = { weight: 1.5, fillOpacity: .72 };
+        if (kind === 'movement') options = { radius: Math.min(13, 4 + Number(point.dataset.weight || 1)), color: '#6faeff', fillColor: '#3f8ce8', weight: 1, fillOpacity: .38 };
+        if (kind === 'death') options = { radius: 7, color: '#ffd0d2', fillColor: '#e8434b', weight: 2, fillOpacity: .72 };
+        if (kind === 'kill') options = { radius: 5, color: '#ffffff', fillColor: '#e5ac00', weight: 1, fillOpacity: 1 };
+        if (kind === 'marker') options = { radius: 6, color: '#1e3a8a', fillColor: '#ffffff', weight: 2, fillOpacity: 1 };
+
+        var layer = L.circleMarker([Number(point.dataset.y), Number(point.dataset.x)], options);
+        if (point.dataset.title) layer.bindTooltip(point.dataset.title);
+        if (point.dataset.profileUrl) {
+            layer.on('click', function () { window.location.href = point.dataset.profileUrl; });
+        }
+        layer.addTo(map);
+        if (point.dataset.eventTime !== undefined) {
+            timedLayers.push({ time: Number(point.dataset.eventTime), layer: layer, visible: true });
+        }
+    });
+
+    var timeline = mapElement.parentElement.querySelector('[data-map-time]');
+    var timelineLabel = mapElement.parentElement.querySelector('[data-map-time-label]');
+    function formatTime(seconds) {
+        seconds = Math.max(0, Number(seconds) || 0);
+        return String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
     }
-
-    function zoom(nextScale) {
-        scale = Math.max(1, Math.min(5, nextScale));
-        if (scale === 1) { x = 0; y = 0; }
-        renderTransform();
-    }
-
-    map.querySelectorAll('[data-map-zoom]').forEach(function (button) {
-        button.addEventListener('click', function () {
-            var action = button.dataset.mapZoom;
-            if (action === 'reset') { scale = 1; x = 0; y = 0; renderTransform(); return; }
-            zoom(scale + (action === 'in' ? .5 : -.5));
+    function filterTimeline() {
+        var cutoff = Number(timeline.value);
+        timedLayers.forEach(function (item) {
+            var shouldShow = item.time <= cutoff;
+            if (shouldShow && !item.visible) { item.layer.addTo(map); item.visible = true; }
+            if (!shouldShow && item.visible) { item.layer.removeFrom(map); item.visible = false; }
         });
-    });
-
-    map.addEventListener('wheel', function (event) {
-        event.preventDefault();
-        zoom(scale + (event.deltaY < 0 ? .25 : -.25));
-    }, { passive: false });
-
-    map.addEventListener('pointerdown', function (event) {
-        if (event.target.closest('button') || scale <= 1) return;
-        dragging = true;
-        startX = event.clientX - x;
-        startY = event.clientY - y;
-        map.classList.add('is-dragging');
-        map.setPointerCapture(event.pointerId);
-    });
-    map.addEventListener('pointermove', function (event) {
-        if (!dragging) return;
-        x = event.clientX - startX;
-        y = event.clientY - startY;
-        renderTransform();
-    });
-    function stopDragging() { dragging = false; map.classList.remove('is-dragging'); }
-    map.addEventListener('pointerup', stopDragging);
-    map.addEventListener('pointercancel', stopDragging);
-
-    if (timeline) {
-        function formatTime(seconds) {
-            seconds = Math.max(0, Number(seconds) || 0);
-            return String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
-        }
-        function filterTimeline() {
-            var cutoff = Number(timeline.value);
-            map.querySelectorAll('[data-event-time]').forEach(function (point) {
-                point.hidden = Number(point.dataset.eventTime) > cutoff;
-            });
-            timelineLabel.value = formatTime(cutoff);
-            timelineLabel.textContent = formatTime(cutoff);
-        }
-        timeline.addEventListener('input', filterTimeline);
-        filterTimeline();
+        timelineLabel.value = formatTime(cutoff);
+        timelineLabel.textContent = formatTime(cutoff);
     }
+    timeline.addEventListener('input', filterTimeline);
+    filterTimeline();
 });
 </script>
 {% endblock %}

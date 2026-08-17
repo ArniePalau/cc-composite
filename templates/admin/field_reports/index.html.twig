@@ -40,7 +40,7 @@
                         <td><a class="btn-link" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">{{ report.missionName }}</a></td>
                         <td>{{ report.worldDisplayName|default(report.world) }}</td>
                         <td>{{ report.playerCount }}</td>
-                        <td>{% if report.mapPath %}<span class="text-success">Cached</span>{% else %}<span class="text-muted">Unavailable</span>{% endif %}</td>
+                        <td>{% if report.payload._ccMap is defined %}<span class="text-success">Live tiles</span>{% elseif report.mapPath %}<span class="text-muted">Legacy image</span>{% else %}<span class="text-muted">Unavailable</span>{% endif %}</td>
                         <td>
                             <div class="flex justify-end gap-2">
                                 <form action="{{ path('cc_composite_admin_field_reports_refresh', {id: report.id}) }}" method="post">

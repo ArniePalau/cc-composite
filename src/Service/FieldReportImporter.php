@@ -57,7 +57,7 @@ final class FieldReportImporter
 
         $report = $this->reportRepository->findOneBy(['code' => $parsed['code']]) ?? new FieldReport();
         $previousWorld = isset($report->getPayload()['world']) ? $report->getWorld() : null;
-        $previousMapPath = $report->getMapPath();
+        $previousMapConfig = $report->getPayload()['_ccMap'] ?? null;
         $previousMapSize = $report->getMapSizeMeters();
         $report->setCode($parsed['code']);
         $report->setSourceUrl($parsed['source_url']);
@@ -72,26 +72,25 @@ final class FieldReportImporter
         $report->setTotalKills((int) ($payload['totalKills'] ?? 0));
         $report->setTotalFriendlyKills((int) ($payload['totalFriendlyKills'] ?? 0));
         $report->setTotalShots((int) ($payload['totalShots'] ?? 0));
-        $report->setPayload($payload);
         $report->setImportedAt(new DateTimeImmutable());
 
         $report->setMapPath(null);
         $report->setMapSizeMeters(null);
         $sameCachedWorld = $previousWorld !== null
             && strcasecmp($previousWorld, $report->getWorld()) === 0
-            && $previousMapPath !== null
+            && is_array($previousMapConfig)
             && $previousMapSize !== null;
         $existingMap = $sameCachedWorld ? null : $this->reportRepository->findOneWithMapForWorld($report->getWorld());
         if ($sameCachedWorld) {
-            $report->setMapPath($previousMapPath);
+            $payload['_ccMap'] = $previousMapConfig;
             $report->setMapSizeMeters($previousMapSize);
         } elseif ($existingMap !== null) {
-            $report->setMapPath($existingMap->getMapPath());
+            $payload['_ccMap'] = $existingMap->getPayload()['_ccMap'];
             $report->setMapSizeMeters($existingMap->getMapSizeMeters());
         } else {
             try {
                 $map = $this->mapCache->cache($report->getWorld());
-                $report->setMapPath($map->path);
+                $payload['_ccMap'] = $map->config;
                 $report->setMapSizeMeters($map->sizeMeters);
             } catch (Throwable $exception) {
                 $this->logger->warning('A field report was imported without an Atlas map.', [
@@ -100,6 +99,7 @@ final class FieldReportImporter
                 ]);
             }
         }
+        $report->setPayload($payload);
 
         $this->entityManager->persist($report);
         $this->entityManager->flush();
