@@ -13,6 +13,7 @@ use ArniePalau\CcComposite\Service\CompositeGenerator;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
 use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
+use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
@@ -35,6 +36,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(FieldReportImporter::class));
         self::assertTrue(class_exists(FieldReportPlayerLink::class));
         self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
+        self::assertTrue(class_exists(AdminNewUser::class));
         self::assertTrue(class_exists(PerscomUser::class));
     }
 
@@ -84,7 +86,7 @@ final class PackageIntegrityTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $environment = new Environment(new ArrayLoader());
-        foreach (['asset', 'csrf_token', 'form', 'form_end', 'form_rest', 'form_row', 'form_start', 'is_granted', 'path', 'stimulus_controller'] as $function) {
+        foreach (['asset', 'csrf_token', 'form', 'form_end', 'form_errors', 'form_rest', 'form_row', 'form_start', 'is_granted', 'path', 'stimulus_controller'] as $function) {
             $environment->addFunction(new TwigFunction($function, static fn (): string => ''));
         }
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root . '/templates'));

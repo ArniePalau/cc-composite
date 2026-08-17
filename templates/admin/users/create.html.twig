@@ -1,0 +1,16 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}Create Forumify user{% endblock %}
+
+{% block body %}
+    <div class="box">
+        <h2 class="box-title">Create a Forumify user</h2>
+        <div class="box-content">
+            <p class="mb-4">This plugin form accepts usernames from 3 to 32 characters. Forumify's standard registration minimum remains unchanged.</p>
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

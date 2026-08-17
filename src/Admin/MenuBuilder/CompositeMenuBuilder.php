@@ -41,6 +41,10 @@ final class CompositeMenuBuilder implements AdminMenuBuilderInterface
                 'icon' => 'ph ph-link',
                 'permission' => 'cc_composite.admin.manage',
             ]),
+            new MenuItem('Create user', $this->urlGenerator->generate('cc_composite_admin_user_creator_create'), [
+                'icon' => 'ph ph-user-plus',
+                'permission' => 'forumify.admin.users.manage',
+            ]),
         ]);
 
         $menu->addItem($composite);
