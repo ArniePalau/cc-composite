@@ -112,6 +112,9 @@ final class PackageIntegrityTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $environment = new Environment(new ArrayLoader());
+        if (class_exists(\Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser::class)) {
+            $environment->addTokenParser(new \Symfony\Bridge\Twig\TokenParser\FormThemeTokenParser());
+        }
         foreach (['asset', 'csrf_token', 'form', 'form_end', 'form_errors', 'form_rest', 'form_row', 'form_start', 'is_granted', 'path', 'stimulus_controller'] as $function) {
             $environment->addFunction(new TwigFunction($function, static fn (): string => ''));
         }

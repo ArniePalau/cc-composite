@@ -1,11 +1,28 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block file_widget %}
+    {% if multiple is defined and multiple %}
+        <div class="file-upload p-4 rounded-lg" style="border: 2px dashed rgba(229, 172, 0, 0.35); background: rgba(11, 17, 28, 0.85);">
+            <div class="flex flex-col items-center justify-center text-center p-3">
+                <i class="ph ph-images text-4xl mb-2" style="color: #e5ac00;"></i>
+                <p class="font-semibold text-white mb-1">Seleccioneu o arrossegueu fins a 15 imatges</p>
+                <p class="text-xs text-secondary mb-3">Podeu seleccionar diversos fitxers alhora mantenint premuda la tecla <kbd style="padding: 0.1rem 0.35rem; background: #1c2232; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;">Ctrl</kbd> o <kbd style="padding: 0.1rem 0.35rem; background: #1c2232; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;">Majús</kbd></p>
+                <input type="file" id="{{ id }}" name="{{ full_name }}" multiple="multiple" accept="image/jpeg,image/png,image/webp,image/gif" class="input" style="max-width: 420px; width: 100%; padding: 0.45rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff;">
+            </div>
+        </div>
+    {% else %}
+        {% include '@Forumify/form/type/file_upload.html.twig' %}
+    {% endif %}
+{% endblock %}
+
 {% block title_page %}{{ galleryImage ? 'Editar fotografia' : 'Nova fotografia' }}{% endblock %}
 
 {% block body %}
 <div class="box max-w-3xl">
     <div class="flex justify-between items-center box-title">
-        <h2 class="mb-0">{{ galleryImage ? 'Editar fotografia de la galeria' : 'Afegir fotografia a la galeria' }}</h2>
+        <h2 class="mb-0">{{ galleryImage ? 'Editar fotografia de la galeria' : 'Afegir fotografies a la galeria' }}</h2>
         <a class="btn-secondary btn-small" href="{{ path('cc_composite_admin_gallery_images_index') }}">
             <i class="ph ph-arrow-left"></i> Tornar al llistat
         </a>
@@ -35,7 +52,7 @@
         <div class="mt-6 flex justify-end gap-3">
             <a class="btn-secondary" href="{{ path('cc_composite_admin_gallery_images_index') }}">Cancel·lar</a>
             <button class="btn-primary" type="submit">
-                <i class="ph ph-check"></i> {{ galleryImage ? 'Desar canvis' : 'Pujar fotografia' }}
+                <i class="ph ph-check"></i> {{ galleryImage ? 'Desar canvis' : 'Pujar fotografies' }}
             </button>
         </div>
 
