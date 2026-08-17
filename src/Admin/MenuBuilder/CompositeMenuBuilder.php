@@ -41,6 +41,10 @@ final class CompositeMenuBuilder implements AdminMenuBuilderInterface
                 'icon' => 'ph ph-flag-banner',
                 'permission' => 'cc_composite.admin.manage',
             ]),
+            new MenuItem('Gallery photos', $this->urlGenerator->generate('cc_composite_admin_gallery_images_index'), [
+                'icon' => 'ph ph-images',
+                'permission' => 'cc_composite.admin.manage',
+            ]),
             new MenuItem('Report player links', $this->urlGenerator->generate('cc_composite_admin_field_report_players_index'), [
                 'icon' => 'ph ph-link',
                 'permission' => 'cc_composite.admin.manage',

@@ -14,8 +14,9 @@ use ArniePalau\CcComposite\Service\FieldReportImporter;
 use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
-use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
 use ArniePalau\CcComposite\Entity\Campaign;
+use ArniePalau\CcComposite\Entity\GalleryImage;
+use ArniePalau\CcComposite\MenuBuilder\GalleryMenuType;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Forumify\PerscomPlugin\Perscom\Entity\PerscomUser;
@@ -35,12 +36,14 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(GenerateCompositeCommand::class));
         self::assertTrue(class_exists(ImportLegacyLibraryCommand::class));
         self::assertTrue(class_exists(FieldReportsMenuType::class));
+        self::assertTrue(class_exists(GalleryMenuType::class));
         self::assertTrue(class_exists(FieldReportImporter::class));
         self::assertTrue(class_exists(FieldReportPlayerLink::class));
         self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
         self::assertTrue(class_exists(FieldReportPlayerProfileResolver::class));
         self::assertTrue(class_exists(AdminNewUser::class));
         self::assertTrue(class_exists(Campaign::class));
+        self::assertTrue(class_exists(GalleryImage::class));
         self::assertTrue(class_exists(PerscomUser::class));
     }
 

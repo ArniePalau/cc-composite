@@ -1,0 +1,476 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+
+{% block title_page %}Galeria de Campanyes i Missions{% endblock %}
+
+{% block body %}
+<style>
+    .cc-gallery-hero {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, rgba(13, 20, 32, 0.95), rgba(7, 11, 18, 0.98));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .cc-gallery-hero__bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.25;
+        filter: blur(2px);
+        transform: scale(1.05);
+    }
+    .cc-gallery-hero__content {
+        position: relative;
+        z-index: 2;
+        padding: 2.5rem 2rem;
+    }
+    .cc-gallery-tabs {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+    .cc-gallery-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1.1rem;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #d1d5db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    .cc-gallery-tab:hover {
+        background: rgba(255, 255, 255, 0.09);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+    .cc-gallery-tab.active {
+        background: #ba1e1e;
+        color: #ffffff;
+        border-color: #ba1e1e;
+        box-shadow: 0 4px 14px rgba(186, 30, 30, 0.45);
+    }
+    .cc-mission-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        padding: 0.75rem 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .cc-mission-tab {
+        padding: 0.35rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #9ca3af;
+        text-decoration: none;
+        transition: all 0.15s ease;
+    }
+    .cc-mission-tab:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f3f4f6;
+    }
+    .cc-mission-tab.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+    }
+    .cc-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+    .cc-gallery-card {
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(13, 20, 32, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        display: flex;
+        flex-col;
+        cursor: pointer;
+    }
+    .cc-gallery-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+        border-color: rgba(186, 30, 30, 0.4);
+    }
+    .cc-gallery-card__media {
+        position: relative;
+        width: 100%;
+        height: 230px;
+        overflow: hidden;
+        background: #080c14;
+    }
+    .cc-gallery-card__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.45s ease;
+    }
+    .cc-gallery-card:hover .cc-gallery-card__img {
+        transform: scale(1.06);
+    }
+    .cc-gallery-card__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(7, 11, 18, 0.8) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .cc-gallery-card__body {
+        padding: 1rem 1.15rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+    .cc-gallery-card__title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #f3f4f6;
+        margin: 0;
+        line-height: 1.35;
+    }
+    .cc-gallery-card__meta {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cc-gallery-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: rgba(186, 30, 30, 0.18);
+        border: 1px solid rgba(186, 30, 30, 0.35);
+        color: #fca5a5;
+    }
+    .cc-gallery-badge:hover {
+        background: rgba(186, 30, 30, 0.35);
+        color: #ffffff;
+    }
+
+    /* Lightbox Modal */
+    .cc-lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background-color: rgba(4, 7, 12, 0.94);
+        backdrop-filter: blur(14px);
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+    .cc-lightbox.active {
+        display: flex;
+        opacity: 1;
+    }
+    .cc-lightbox__container {
+        position: relative;
+        max-width: 92vw;
+        max-height: 88vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .cc-lightbox__img {
+        max-width: 100%;
+        max-height: 78vh;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .cc-lightbox__info {
+        margin-top: 1rem;
+        text-align: center;
+        color: #f3f4f6;
+    }
+    .cc-lightbox__title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    .cc-lightbox__sub {
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+    .cc-lightbox__close {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .cc-lightbox__close:hover {
+        background: #ba1e1e;
+        border-color: #ba1e1e;
+        transform: rotate(90deg);
+    }
+    .cc-lightbox__arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+    .cc-lightbox__arrow:hover {
+        background: #ba1e1e;
+        border-color: #ba1e1e;
+    }
+    .cc-lightbox__arrow--prev { left: 25px; }
+    .cc-lightbox__arrow--next { right: 25px; }
+</style>
+
+<div class="container my-6">
+    <div class="cc-gallery-hero">
+        {% if selectedCampaign and selectedCampaign.imagePath %}
+            <img class="cc-gallery-hero__bg" src="{{ asset(selectedCampaign.imagePath, 'cc_composite.asset') }}" alt="">
+        {% endif %}
+        <div class="cc-gallery-hero__content">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2 text-white">
+                        {% if selectedReport %}
+                            📸 Galeria: {{ selectedReport.missionName }}
+                        {% elseif selectedCampaign %}
+                            📸 Galeria: {{ selectedCampaign.name }}
+                        {% else %}
+                            📸 Galeria de Campanyes i Missions
+                        {% endif %}
+                    </h1>
+                    <p class="text-secondary max-w-3xl mb-0">
+                        {% if selectedReport %}
+                            Fotografies i moments destacats de la missió del dia {{ selectedReport.startedAt|date('d/m/Y') }} a {{ selectedReport.worldDisplayName|default(selectedReport.world) }}.
+                        {% elseif selectedCampaign and selectedCampaign.description %}
+                            {{ selectedCampaign.description }}
+                        {% else %}
+                            Exploreu les fotografies, captures tàctiques i moments destacats de les nostres operacions militars.
+                        {% endif %}
+                    </p>
+                </div>
+                {% if selectedReport %}
+                    <a href="{{ path('cc_composite_field_reports_show', { code: selectedReport.code }) }}" class="btn-secondary">
+                        <i class="ph ph-file-text"></i> Veure informe de combat
+                    </a>
+                {% elseif selectedCampaign %}
+                    <a href="{{ path('cc_composite_field_reports_campaign', { slug: selectedCampaign.slug }) }}" class="btn-secondary">
+                        <i class="ph ph-flag-banner"></i> Veure missions de la campanya
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Campaign Pills Tabs #}
+    <div class="cc-gallery-tabs">
+        <a href="{{ path('cc_composite_galeria') }}" class="cc-gallery-tab {% if not selectedCampaign %}active{% endif %}">
+            <i class="ph ph-squares-four"></i> Totes les campanyes
+        </a>
+        {% for c in campaigns %}
+            <a href="{{ path('cc_composite_galeria', { campaign: c.slug }) }}" class="cc-gallery-tab {% if selectedCampaign and selectedCampaign.id == c.id %}active{% endif %}">
+                <i class="ph ph-flag"></i> {{ c.name }}
+            </a>
+        {% endfor %}
+    </div>
+
+    {# Mission Sub-filter if Campaign Selected #}
+    {% if selectedCampaign and campaignMissions is not empty %}
+        <div class="cc-mission-tabs">
+            <span class="text-xs font-semibold text-secondary flex items-center mr-2">
+                <i class="ph ph-funnel mr-1"></i> Filtrar per missió:
+            </span>
+            <a href="{{ path('cc_composite_galeria', { campaign: selectedCampaign.slug }) }}" class="cc-mission-tab {% if not selectedReport %}active{% endif %}">
+                Totes les missions
+            </a>
+            {% for m in campaignMissions %}
+                <a href="{{ path('cc_composite_galeria', { campaign: selectedCampaign.slug, mission: m.code }) }}" class="cc-mission-tab {% if selectedReport and selectedReport.id == m.id %}active{% endif %}">
+                    🎯 {{ m.missionName }} ({{ m.startedAt|date('d/m/Y') }})
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Images Grid #}
+    {% if images is empty %}
+        <div class="card p-8 text-center bg-[#0d1420] border border-line rounded-lg">
+            <i class="ph ph-camera-slash text-5xl text-secondary mb-3 inline-block"></i>
+            <h3 class="text-xl font-bold mb-2">No s'han trobat fotografies</h3>
+            <p class="text-secondary mb-0">Encara no s'ha publicat cap fotografia per a aquesta selecció.</p>
+        </div>
+    {% else %}
+        <div class="cc-gallery-grid" id="galleryGrid">
+            {% for idx, img in images %}
+                <div class="cc-gallery-card" onclick="openGalleryModal({{ idx }})">
+                    <div class="cc-gallery-card__media">
+                        <img class="cc-gallery-card__img" src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Fotografia') }}" loading="lazy">
+                        <div class="cc-gallery-card__overlay"></div>
+                    </div>
+                    <div class="cc-gallery-card__body">
+                        <h4 class="cc-gallery-card__title">{{ img.title|default('Fotografia sense títol') }}</h4>
+                        <div class="cc-gallery-card__meta">
+                            {% if img.fieldReport %}
+                                <span class="cc-gallery-badge">
+                                    <i class="ph ph-crosshair"></i> {{ img.fieldReport.missionName }}
+                                </span>
+                            {% elseif img.effectiveCampaign %}
+                                <span class="text-xs text-secondary">
+                                    <i class="ph ph-flag"></i> {{ img.effectiveCampaign.name }}
+                                </span>
+                            {% else %}
+                                <span></span>
+                            {% endif %}
+                            <span class="text-xs text-secondary">{{ img.createdAt|date('d/m/Y') }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Lightbox Modal -->
+<div id="ccLightbox" class="cc-lightbox" onclick="handleLightboxBackdropClick(event)">
+    <button class="cc-lightbox__close" onclick="closeGalleryModal()" aria-label="Tancar">
+        <i class="ph ph-x"></i>
+    </button>
+    <button class="cc-lightbox__arrow cc-lightbox__arrow--prev" onclick="prevGalleryImage(event)" aria-label="Anterior">
+        <i class="ph ph-caret-left"></i>
+    </button>
+    <button class="cc-lightbox__arrow cc-lightbox__arrow--next" onclick="nextGalleryImage(event)" aria-label="Següent">
+        <i class="ph ph-caret-right"></i>
+    </button>
+
+    <div class="cc-lightbox__container" onclick="event.stopPropagation()">
+        <img id="lightboxImage" class="cc-lightbox__img" src="" alt="">
+        <div class="cc-lightbox__info">
+            <div id="lightboxTitle" class="cc-lightbox__title"></div>
+            <div id="lightboxSub" class="cc-lightbox__sub"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const galleryItems = [
+        {% for img in images %}
+            {
+                src: "{{ asset(img.imagePath, 'cc_composite.asset') }}",
+                title: "{{ (img.title|default('Fotografia'))|escape('js') }}",
+                date: "{{ img.createdAt|date('d/m/Y') }}",
+                mission: "{{ img.fieldReport ? img.fieldReport.missionName|escape('js') : '' }}",
+                missionUrl: "{{ img.fieldReport ? path('cc_composite_field_reports_show', { code: img.fieldReport.code }) : '' }}",
+                campaign: "{{ img.effectiveCampaign ? img.effectiveCampaign.name|escape('js') : '' }}"
+            }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    let currentImageIndex = 0;
+
+    function openGalleryModal(index) {
+        if (index < 0 || index >= galleryItems.length) return;
+        currentImageIndex = index;
+        updateModalContent();
+        const modal = document.getElementById('ccLightbox');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeGalleryModal() {
+        const modal = document.getElementById('ccLightbox');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function prevGalleryImage(e) {
+        if (e) e.stopPropagation();
+        if (galleryItems.length === 0) return;
+        currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+        updateModalContent();
+    }
+
+    function nextGalleryImage(e) {
+        if (e) e.stopPropagation();
+        if (galleryItems.length === 0) return;
+        currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+        updateModalContent();
+    }
+
+    function updateModalContent() {
+        const item = galleryItems[currentImageIndex];
+        if (!item) return;
+
+        document.getElementById('lightboxImage').src = item.src;
+        document.getElementById('lightboxTitle').innerText = item.title;
+
+        let subText = item.date;
+        if (item.mission) {
+            subText += ' • 🎯 ' + item.mission;
+        } else if (item.campaign) {
+            subText += ' • 🚩 ' + item.campaign;
+        }
+        document.getElementById('lightboxSub').innerText = subText;
+    }
+
+    function handleLightboxBackdropClick(e) {
+        if (e.target.id === 'ccLightbox') {
+            closeGalleryModal();
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('ccLightbox');
+        if (!modal || !modal.classList.contains('active')) return;
+
+        if (e.key === 'Escape') {
+            closeGalleryModal();
+        } else if (e.key === 'ArrowLeft') {
+            prevGalleryImage();
+        } else if (e.key === 'ArrowRight') {
+            nextGalleryImage();
+        }
+    });
+</script>
+{% endblock %}

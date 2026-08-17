@@ -1,0 +1,98 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}Galeria Fotogràfica{% endblock %}
+
+{% block body %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold">Galeria Fotogràfica de Campanyes i Missions</h1>
+        <p class="text-secondary text-sm">Pugeu i gestioneu les fotografies preses durant les operacions i campanyes militars.</p>
+    </div>
+    <div class="flex gap-2">
+        <a class="btn-primary" href="{{ path('cc_composite_admin_gallery_images_new') }}">
+            <i class="ph ph-plus"></i> Afegir fotografia
+        </a>
+    </div>
+</div>
+
+<div class="box mb-6">
+    <div class="box-content flex flex-wrap items-center gap-4">
+        <span class="text-sm font-semibold">Filtrar per campanya:</span>
+        <a href="{{ path('cc_composite_admin_gallery_images_index') }}" class="btn-small {% if not selectedCampaignId and not selectedReportId %}btn-primary{% else %}btn-secondary{% endif %}">
+            Totes ({{ images|length }})
+        </a>
+        {% for c in campaigns %}
+            <a href="{{ path('cc_composite_admin_gallery_images_index', { campaign: c.id }) }}" class="btn-small {% if selectedCampaignId == c.id %}btn-primary{% else %}btn-secondary{% endif %}">
+                {{ c.name }} ({{ c.images|length }})
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="box">
+    <h2 class="box-title">Fotografies publicades</h2>
+    <div class="box-content overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th style="width: 120px;">Miniatura</th>
+                    <th>Títol / Peu de foto</th>
+                    <th>Campanya</th>
+                    <th>Missió vinculada</th>
+                    <th>Ordre</th>
+                    <th class="text-right">Accions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for img in images %}
+                <tr>
+                    <td>
+                        <img src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                    </td>
+                    <td>
+                        <strong>{{ img.title|default('—') }}</strong>
+                        <div class="text-xs text-secondary">{{ img.createdAt|date('d/m/Y H:i') }}</div>
+                    </td>
+                    <td>
+                        {% if img.effectiveCampaign %}
+                            <span class="badge badge-secondary">{{ img.effectiveCampaign.name }}</span>
+                        {% else %}
+                            <span class="text-secondary">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if img.fieldReport %}
+                            <span class="text-sm">🎯 {{ img.fieldReport.missionName }}</span>
+                            <div class="text-xs text-secondary">{{ img.fieldReport.startedAt|date('d/m/Y') }}</div>
+                        {% else %}
+                            <span class="text-secondary">—</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ img.position }}</td>
+                    <td>
+                        <div class="flex justify-end gap-2">
+                            <a class="btn-secondary btn-small" href="{{ path('cc_composite_admin_gallery_images_edit', { id: img.id }) }}">
+                                <i class="ph ph-pencil"></i> Editar
+                            </a>
+                            <form action="{{ path('cc_composite_admin_gallery_images_delete', { id: img.id }) }}" method="post" onsubmit="return confirm('Esteu segur que voleu eliminar aquesta fotografia de la galeria?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-gallery-delete-' ~ img.id) }}">
+                                <button class="btn-danger btn-small" type="submit" aria-label="Eliminar">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center p-8 text-secondary">
+                        <i class="ph ph-image text-4xl mb-2 inline-block"></i>
+                        <p class="mb-0">Encara no hi ha cap fotografia a la galeria. Feu clic a <strong>"Afegir fotografia"</strong> per començar.</p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

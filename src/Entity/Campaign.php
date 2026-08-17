@@ -38,10 +38,16 @@ class Campaign
     #[ORM\OrderBy(['startedAt' => 'DESC'])]
     private Collection $reports;
 
+    /** @var Collection<int, GalleryImage> */
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: GalleryImage::class, cascade: ['remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+    private Collection $images;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
         $this->reports = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getName(): string { return $this->name; }
@@ -55,4 +61,19 @@ class Campaign
     public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
     /** @return Collection<int, FieldReport> */
     public function getReports(): Collection { return $this->reports; }
+    /** @return Collection<int, GalleryImage> */
+    public function getImages(): Collection { return $this->images; }
+    public function addImage(GalleryImage $image): void
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setCampaign($this);
+        }
+    }
+    public function removeImage(GalleryImage $image): void
+    {
+        if ($this->images->removeElement($image) && $image->getCampaign() === $this) {
+            $image->setCampaign(null);
+        }
+    }
 }

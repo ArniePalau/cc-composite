@@ -1,0 +1,42 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}{{ galleryImage ? 'Editar fotografia' : 'Nova fotografia' }}{% endblock %}
+
+{% block body %}
+<div class="box max-w-3xl">
+    <div class="flex justify-between items-center box-title">
+        <h2 class="mb-0">{{ galleryImage ? 'Editar fotografia de la galeria' : 'Afegir fotografia a la galeria' }}</h2>
+        <a class="btn-secondary btn-small" href="{{ path('cc_composite_admin_gallery_images_index') }}">
+            <i class="ph ph-arrow-left"></i> Tornar al llistat
+        </a>
+    </div>
+    <div class="box-content">
+        {{ form_start(form) }}
+        
+        {% if galleryImage and galleryImage.imagePath %}
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-2">Imatge actual</label>
+                <div class="p-2 border border-line rounded inline-block bg-[#0b111c]">
+                    <img src="{{ asset(galleryImage.imagePath, 'cc_composite.asset') }}" alt="" style="max-width: 320px; max-height: 180px; object-fit: contain; border-radius: 4px;">
+                </div>
+            </div>
+        {% endif %}
+
+        {{ form_row(form.campaign) }}
+        {{ form_row(form.fieldReport) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.position) }}
+
+        <div class="mt-6 flex justify-end gap-3">
+            <a class="btn-secondary" href="{{ path('cc_composite_admin_gallery_images_index') }}">Cancel·lar</a>
+            <button class="btn-primary" type="submit">
+                <i class="ph ph-check"></i> {{ galleryImage ? 'Desar canvis' : 'Pujar fotografia' }}
+            </button>
+        </div>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

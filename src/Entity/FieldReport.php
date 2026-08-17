@@ -6,6 +6,8 @@ namespace ArniePalau\CcComposite\Entity;
 
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
@@ -73,6 +75,16 @@ class FieldReport
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Campaign $campaign = null;
 
+    /** @var Collection<int, GalleryImage> */
+    #[ORM\OneToMany(mappedBy: 'fieldReport', targetEntity: GalleryImage::class)]
+    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+    private Collection $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
+
     public function getCode(): string { return $this->code; }
     public function setCode(string $code): void { $this->code = $code; }
     public function getSourceUrl(): string { return $this->sourceUrl; }
@@ -111,6 +123,21 @@ class FieldReport
     public function setImportedAt(DateTimeImmutable $importedAt): void { $this->importedAt = $importedAt; }
     public function getCampaign(): ?Campaign { return $this->campaign; }
     public function setCampaign(?Campaign $campaign): void { $this->campaign = $campaign; }
+    /** @return Collection<int, GalleryImage> */
+    public function getImages(): Collection { return $this->images; }
+    public function addImage(GalleryImage $image): void
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setFieldReport($this);
+        }
+    }
+    public function removeImage(GalleryImage $image): void
+    {
+        if ($this->images->removeElement($image) && $image->getFieldReport() === $this) {
+            $image->setFieldReport(null);
+        }
+    }
 
     public function getDurationLabel(): string
     {

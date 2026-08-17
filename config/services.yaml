@@ -24,3 +24,8 @@ services:
     ArniePalau\CcComposite\Admin\Controller\CampaignController:
         arguments:
             $campaignStorage: '@cc_composite_layer.storage'
+
+    ArniePalau\CcComposite\Service\ImageOptimizationService:
+        arguments:
+            $galleryStorage: '@cc_composite_layer.storage'
+
