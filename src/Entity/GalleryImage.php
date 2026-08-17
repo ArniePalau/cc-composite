@@ -16,7 +16,10 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 #[ORM\Index(name: 'idx_cc_gallery_field_report', columns: ['field_report_id'])]
 class GalleryImage
 {
-    use IdentifiableEntityTrait;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'images')]
     #[ORM\JoinColumn(name: 'campaign_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
@@ -30,7 +33,7 @@ class GalleryImage
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    private string $imagePath;
+    private string $imagePath = '';
 
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $position = 0;
@@ -41,6 +44,11 @@ class GalleryImage
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getCampaign(): ?Campaign

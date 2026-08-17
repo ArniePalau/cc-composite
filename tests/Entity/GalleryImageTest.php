@@ -42,4 +42,15 @@ final class GalleryImageTest extends TestCase
         $campaign->removeImage($image);
         self::assertCount(0, $campaign->getImages());
     }
+
+    public function testUnpersistedEntityHasNullIdAndSafeDefaults(): void
+    {
+        $image = new GalleryImage();
+        self::assertNull($image->getId());
+        self::assertSame('', $image->getImagePath());
+        self::assertSame(0, $image->getPosition());
+        self::assertNull($image->getTitle());
+        self::assertNull($image->getCampaign());
+        self::assertNull($image->getFieldReport());
+    }
 }
