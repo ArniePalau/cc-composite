@@ -145,6 +145,8 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('cc-icon-skull', $template);
         self::assertStringContainsString('rankingIcons', $template);
         self::assertStringContainsString('cc-feed__arrow', $template);
+        self::assertStringContainsString('data-feed-players-only', $template);
+        self::assertStringContainsString("|reverse", $template);
         self::assertStringContainsString('cc-person--civilian', $template);
         self::assertStringContainsString('cc-player-avatar', $template);
         self::assertStringContainsString("@Forumify/components/avatar.html.twig", $template);
