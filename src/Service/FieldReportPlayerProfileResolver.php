@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace ArniePalau\CcComposite\Service;
 
 use ArniePalau\CcComposite\Repository\FieldReportPlayerLinkRepository;
+use Forumify\Core\Repository\SettingRepository;
 use Forumify\PerscomPlugin\Perscom\Repository\PerscomUserRepository;
+use Symfony\Component\Asset\Packages;
 
 final class FieldReportPlayerProfileResolver
 {
@@ -13,10 +15,12 @@ final class FieldReportPlayerProfileResolver
         private readonly FieldReportPlayerLinkRepository $linkRepository,
         private readonly PerscomUserRepository $perscomUserRepository,
         private readonly FieldReportPlayerIdentity $identity,
+        private readonly Packages $packages,
+        private readonly SettingRepository $settingRepository,
     ) {
     }
 
-    /** @param array<string, mixed> $payload @return array<string, int> */
+    /** @param array<string, mixed> $payload @return array<string, array{id: int, avatar: string|null}> */
     public function resolve(array $payload): array
     {
         $links = $this->linkRepository->findIndexedByPlayerKey();
@@ -34,7 +38,11 @@ final class FieldReportPlayerProfileResolver
                 $profilesByForumifyUser[$forumifyUserId] = $this->perscomUserRepository->findOneBy(['user' => $forumifyUser])?->getId();
             }
             if (is_int($profilesByForumifyUser[$forumifyUserId])) {
-                $resolved[$name] = $profilesByForumifyUser[$forumifyUserId];
+                $avatar = $forumifyUser->getAvatar() ?? $this->settingRepository->get('forumify.default_avatar');
+                $resolved[$name] = [
+                    'id' => $profilesByForumifyUser[$forumifyUserId],
+                    'avatar' => $avatar ? $this->packages->getUrl($avatar, 'forumify.avatar') : null,
+                ];
             }
         }
 
