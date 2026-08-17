@@ -8,6 +8,9 @@ use ArniePalau\CcComposite\Entity\FieldReport;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
+use ArniePalau\CcComposite\Service\AtlasMapCache;
+use Doctrine\ORM\EntityManagerInterface;
+use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,7 +52,7 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
-    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver): Response
+    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, EntityManagerInterface $entityManager): Response
     {
         $report = $repository->findOneBy(['code' => $code]);
         if (!$report instanceof FieldReport) {
@@ -57,6 +60,22 @@ final class FieldReportController extends AbstractController
         }
 
         $payload = $report->getPayload();
+        if (!is_array($payload['_ccMap'] ?? null) && $report->getMapPath() === null) {
+            $map = $mapCache->knownFallback($report->getWorld());
+            if ($map === null) {
+                try {
+                    $map = $mapCache->cache($report->getWorld());
+                } catch (Throwable) {
+                    $map = null;
+                }
+            }
+            if ($map !== null) {
+                $payload['_ccMap'] = $map->config;
+                $report->setPayload($payload);
+                $report->setMapSizeMeters($map->sizeMeters);
+                $entityManager->flush();
+            }
+        }
 
         return $this->render('@CcCompositePlugin/frontend/field_report/show.html.twig', [
             'report' => $report,

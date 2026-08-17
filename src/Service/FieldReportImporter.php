@@ -97,6 +97,10 @@ final class FieldReportImporter
                     'world' => $report->getWorld(),
                     'exception' => $exception,
                 ]);
+                if (($fallback = $this->mapCache->knownFallback($report->getWorld())) !== null) {
+                    $payload['_ccMap'] = $fallback->config;
+                    $report->setMapSizeMeters($fallback->sizeMeters);
+                }
             }
         }
         $report->setPayload($payload);

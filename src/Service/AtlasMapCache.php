@@ -77,6 +77,32 @@ final class AtlasMapCache
         return new MapCacheResult(null, $sizeMeters, $config);
     }
 
+    public function knownFallback(string $world): ?MapCacheResult
+    {
+        $key = strtolower(trim(str_replace(['_', '-'], ' ', $world)));
+        $key = preg_replace('/\s+/', ' ', $key) ?? $key;
+        if (in_array($key, ['malden', 'malden 2035'], true)) {
+            return new MapCacheResult(null, 12800, [
+                'minZoom' => 0, 'maxZoom' => 5, 'factorX' => 0.02475, 'factorY' => 0.02475,
+                'tileSize' => 317, 'tilePattern' => self::ATLAS_BASE . '/data/1/maps/68/68/{z}/{x}/{y}.png',
+                'attribution' => '© Bohemia Interactive', 'originX' => 0, 'originY' => 0,
+                'sizeInMeters' => 12800, 'defaultPosition' => [6400, 6400], 'defaultZoom' => 2,
+                'isSvg' => false, 'isAerial' => false,
+            ]);
+        }
+        if (in_array($key, ['iron excelsior tobruk', 'ww2 tobruk libya', 'tobruk'], true)) {
+            return new MapCacheResult(null, 10240, [
+                'minZoom' => 0, 'maxZoom' => 5, 'factorX' => 0.0315, 'factorY' => 0.0315,
+                'tileSize' => 323, 'tilePattern' => self::ATLAS_BASE . '/data/1/maps/183/187/{z}/{x}/{y}.png',
+                'attribution' => '© Bohemia Interactive, ww2ina3', 'originX' => 0, 'originY' => 0,
+                'sizeInMeters' => 10240, 'defaultPosition' => [5120, 5120], 'defaultZoom' => 2,
+                'isSvg' => false, 'isAerial' => false,
+            ]);
+        }
+
+        return null;
+    }
+
     private function requestText(string $url): string
     {
         $response = $this->httpClient->request('GET', $url, [

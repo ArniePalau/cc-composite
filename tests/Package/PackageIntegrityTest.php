@@ -154,6 +154,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('resolvedMapSize', $template);
         self::assertStringContainsString('data-cc-interactive-map', $template);
         self::assertStringContainsString('report.mapPath', $template);
+        self::assertStringContainsString('knownFallback', file_get_contents(dirname(__DIR__, 2) . '/src/Controller/FieldReportController.php'));
         self::assertStringContainsString('rankingValue', $template);
         self::assertStringContainsString('.cc-ranking__entry>strong', $template);
         self::assertStringNotContainsString('text-decoration:underline', $template);

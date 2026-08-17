@@ -36,4 +36,20 @@ final class AtlasMapCacheTest extends TestCase
         self::assertCount(2, $requestedUrls);
         self::assertCount(0, array_filter($requestedUrls, static fn (string $url): bool => str_contains($url, '/data/')));
     }
+
+    public function testProvidesOfflineFallbacksForCurrentCommunityMaps(): void
+    {
+        $cache = new AtlasMapCache(new MockHttpClient(), new AsciiSlugger());
+
+        $malden = $cache->knownFallback('Malden 2035');
+        self::assertNotNull($malden);
+        self::assertSame(12800, $malden->sizeMeters);
+        self::assertStringContainsString('/maps/68/68/', $malden->config['tilePattern']);
+
+        $tobruk = $cache->knownFallback('iron_excelsior_Tobruk');
+        self::assertNotNull($tobruk);
+        self::assertSame(10240, $tobruk->sizeMeters);
+        self::assertStringContainsString('/maps/183/187/', $tobruk->config['tilePattern']);
+        self::assertNull($cache->knownFallback('unknown_world'));
+    }
 }
