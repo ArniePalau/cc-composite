@@ -224,29 +224,36 @@
                 </div>
             </section>
         </div>
+    </div>
+
     {% if report.images is not empty %}
-        <section class="cc-section cc-mission-gallery" style="margin-top: 2rem;">
-            <div class="flex justify-between items-center mb-4">
+        <section class="cc-section cc-mission-gallery" style="margin-top: 2rem; width: 100%;">
+            <div class="flex justify-between items-center mb-4 pb-2" style="border-bottom: 1px solid rgba(229, 172, 0, 0.2);">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2" style="font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif; letter-spacing: 0.03em; text-transform: uppercase;">
-                        <i class="ph ph-images"></i> Fotografies de la Missió ({{ report.images|length }})
+                        <i class="ph ph-images" style="color: #e5ac00;"></i> Fotografies de la Missió ({{ report.images|length }})
                     </h2>
                     <p class="text-secondary text-sm mb-0">Imatges i captures preses durant aquesta operació.</p>
                 </div>
                 <a href="{{ path('cc_composite_galeria', { mission: report.code }) }}" class="btn-secondary btn-small">
-                    <i class="ph ph-images"></i> Veure a la Galeria
+                    <i class="ph ph-arrow-square-out"></i> Veure a la Galeria
                 </a>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; width: 100%;">
                 {% for img in report.images %}
-                    <div style="border-radius: 8px; overflow: hidden; background: rgba(13, 20, 32, 0.8); border: 1px solid rgba(255, 255, 255, 0.08); transition: transform 0.2s ease;">
-                        <a href="{{ path('cc_composite_galeria', { mission: report.code }) }}" style="display: block; text-decoration: none;">
-                            <img src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Foto de missió') }}" style="width: 100%; height: 180px; object-fit: cover; display: block;" loading="lazy">
-                            {% if img.title %}
-                                <div style="padding: 0.75rem 1rem; font-size: 0.9rem; color: #f3f4f6; font-weight: 500;">
-                                    {{ img.title }}
-                                </div>
-                            {% endif %}
+                    <div style="display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; background: rgba(13, 20, 32, 0.85); border: 1px solid rgba(229, 172, 0, 0.2); box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+                        <a href="{{ path('cc_composite_galeria', { mission: report.code }) }}" style="display: block; text-decoration: none; width: 100%;">
+                            <div style="width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #080c14;">
+                                <img src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Foto de missió') }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+                            </div>
+                            <div style="padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.95); border-top: 1px solid rgba(255,255,255,0.06);">
+                                <strong style="font-size: 0.92rem; color: #f3f4f6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ img.title|default('Fotografia') }}
+                                </strong>
+                                <span style="font-size: 0.78rem; color: #9ca3af; white-space: nowrap;">
+                                    {{ img.createdAt|date('d/m/Y') }}
+                                </span>
+                            </div>
                         </a>
                     </div>
                 {% endfor %}

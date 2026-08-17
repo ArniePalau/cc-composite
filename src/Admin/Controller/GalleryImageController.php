@@ -73,15 +73,46 @@ final class GalleryImageController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('image')->getData();
-            if ($file instanceof UploadedFile) {
-                $campaignSlug = $galleryImage->getEffectiveCampaign()?->getSlug() ?? 'gallery';
-                $path = $optimizationService->optimizeAndSave($file, $campaignSlug);
-                $galleryImage->setImagePath($path);
+            $files = $form->has('images') ? $form->get('images')->getData() : [];
+            if (!is_array($files)) {
+                $files = $files ? [$files] : [];
+            }
 
-                $entityManager->persist($galleryImage);
+            if (!empty($files)) {
+                $campaign = $galleryImage->getCampaign();
+                $fieldReport = $galleryImage->getFieldReport();
+                $baseTitle = $galleryImage->getTitle();
+                $basePosition = $galleryImage->getPosition();
+                $campaignSlug = $galleryImage->getEffectiveCampaign()?->getSlug() ?? 'gallery';
+
+                $count = 0;
+                foreach ($files as $index => $file) {
+                    if (!$file instanceof UploadedFile) {
+                        continue;
+                    }
+
+                    $path = $optimizationService->optimizeAndSave($file, $campaignSlug);
+
+                    $img = new GalleryImage();
+                    $img->setCampaign($campaign);
+                    $img->setFieldReport($fieldReport);
+                    $img->setImagePath($path);
+                    $img->setPosition($basePosition + $index);
+
+                    if ($baseTitle !== null && $baseTitle !== '') {
+                        $img->setTitle(count($files) > 1 ? sprintf('%s (%d)', $baseTitle, $index + 1) : $baseTitle);
+                    } else {
+                        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $cleanTitle = ucwords(str_replace(['_', '-'], ' ', $originalName));
+                        $img->setTitle($cleanTitle);
+                    }
+
+                    $entityManager->persist($img);
+                    $count++;
+                }
+
                 $entityManager->flush();
-                $this->addFlash('success', 'Fotografia afegida a la galeria amb èxit.');
+                $this->addFlash('success', sprintf("S'han afegit %d fotografies a la galeria amb èxit.", $count));
 
                 return $this->redirectToRoute('cc_composite_admin_gallery_images_index');
             }
@@ -106,15 +137,17 @@ final class GalleryImageController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('image')->getData();
-            if ($file instanceof UploadedFile) {
-                $oldPath = $galleryImage->getImagePath();
-                $campaignSlug = $galleryImage->getEffectiveCampaign()?->getSlug() ?? 'gallery';
-                $newPath = $optimizationService->optimizeAndSave($file, $campaignSlug);
-                $galleryImage->setImagePath($newPath);
+            if ($form->has('image')) {
+                $file = $form->get('image')->getData();
+                if ($file instanceof UploadedFile) {
+                    $oldPath = $galleryImage->getImagePath();
+                    $campaignSlug = $galleryImage->getEffectiveCampaign()?->getSlug() ?? 'gallery';
+                    $newPath = $optimizationService->optimizeAndSave($file, $campaignSlug);
+                    $galleryImage->setImagePath($newPath);
 
-                if ($oldPath && $oldPath !== $newPath) {
-                    $optimizationService->delete($oldPath);
+                    if ($oldPath && $oldPath !== $newPath) {
+                        $optimizationService->delete($oldPath);
+                    }
                 }
             }
 

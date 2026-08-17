@@ -93,27 +93,29 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 1.5rem;
+        width: 100%;
     }
     .cc-gallery-card {
-        border-radius: 10px;
-        overflow: hidden;
-        background: rgba(13, 20, 32, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         display: flex;
-        flex-col;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(13, 20, 32, 0.88);
+        border: 1px solid rgba(229, 172, 0, 0.18);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
         cursor: pointer;
+        width: 100%;
     }
     .cc-gallery-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
-        border-color: rgba(186, 30, 30, 0.4);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+        border-color: rgba(229, 172, 0, 0.55);
     }
     .cc-gallery-card__media {
         position: relative;
         width: 100%;
-        height: 230px;
+        aspect-ratio: 16 / 9;
         overflow: hidden;
         background: #080c14;
     }
@@ -121,6 +123,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
         transition: transform 0.45s ease;
     }
     .cc-gallery-card:hover .cc-gallery-card__img {
@@ -129,14 +132,66 @@
     .cc-gallery-card__overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(7, 11, 18, 0.8) 0%, transparent 50%);
+        background: linear-gradient(to top, rgba(5, 8, 15, 0.9) 0%, rgba(5, 8, 15, 0.2) 40%, transparent 70%);
         pointer-events: none;
     }
-    .cc-gallery-card__body {
-        padding: 1rem 1.15rem;
+    .cc-gallery-card__media-bottom {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        right: 12px;
         display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 2;
+        pointer-events: none;
+    }
+    .cc-gallery-card__media-left,
+    .cc-gallery-card__media-right {
+        display: flex;
+        align-items: center;
+    }
+    .cc-gallery-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .cc-gallery-pill--mission {
+        background: rgba(186, 30, 30, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cc-gallery-pill--campaign {
+        background: rgba(229, 172, 0, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #05080f;
+        font-weight: 700;
+        max-width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cc-gallery-pill--date {
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e5e7eb;
+        white-space: nowrap;
+    }
+    .cc-gallery-card__body {
+        padding: 0.9rem 1.15rem;
+        background: rgba(10, 14, 23, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
     .cc-gallery-card__title {
         font-size: 1rem;
@@ -144,29 +199,9 @@
         color: #f3f4f6;
         margin: 0;
         line-height: 1.35;
-    }
-    .cc-gallery-card__meta {
-        font-size: 0.8rem;
-        color: #9ca3af;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .cc-gallery-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        padding: 0.2rem 0.55rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        background: rgba(186, 30, 30, 0.18);
-        border: 1px solid rgba(186, 30, 30, 0.35);
-        color: #fca5a5;
-    }
-    .cc-gallery-badge:hover {
-        background: rgba(186, 30, 30, 0.35);
-        color: #ffffff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .cc-gallery-title {
@@ -376,23 +411,27 @@
                     <div class="cc-gallery-card__media">
                         <img class="cc-gallery-card__img" src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Fotografia') }}" loading="lazy">
                         <div class="cc-gallery-card__overlay"></div>
+                        <div class="cc-gallery-card__media-bottom">
+                            <div class="cc-gallery-card__media-left">
+                                {% if img.fieldReport %}
+                                    <span class="cc-gallery-pill cc-gallery-pill--mission" title="{{ img.fieldReport.missionName }}">
+                                        <i class="ph ph-crosshair"></i> {{ img.fieldReport.missionName }}
+                                    </span>
+                                {% elseif img.effectiveCampaign %}
+                                    <span class="cc-gallery-pill cc-gallery-pill--campaign" title="{{ img.effectiveCampaign.name }}">
+                                        <i class="ph ph-flag"></i> {{ img.effectiveCampaign.name }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="cc-gallery-card__media-right">
+                                <span class="cc-gallery-pill cc-gallery-pill--date">
+                                    <i class="ph ph-calendar-blank"></i> {{ img.createdAt|date('d/m/Y') }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="cc-gallery-card__body">
                         <h4 class="cc-gallery-card__title">{{ img.title|default('Fotografia sense títol') }}</h4>
-                        <div class="cc-gallery-card__meta">
-                            {% if img.fieldReport %}
-                                <span class="cc-gallery-badge">
-                                    <i class="ph ph-crosshair"></i> {{ img.fieldReport.missionName }}
-                                </span>
-                            {% elseif img.effectiveCampaign %}
-                                <span class="text-xs text-secondary">
-                                    <i class="ph ph-flag"></i> {{ img.effectiveCampaign.name }}
-                                </span>
-                            {% else %}
-                                <span></span>
-                            {% endif %}
-                            <span class="text-xs text-secondary">{{ img.createdAt|date('d/m/Y') }}</span>
-                        </div>
                     </div>
                 </div>
             {% endfor %}
