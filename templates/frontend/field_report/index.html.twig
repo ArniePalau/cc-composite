@@ -7,7 +7,7 @@
 .cc-reports{--cc-gold:#e5ac00;--cc-line:rgba(229,172,0,.24);--cc-panel:rgba(10,14,23,.88);max-width:1200px;margin:2rem auto;padding:0 1rem}
 .cc-reports__head{margin-bottom:1.5rem}.cc-reports__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
 .cc-reports h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1;margin:.35rem 0}.cc-reports__intro{color:var(--c-text-secondary,#a0a8b0);max-width:720px}
-.cc-report-list{display:grid;gap:1rem}.cc-report-card{display:grid;grid-template-columns:150px 1fr auto;gap:1.25rem;align-items:center;padding:1.25rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);transition:border-color .2s,transform .2s}
+.cc-report-list{display:grid;gap:1rem}.cc-report-card{position:relative;isolation:isolate;display:grid;grid-template-columns:150px 1fr auto;gap:1.25rem;align-items:center;min-height:112px;padding:1.25rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden;transition:border-color .2s,transform .2s}.cc-report-card>*{position:relative;z-index:2}.cc-report-card--image:after{content:"";position:absolute;z-index:0;inset:0 0 0 42%;background-image:linear-gradient(90deg,var(--cc-panel) 0%,rgba(10,14,23,.72) 34%,rgba(10,14,23,.2) 100%),var(--cc-report-image);background-position:center;background-size:cover;pointer-events:none}.cc-report-card--image:before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(90deg,var(--cc-panel) 0%,transparent 72%);pointer-events:none}
 .cc-report-card:hover{border-color:var(--cc-gold);transform:translateY(-2px)}.cc-report-card__date{font-weight:700;color:var(--cc-gold)}.cc-report-card__date small{display:block;color:var(--c-text-secondary,#a0a8b0);font-weight:400}
 .cc-report-card h2{font-size:1.25rem;margin:0 0 .4rem}.cc-report-card h2 a:hover{color:var(--cc-gold)}.cc-report-card__meta{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;color:var(--c-text-secondary,#a0a8b0);font-size:.9rem}.cc-report-card__campaign{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border:1px solid var(--cc-line);border-radius:999px;color:var(--cc-gold);font-weight:700}.cc-report-card__campaign:hover{border-color:var(--cc-gold);background:rgba(229,172,0,.08)}.cc-report-card__arrow{font-size:1.5rem;color:var(--cc-gold)}
 .cc-pagination{display:flex;justify-content:center;align-items:center;gap:.4rem;margin-top:1.5rem}.cc-pagination a,.cc-pagination span{display:grid;place-items:center;min-width:38px;height:38px;border:1px solid var(--cc-line);border-radius:8px}.cc-pagination a:hover,.cc-pagination .active{background:var(--cc-gold);color:#05080f;border-color:var(--cc-gold)}
@@ -24,7 +24,7 @@
 
     <div class="cc-report-list">
         {% for report in reports %}
-            <article class="cc-report-card">
+            <article class="cc-report-card{% if report.campaign and report.campaign.imagePath %} cc-report-card--image{% endif %}"{% if report.campaign and report.campaign.imagePath %} style="--cc-report-image:url('{{ asset(report.campaign.imagePath, 'cc_composite.asset')|e('html_attr') }}')"{% endif %}>
                 <div class="cc-report-card__date">{{ report.startedAt|date('d M Y') }}<small>{{ report.startedAt|date('H:i') }}</small></div>
                 <div>
                     <h2><a href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">{{ report.missionName|replace({'_':' '}) }}</a></h2>
