@@ -2,6 +2,7 @@
 
 {% macro player(name, playerProfiles, strong = false) %}{% set profile = playerProfiles[name]|default(null) %}{% if profile %}{% if profile.id %}<a class="cc-player-link" href="{{ path('perscom_user', {id: profile.id}) }}" title="Obre el perfil del roster">{% else %}<span class="cc-player-link">{% endif %}{% include '@Forumify/components/avatar.html.twig' with {user: profile.user, className: 'avatar-xs cc-player-avatar'} only %}<span>{% if strong %}<strong>{{ name }}</strong>{% else %}{{ name }}{% endif %}</span>{% if profile.id %}</a>{% else %}</span>{% endif %}{% elseif strong %}<strong>{{ name }}</strong>{% else %}{{ name }}{% endif %}{% endmacro %}
 {% macro rankingValue(key, value) %}{% if key in ['kills', 'friendly_fire'] %}{{ value|round }}{% elseif key == 'accuracy' %}{{ (value * 100)|number_format(1) }}%{% elseif key in ['distance', 'distance_vehicle', 'longest_kill'] %}{{ value|round }} m{% elseif key == 'survival' %}{{ (value / 60)|round(0, 'floor') }} min {{ value % 60|round }} s{% elseif key == 'kd' %}{{ value|number_format(2) }}:1{% elseif key == 'damage' %}{{ value|number_format(0) }} pts{% else %}{{ value|number_format(2) }}{% endif %}{% endmacro %}
+{% macro missionTime(seconds) %}{{ '%02d:%02d:%02d'|format((seconds / 3600)|round(0, 'floor'), ((seconds % 3600) / 60)|round(0, 'floor'), seconds % 60) }}{% endmacro %}
 {% import _self as reportUi %}
 
 {% block title_page %}{{ report.missionName|replace({'_':' '}) }}{% endblock %}
@@ -143,6 +144,7 @@
         <div class="cc-kill-chart"><svg viewBox="0 0 960 120" preserveAspectRatio="none" role="img" aria-label="Gràfic temporal de baixes">
             {% for count in killTimeline.hostile %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#e53d3d" opacity=".88"/>{% endif %}{% endfor %}
             {% for count in killTimeline.player %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#3fa0ff" opacity=".92"/>{% endif %}{% endfor %}
+            {% for bucket in killTimeline.buckets %}<rect class="cc-kill-chart__hover" x="{{ loop.index0 * 20 }}" y="0" width="20" height="96" fill="transparent"><title>Temps mitjà: {{ reportUi.missionTime(bucket.midpoint) }} · Interval: {{ reportUi.missionTime(bucket.start) }}–{{ reportUi.missionTime(bucket.end) }} · Baixes enemigues: {{ bucket.hostile }} · Baixes de jugadors: {{ bucket.player }}</title></rect>{% endfor %}
             <line x1="0" y1="96" x2="960" y2="96" stroke="rgba(255,255,255,.25)"/><text x="0" y="116" fill="rgba(255,255,255,.5)" font-size="13">00:00</text><text x="960" y="116" text-anchor="end" fill="rgba(255,255,255,.5)" font-size="13">{{ report.durationLabel }}</text>
         </svg></div>
     </section>

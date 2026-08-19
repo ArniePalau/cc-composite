@@ -153,7 +153,7 @@ final class FieldReportController extends AbstractController
         ]);
     }
 
-    /** @return array{player: list<int>, hostile: list<int>, max: int} */
+    /** @return array{player: list<int>, hostile: list<int>, max: int, buckets: list<array{start: int, end: int, midpoint: int, player: int, hostile: int}>} */
     private function buildKillTimeline(array $payload): array
     {
         $buckets = 48;
@@ -172,6 +172,24 @@ final class FieldReportController extends AbstractController
             }
         }
 
-        return ['player' => $player, 'hostile' => $hostile, 'max' => max(1, ...$player, ...$hostile)];
+        $timelineBuckets = [];
+        for ($index = 0; $index < $buckets; ++$index) {
+            $start = (int) floor(($index / $buckets) * $duration);
+            $end = (int) floor((($index + 1) / $buckets) * $duration);
+            $timelineBuckets[] = [
+                'start' => $start,
+                'end' => $end,
+                'midpoint' => (int) round(($start + $end) / 2),
+                'player' => $player[$index],
+                'hostile' => $hostile[$index],
+            ];
+        }
+
+        return [
+            'player' => $player,
+            'hostile' => $hostile,
+            'max' => max(1, ...$player, ...$hostile),
+            'buckets' => $timelineBuckets,
+        ];
     }
 }
