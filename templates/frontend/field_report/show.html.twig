@@ -10,17 +10,18 @@
 <link rel="stylesheet" href="https://atlas.plan-ops.fr/lib/leaflet/leaflet.css">
 <style>
 .cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
-.cc-field a{color:inherit}.cc-field .cc-player-link{display:inline-flex;align-items:center;gap:.4rem;color:inherit;text-decoration:none}.cc-field .cc-player-link:hover{color:var(--cc-gold)}.cc-player-avatar{width:1.65rem!important;height:1.65rem!important;flex:0 0 1.65rem;border-radius:50%;object-fit:cover;background:#111827}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
-.cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 .55rem;position:relative;z-index:1}.cc-field__subtitle{position:relative;z-index:1;margin:0 0 1rem;color:#a9c9ef;font-size:1.05rem}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
+.cc-field a{color:inherit}.cc-field .cc-player-link{display:inline-flex;align-items:center;gap:.4rem;color:inherit;text-decoration:none}.cc-field .cc-player-link:hover{color:var(--cc-gold)}.cc-player-avatar{width:1.65rem!important;height:1.65rem!important;flex:0 0 1.65rem;border-radius:50%;object-fit:cover;background:#111827}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}.cc-field__hero>*:not(.cc-field__hero-art){position:relative;z-index:2}.cc-field__hero-art{position:absolute;z-index:0;inset:0 0 0 38%;width:62%;height:100%;object-fit:cover;object-position:center;opacity:.48;pointer-events:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 48%,#000 100%);mask-image:linear-gradient(to right,transparent 0,#000 48%,#000 100%)}
+.cc-field__hero:before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.12) 0,rgba(8,13,24,.18) 52%,rgba(8,13,24,.32) 100%);pointer-events:none}.cc-field__hero:after{content:"";position:absolute;z-index:1;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 .55rem}.cc-field__subtitle{margin:0 0 1rem;color:#a9c9ef;font-size:1.05rem}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1}
 .cc-field__stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
 .cc-map{position:relative;width:min(100%,760px);height:min(760px,calc(100vw - 4rem));min-height:360px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map .leaflet-control-attribution{font-size:10px}.cc-map .leaflet-control-container a{color:#1d4ed8}.cc-map__data{display:none}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-map--legacy{aspect-ratio:1/1;height:auto;min-height:0;cursor:grab;touch-action:none;user-select:none}.cc-map--legacy.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map a.cc-map__point{pointer-events:auto;cursor:pointer}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
 .cc-mvp{display:grid;grid-template-columns:minmax(260px,1.2fr) minmax(420px,1fr);gap:2rem;align-items:center;margin:1rem 0;padding:1.5rem 1.75rem;border:1px solid rgba(229,172,0,.42);border-radius:12px;background:linear-gradient(110deg,rgba(229,172,0,.13),rgba(30,41,59,.82) 48%,var(--cc-panel));overflow:hidden}.cc-mvp__eyebrow{display:flex;align-items:center;gap:.55rem;margin-bottom:.75rem;color:#ffc400;font-size:.78rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase}.cc-mvp__name{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.05;color:#fff}.cc-mvp__name .cc-player-link{gap:.75rem}.cc-mvp__name .cc-player-avatar{width:3.25rem!important;height:3.25rem!important;flex-basis:3.25rem}.cc-mvp__meta{margin-top:.7rem;color:#a9c9ef}.cc-mvp__metrics{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:1rem}.cc-mvp__metric{padding-left:.8rem;border-left:2px solid rgba(125,167,218,.42)}.cc-mvp__metric span{display:block;color:#86a7d0;font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.cc-mvp__metric strong{display:block;margin-top:.25rem;color:#fff;font-size:1.35rem;line-height:1.1}
-.cc-logistics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1rem;align-items:start}.cc-frago{padding:1.4rem}.cc-frago__eyebrow,.cc-loadout__eyebrow{color:#ff9f1c;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.cc-frago h2{margin:.65rem 0 .8rem;font-size:1.2rem}.cc-frago__body{margin:0;color:#b7cee9;line-height:1.55;white-space:normal}.cc-frago__formatted{display:inline}.cc-frago__marker{color:var(--cc-gold);font-weight:700}.cc-loadout{display:grid;gap:1rem}.cc-loadout__group{padding:1.25rem}.cc-loadout__heading{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}.cc-loadout__heading:after{content:"";height:1px;flex:1;background:rgba(125,167,218,.25)}.cc-media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,300px));justify-content:start;gap:.85rem}.cc-media-card{display:grid;grid-template-rows:145px auto;width:100%;max-width:300px;height:100%;border:1px solid rgba(125,167,218,.2);border-radius:10px;background:rgba(30,41,55,.72);overflow:hidden}.cc-media-card__image{display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:.8rem .8rem 0;padding:.65rem;border-radius:7px;background:rgba(255,255,255,.035);overflow:hidden}.cc-media-card__image img{display:block!important;box-sizing:border-box!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important}.cc-media-card__content{padding:1rem}.cc-media-card h3{margin:0;font-size:1rem;color:#fff}.cc-media-card__class{display:block;margin-top:.15rem;color:#7694bd;font-size:.72rem;overflow-wrap:anywhere}.cc-media-card__stats{display:flex;gap:1.5rem;margin-top:.9rem}.cc-media-card__stats strong{display:block;color:#fff;font-size:1.2rem}.cc-media-card__stats span{display:block;color:#9cb8da;font-size:.78rem}.cc-media-card__empty{color:var(--c-text-secondary,#a0a8b0)}
+.cc-logistics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1rem;align-items:start}.cc-frago{display:flex;flex-direction:column;box-sizing:border-box;min-height:0;padding:1.4rem}.cc-frago__eyebrow,.cc-loadout__eyebrow{color:#ff9f1c;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.cc-frago h2{flex:0 0 auto;margin:.65rem 0 .8rem;font-size:1.2rem}.cc-frago__body{flex:1 1 auto;min-height:0;margin:0;padding-right:.6rem;color:#b7cee9;line-height:1.55;white-space:normal;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:var(--cc-gold) rgba(255,255,255,.05);scrollbar-width:thin}.cc-frago__formatted{display:inline}.cc-frago__marker{color:var(--cc-gold);font-weight:700}.cc-loadout{display:grid;gap:1rem}.cc-loadout__group{padding:1.25rem}.cc-loadout__heading{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}.cc-loadout__heading:after{content:"";height:1px;flex:1;background:rgba(125,167,218,.25)}.cc-media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,300px));justify-content:start;gap:.85rem}.cc-media-card{display:grid;grid-template-rows:145px auto;width:100%;max-width:300px;height:100%;border:1px solid rgba(125,167,218,.2);border-radius:10px;background:rgba(30,41,55,.72);overflow:hidden}.cc-media-card__image{display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:.8rem .8rem 0;padding:.65rem;border-radius:7px;background:rgba(255,255,255,.035);overflow:hidden}.cc-media-card__image img{display:block!important;box-sizing:border-box!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important}.cc-media-card__content{padding:1rem}.cc-media-card h3{margin:0;font-size:1rem;color:#fff}.cc-media-card__class{display:block;margin-top:.15rem;color:#7694bd;font-size:.72rem;overflow-wrap:anywhere}.cc-media-card__stats{display:flex;gap:1.5rem;margin-top:.9rem}.cc-media-card__stats strong{display:block;color:#fff;font-size:1.2rem}.cc-media-card__stats span{display:block;color:#9cb8da;font-size:.78rem}.cc-media-card__empty{color:var(--c-text-secondary,#a0a8b0)}
+.cc-mission-gallery{box-sizing:border-box;padding:1.25rem!important}.cc-mission-gallery__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--cc-line)}.cc-mission-gallery__header h2{margin:0}.cc-mission-gallery__header p{margin:.35rem 0 0}.cc-mission-gallery__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;width:100%}
 .cc-feed-filters{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.cc-feed-filter{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:700;cursor:pointer}.cc-feed-filter input{width:1rem;height:1rem;accent-color:var(--cc-gold)}.cc-feed{display:grid;gap:.65rem;max-height:780px;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:var(--cc-gold) rgba(255,255,255,.05);scrollbar-width:thin}.cc-feed__row{display:grid;grid-template-columns:70px minmax(110px,.8fr) minmax(70px,.65fr) minmax(145px,.85fr) minmax(70px,.65fr) minmax(160px,1.1fr);align-items:center;gap:1rem;min-height:68px;padding:1rem 1.25rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row[hidden]{display:none}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold);font-weight:700}.cc-feed__attacker{font-weight:700}.cc-person--player{color:#facc15}.cc-person--enemy{color:#ff5733}.cc-person--civilian{color:#60a5fa}.cc-feed__arrow{position:relative;display:block;align-self:center;width:100%;height:16px;min-width:55px}.cc-feed__arrow:before{content:"";position:absolute;left:0;right:5px;top:50%;border-top:2px solid #f8fafc;transform:translateY(-50%)}.cc-feed__arrow:after{content:"";position:absolute;right:1px;top:50%;width:8px;height:8px;border-top:2px solid #f8fafc;border-right:2px solid #f8fafc;transform:translateY(-50%) rotate(45deg)}.cc-feed__action{display:flex;align-items:center;justify-content:center;gap:.65rem;color:#fff;font-weight:800;font-size:1.05rem}.cc-feed__icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:rgba(232,67,75,.12);color:#ef233c;font-size:1.4rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__result{min-width:0}.cc-feed__weapon{display:block;margin-top:.2rem;color:var(--c-text-secondary,#a0a8b0);font-size:.78rem;font-weight:400;white-space:normal}.cc-feed__empty-filter{display:none;padding:1.25rem;text-align:center;color:var(--c-text-secondary,#a0a8b0)}.cc-feed__empty-filter.is-visible{display:block}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.3rem 0}.cc-ranking__entry>span{display:flex;align-items:center;gap:.35rem;min-width:0;white-space:nowrap}.cc-ranking__entry>strong{flex:0 0 auto;white-space:nowrap;line-height:1}.cc-ranking__entry .cc-player-link{display:inline-flex;align-items:center;white-space:nowrap}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
-@media(max-width:1000px){.cc-feed__row{grid-template-columns:64px minmax(100px,1fr) 60px minmax(130px,1fr);gap:.75rem}.cc-feed__arrow--after{display:none}.cc-feed__result{grid-column:4}.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2,.cc-logistics{grid-template-columns:1fr}.cc-mvp{grid-template-columns:1fr}}@media(max-width:650px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 1fr 38px}.cc-feed__arrow{display:none}.cc-feed__action{grid-column:3}.cc-feed__result{grid-column:2/-1}.cc-field__meta{gap:.6rem}.cc-map{min-height:300px}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}.cc-mvp{padding:1.2rem}.cc-mvp__metrics{grid-template-columns:repeat(2,1fr)}.cc-media-grid{grid-template-columns:1fr}}
+@media(max-width:1000px){.cc-feed__row{grid-template-columns:64px minmax(100px,1fr) 60px minmax(130px,1fr);gap:.75rem}.cc-feed__arrow--after{display:none}.cc-feed__result{grid-column:4}.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2,.cc-logistics{grid-template-columns:1fr}.cc-frago{height:auto!important;min-height:0;max-height:650px}.cc-mission-gallery__header{align-items:flex-start;flex-direction:column}}@media(max-width:650px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-field__hero-art{inset:0 0 0 18%;width:82%;opacity:.32}.cc-feed__row{grid-template-columns:52px 1fr 38px}.cc-feed__arrow{display:none}.cc-feed__action{grid-column:3}.cc-feed__result{grid-column:2/-1}.cc-field__meta{gap:.6rem}.cc-map{min-height:300px}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}.cc-media-grid{grid-template-columns:1fr}.cc-mission-gallery{padding:1rem!important}.cc-mission-gallery__grid{grid-template-columns:1fr}}
 </style>
 <article class="cc-field">
     <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
@@ -39,7 +40,11 @@
     </svg>
     <a class="cc-field__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a>
 
+    {% set playerNames = data.players|default([])|map(player => player.name) %}
+    {% set playerFriendlyFire = data.killFeed|default([])|filter(kill => kill.friendlyFire|default(false) and (kill.killerIsPlayer|default(false) or kill.killer|default('') in playerNames))|length %}
+
     <header class="cc-field__hero">
+        <img class="cc-field__hero-art" src="{{ path('cc_composite_field_reports_mission_media', {code: report.code}) }}" alt="" aria-hidden="true">
         <div class="cc-field__eyebrow">Informe de missió · {{ report.code }}</div>
         <h1>{{ report.missionName|replace({'_':' '}) }}</h1>
         {% if data.missionTitle|default(null) or data.missionOverview|default(null) %}<p class="cc-field__subtitle">{{ data.missionTitle|default(data.missionOverview) }}{% if data.missionTitle|default(null) and data.missionOverview|default(null) and data.missionOverview != data.missionTitle %} · {{ data.missionOverview }}{% endif %}</p>{% endif %}
@@ -55,10 +60,9 @@
     <div class="cc-field__stats">
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-users"/></svg><div><span>Participants</span><strong>{{ report.playerCount }}</strong></div></div>
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-target"/></svg><div><span>Baixes totals</span><strong>{{ report.totalKills }}</strong></div></div>
-        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg><div><span>Foc amic</span><strong>{{ report.totalFriendlyKills }}</strong></div></div>
+        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg><div><span>Foc amic</span><strong>{{ playerFriendlyFire }}</strong></div></div>
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg><div><span>Trets</span><strong>{{ report.totalShots }}</strong></div></div>
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-clock"/></svg><div><span>Durada</span><strong>{{ report.durationLabel }}</strong></div></div>
-        <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-trophy"/></svg><div><span>MVP</span>{{ reportUi.player(data.mvp.name|default('—'), playerProfiles, true) }}</div></div>
         {% if data.totalCivilianKills is defined %}<div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-users"/></svg><div><span>Civils morts</span><strong>{{ data.totalCivilianKills }}</strong></div></div>{% endif %}
         {% if data.totalVehicleKills is defined %}<div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-vehicle"/></svg><div><span>Vehicles destruïts</span><strong>{{ data.totalVehicleKills }}</strong></div></div>{% endif %}
     </div>
@@ -118,27 +122,7 @@
     {% endif %}
     {% endset %}
 
-    {% if data.mvp.name|default(null) %}
-        {% set mvp = data.mvp %}
-        {% set sideLabels = {WEST:'BLUFOR', BLUFOR:'BLUFOR', EAST:'OPFOR', OPFOR:'OPFOR', GUER:'Independents', INDEPENDENT:'Independents', CIV:'Civilians', CIVILIAN:'Civilians'} %}
-        <section class="cc-mvp" aria-label="MVP de la missió">
-            <div class="cc-mvp__identity">
-                <div class="cc-mvp__eyebrow"><i class="ph-fill ph-star"></i> MVP</div>
-                <div class="cc-mvp__name">{{ reportUi.player(mvp.name, playerProfiles, true) }}</div>
-                <div class="cc-mvp__meta">{{ mvp.mvpPoints|default(0)|number_format(1, ',', '.') }} punts{% if mvp.side|default(null) %} · {{ sideLabels[mvp.side|upper]|default(mvp.side) }}{% endif %}</div>
-            </div>
-            <div class="cc-mvp__metrics">
-                <div class="cc-mvp__metric"><span>Baixes</span><strong>{{ mvp.kills|default(0) }}</strong></div>
-                <div class="cc-mvp__metric"><span>Morts</span><strong>{{ mvp.deaths|default(0) }}</strong></div>
-                <div class="cc-mvp__metric"><span>Precisió</span><strong>{{ ((mvp.accuracy|default(0)) * 100)|number_format(1) }}%</strong></div>
-                <div class="cc-mvp__metric"><span>Dany</span><strong>{{ mvp.damageDealt|default(0)|number_format(1, ',', '.') }}</strong></div>
-                <div class="cc-mvp__metric"><span>Recorregut</span><strong>{{ mvp.distanceMeters|default(0)|round }} m</strong></div>
-            </div>
-        </section>
-    {% endif %}
-
-    <div class="cc-grid-2">
-        <section class="cc-section">
+    <section class="cc-section">
             <div class="cc-section__title"><h2><i class="ph ph-users"></i> Participants</h2></div>
             <div class="cc-table-wrap">
                 <table class="cc-table">
@@ -150,21 +134,7 @@
                     </tbody>
                 </table>
             </div>
-        </section>
-
-        <section class="cc-section">
-            <div class="cc-section__title"><h2><i class="ph ph-trophy"></i> Classificacions</h2></div>
-            <div class="cc-section__body cc-ranking">
-                {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', distance_vehicle:'Distància en vehicle', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
-                {% set rankingIcons = {kills:'target', kd:'scales', accuracy:'target', damage:'heart', distance:'footprints', distance_vehicle:'vehicle', longest_kill:'binoculars', survival:'heart', friendly_fire:'warning'} %}
-                {% for ranking in data.rankings|default([]) %}
-                    {% if ranking.entries|default([]) is not empty %}
-                        <div class="cc-ranking__card"><h3><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-{{ rankingIcons[ranking.key]|default('trophy') }}"/></svg>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ reportUi.player(entry.name, playerProfiles) }}</span><strong>{{ reportUi.rankingValue(ranking.key, entry.value) }}</strong></div>{% endfor %}</div>
-                    {% endif %}
-                {% else %}<p class="cc-muted">No hi ha classificacions disponibles.</p>{% endfor %}
-            </div>
-        </section>
-    </div>
+    </section>
 
     <section class="cc-section">
         <div class="cc-section__title"><h2><i class="ph ph-crosshair"></i> Cronologia de baixes</h2><div class="cc-feed-filters"><label class="cc-feed-filter"><input type="checkbox" data-feed-players-only> Només jugadors</label></div></div>
@@ -193,7 +163,7 @@
     {{ tacticalMap|raw }}
 
     <div class="cc-logistics">
-        <section class="cc-section cc-frago">
+        <section class="cc-section cc-frago" data-frago-panel>
             <div class="cc-frago__eyebrow">FRAGORD</div>
             {% if frago %}
                 <h2>{{ frago.title|default('Ordre fragmentària') }}</h2>
@@ -204,7 +174,7 @@
             {% endif %}
         </section>
 
-        <div class="cc-loadout">
+        <div class="cc-loadout" data-loadout-panel>
             <section class="cc-section cc-loadout__group">
                 <div class="cc-loadout__heading"><span class="cc-loadout__eyebrow">Armament utilitzat</span></div>
                 <div class="cc-media-grid">
@@ -247,7 +217,7 @@
 
     {% if report.images is not empty %}
         <section class="cc-section cc-mission-gallery" style="margin-top: 2rem; width: 100%;">
-            <div class="flex justify-between items-center mb-4 pb-2" style="border-bottom: 1px solid rgba(229, 172, 0, 0.2);">
+            <div class="cc-mission-gallery__header">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2" style="font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif; letter-spacing: 0.03em; text-transform: uppercase;">
                         <i class="ph ph-images" style="color: #e5ac00;"></i> Fotografies de la Missió ({{ report.images|length }})
@@ -258,7 +228,7 @@
                     <i class="ph ph-arrow-square-out"></i> Veure a la Galeria
                 </a>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; width: 100%;">
+            <div class="cc-mission-gallery__grid">
                 {% for img in report.images %}
                     <div style="display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; background: rgba(13, 20, 32, 0.85); border: 1px solid rgba(229, 172, 0, 0.2); box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
                         <a href="{{ path('cc_composite_galeria', { mission: report.code }) }}" style="display: block; text-decoration: none; width: 100%;">
@@ -421,6 +391,19 @@ document.querySelectorAll('[data-feed-players-only]').forEach(function (toggle) 
     }
     toggle.addEventListener('change', filterFeed);
     filterFeed();
+});
+document.querySelectorAll('.cc-logistics').forEach(function (layout) {
+    var frago = layout.querySelector('[data-frago-panel]');
+    var loadout = layout.querySelector('[data-loadout-panel]');
+    if (!frago || !loadout) return;
+    function syncFragoHeight() {
+        frago.style.height = window.innerWidth > 1000 ? Math.ceil(loadout.getBoundingClientRect().height) + 'px' : '';
+    }
+    if (window.ResizeObserver) {
+        new ResizeObserver(syncFragoHeight).observe(loadout);
+    }
+    window.addEventListener('resize', syncFragoHeight);
+    syncFragoHeight();
 });
 </script>
 {% endblock %}

@@ -68,6 +68,21 @@ final class FieldReportController extends AbstractController
         }
     }
 
+    #[Route('/{code}/media/mission', name: 'mission_media', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
+    public function missionMedia(string $code, FieldReportRepository $repository, FieldReportMediaProxy $mediaProxy): Response
+    {
+        $report = $repository->findOneBy(['code' => $code]);
+        if (!$report instanceof FieldReport) {
+            throw $this->createNotFoundException('Field report not found.');
+        }
+
+        try {
+            return $mediaProxy->fetchMissionImage($report);
+        } catch (Throwable) {
+            throw $this->createNotFoundException('Mission image not found.');
+        }
+    }
+
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
     public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, ArmaBriefingFormatter $briefingFormatter, EntityManagerInterface $entityManager): Response
     {
