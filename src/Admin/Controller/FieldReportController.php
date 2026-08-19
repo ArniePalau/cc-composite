@@ -9,6 +9,7 @@ use ArniePalau\CcComposite\Entity\Campaign;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
+use ArniePalau\CcComposite\Service\FieldReportFeedSync;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,47 @@ final class FieldReportController extends AbstractController
         return $this->render('@CcCompositePlugin/admin/field_reports/index.html.twig', [
             'reports' => $repository->findBy([], ['startedAt' => 'DESC']),
             'campaigns' => $campaignRepository->findBy([], ['name' => 'ASC']),
+            'feedUrl' => FieldReportFeedSync::FEED_URL,
         ]);
+    }
+
+    #[Route('/sync', name: '_sync', methods: ['POST'])]
+    public function sync(Request $request, FieldReportFeedSync $feedSync): Response
+    {
+        $this->denyAccessUnlessGranted('cc_composite.admin.manage');
+        if (!$this->isCsrfTokenValid('cc-composite-field-report-sync', (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        try {
+            $result = $feedSync->sync();
+            $this->addFlash('success', sprintf(
+                'Feed checked: %d discovered, %d imported, %d already present, %d failed.',
+                $result->discovered,
+                $result->imported,
+                $result->alreadyImported,
+                $result->failed,
+            ));
+        } catch (Throwable $exception) {
+            $this->addFlash('error', $exception->getMessage());
+        }
+
+        return $this->redirectToRoute('cc_composite_admin_field_reports_index');
+    }
+
+    #[Route('/{id}/visibility', name: '_visibility', methods: ['POST'])]
+    public function visibility(FieldReport $report, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('cc_composite.admin.manage');
+        if (!$this->isCsrfTokenValid('cc-composite-field-report-visibility-' . $report->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
+        $report->setVisible($request->request->getBoolean('visible'));
+        $entityManager->flush();
+        $this->addFlash('success', sprintf('Report "%s" is now %s.', $report->getMissionName(), $report->isVisible() ? 'visible' : 'hidden'));
+
+        return $this->redirectToRoute('cc_composite_admin_field_reports_index');
     }
 
     #[Route('/{id}/campaign', name: '_campaign', methods: ['POST'])]

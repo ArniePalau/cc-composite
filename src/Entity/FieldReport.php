@@ -71,6 +71,9 @@ class FieldReport
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $importedAt;
 
+    #[ORM\Column(options: ['default' => true])]
+    private bool $visible = true;
+
     #[ORM\ManyToOne(targetEntity: Campaign::class)]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Campaign $campaign = null;
@@ -121,6 +124,8 @@ class FieldReport
     public function setMapSizeMeters(?int $mapSizeMeters): void { $this->mapSizeMeters = $mapSizeMeters; }
     public function getImportedAt(): DateTimeImmutable { return $this->importedAt; }
     public function setImportedAt(DateTimeImmutable $importedAt): void { $this->importedAt = $importedAt; }
+    public function isVisible(): bool { return $this->visible; }
+    public function setVisible(bool $visible): void { $this->visible = $visible; }
     public function getCampaign(): ?Campaign { return $this->campaign; }
     public function setCampaign(?Campaign $campaign): void { $this->campaign = $campaign; }
     /** @return Collection<int, GalleryImage> */

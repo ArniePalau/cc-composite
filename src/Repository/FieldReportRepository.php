@@ -21,6 +21,7 @@ final class FieldReportRepository extends ServiceEntityRepository
     public function findPage(int $page, int $limit = 6): array
     {
         return $this->createQueryBuilder('report')
+            ->andWhere('report.visible = true')
             ->orderBy('report.startedAt', 'DESC')
             ->addOrderBy('report.id', 'DESC')
             ->setFirstResult((max(1, $page) - 1) * $limit)
@@ -33,6 +34,7 @@ final class FieldReportRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('report')
             ->select('COUNT(report.id)')
+            ->andWhere('report.visible = true')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -40,7 +42,7 @@ final class FieldReportRepository extends ServiceEntityRepository
     /** @return list<FieldReport> */
     public function findForCampaign(Campaign $campaign): array
     {
-        return $this->findBy(['campaign' => $campaign], ['startedAt' => 'DESC']);
+        return $this->findBy(['campaign' => $campaign, 'visible' => true], ['startedAt' => 'DESC']);
     }
 
     public function findOneWithMapForWorld(string $world): ?FieldReport

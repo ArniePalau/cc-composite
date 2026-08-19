@@ -4,18 +4,16 @@
 
 {% block body %}
     <div class="box mb-6">
-        <h2 class="box-title">Import a mission report</h2>
+        <h2 class="box-title">Automatic mission report feed</h2>
         <div class="box-content">
             <div class="flex justify-end mb-4"><a class="btn-secondary" href="{{ path('cc_composite_admin_field_report_players_index') }}"><i class="ph ph-link"></i> Link report players</a></div>
             <div class="flex justify-end mb-4"><a class="btn-secondary" href="{{ path('cc_composite_admin_campaigns_index') }}"><i class="ph ph-flag-banner"></i> Manage campaigns</a></div>
-            <p class="mb-4">Paste a public Arma Server Manager report URL. Importing the same report again refreshes its local snapshot.</p>
-            <form action="{{ path('cc_composite_admin_field_reports_import') }}" method="post" class="flex items-end gap-4 flex-wrap">
-                <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-import') }}">
-                <div class="form-group flex-1">
-                    <label class="form-label" for="cc-field-report-url">Public report URL</label>
-                    <input class="form-control" id="cc-field-report-url" type="url" name="url" placeholder="http://server.example:8080/r/REPORT_CODE" required>
-                </div>
-                <button class="btn-primary" type="submit"><i class="ph ph-download-simple"></i> Import report</button>
+            <p class="mb-2">The plugin checks the Arma Server Manager feed every hour and imports newly available reports.</p>
+            <p class="mb-4"><a class="btn-link" href="{{ feedUrl }}" target="_blank" rel="noopener noreferrer">{{ feedUrl }}</a></p>
+            <p class="mb-4 text-muted">New reports are hidden by default. Reports spanning Wednesday at 23:00 or Saturday at 23:30 (Europe/Madrid) are published automatically. The visibility switch below always remains under admin control.</p>
+            <form action="{{ path('cc_composite_admin_field_reports_sync') }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-sync') }}">
+                <button class="btn-primary" type="submit"><i class="ph ph-arrows-clockwise"></i> Check feed now</button>
             </form>
         </div>
     </div>
@@ -30,6 +28,7 @@
                         <th>Mission</th>
                         <th>Map</th>
                         <th>Players</th>
+                        <th>Visible</th>
                         <th>Campaign</th>
                         <th>Local map</th>
                         <th class="text-right">Actions</th>
@@ -42,6 +41,7 @@
                         <td><a class="btn-link" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}">{{ report.missionName }}</a></td>
                         <td>{{ report.worldDisplayName|default(report.world) }}</td>
                         <td>{{ report.playerCount }}</td>
+                        <td><form action="{{ path('cc_composite_admin_field_reports_visibility', {id: report.id}) }}" method="post"><input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-visibility-' ~ report.id) }}"><input type="hidden" name="visible" value="0"><label class="flex items-center gap-2"><input type="checkbox" name="visible" value="1" role="switch"{% if report.visible %} checked{% endif %} onchange="this.form.submit()"><span>{{ report.visible ? 'Visible' : 'Hidden' }}</span></label></form></td>
                         <td><form action="{{ path('cc_composite_admin_field_reports_campaign', {id: report.id}) }}" method="post" class="flex gap-2"><input type="hidden" name="_token" value="{{ csrf_token('cc-composite-field-report-campaign-' ~ report.id) }}"><select class="form-control" name="campaign"><option value="0">No campaign</option>{% for campaign in campaigns %}<option value="{{ campaign.id }}"{% if report.campaign and report.campaign.id == campaign.id %} selected{% endif %}>{{ campaign.name }}</option>{% endfor %}</select><button class="btn-secondary btn-small" type="submit">Save</button></form></td>
                         <td>{% if report.payload._ccMap is defined %}<span class="text-success">Live tiles</span>{% elseif report.mapPath %}<span class="text-muted">Legacy image</span>{% else %}<span class="text-muted">Unavailable</span>{% endif %}</td>
                         <td>
@@ -58,7 +58,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="7" class="text-center p-6">No field reports have been imported yet.</td></tr>
+                    <tr><td colspan="8" class="text-center p-6">No field reports have been imported yet.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>

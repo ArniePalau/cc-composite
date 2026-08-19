@@ -60,7 +60,7 @@
         <div class="cc-reports__eyebrow">Operacions agrupades</div>
         <h2>Campanyes</h2>
         <div class="cc-campaign-list">
-            {% for campaign in campaigns %}<a class="cc-campaign-card{% if campaign.imagePath %} cc-campaign-card--image{% endif %}" href="{{ path('cc_composite_field_reports_campaign', {slug: campaign.slug}) }}"{% if campaign.imagePath %} style="background-image:url('{{ asset(campaign.imagePath, 'cc_composite.asset')|e('html_attr') }}')"{% endif %}><div class="cc-campaign-card__content"><h3><i class="ph ph-flag-banner"></i> {{ campaign.name }}</h3>{% if campaign.description %}<p>{{ campaign.description }}</p>{% endif %}<span class="cc-campaign-card__count">{{ campaign.reports|length }} missions</span></div></a>
+            {% for campaign in campaigns %}<a class="cc-campaign-card{% if campaign.imagePath %} cc-campaign-card--image{% endif %}" href="{{ path('cc_composite_field_reports_campaign', {slug: campaign.slug}) }}"{% if campaign.imagePath %} style="background-image:url('{{ asset(campaign.imagePath, 'cc_composite.asset')|e('html_attr') }}')"{% endif %}><div class="cc-campaign-card__content"><h3><i class="ph ph-flag-banner"></i> {{ campaign.name }}</h3>{% if campaign.description %}<p>{{ campaign.description }}</p>{% endif %}<span class="cc-campaign-card__count">{{ campaign.visibleReports|length }} missions</span></div></a>
             {% else %}<div class="cc-empty">Encara no hi ha campanyes publicades.</div>{% endfor %}
         </div>
     </section>

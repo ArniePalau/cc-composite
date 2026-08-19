@@ -61,6 +61,11 @@ class Campaign
     public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }
     /** @return Collection<int, FieldReport> */
     public function getReports(): Collection { return $this->reports; }
+    /** @return list<FieldReport> */
+    public function getVisibleReports(): array
+    {
+        return array_values($this->reports->filter(static fn (FieldReport $report): bool => $report->isVisible())->toArray());
+    }
     /** @return Collection<int, GalleryImage> */
     public function getImages(): Collection { return $this->images; }
     public function addImage(GalleryImage $image): void

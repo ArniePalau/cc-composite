@@ -11,6 +11,8 @@ use ArniePalau\CcComposite\EventListener\PerscomRecordLifecycleSubscriber;
 use ArniePalau\CcComposite\MenuBuilder\FieldReportsMenuType;
 use ArniePalau\CcComposite\Service\CompositeGenerator;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
+use ArniePalau\CcComposite\Service\FieldReportFeedSync;
+use ArniePalau\CcComposite\Scheduler\FieldReportFeedTask;
 use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
@@ -39,6 +41,8 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(FieldReportsMenuType::class));
         self::assertTrue(class_exists(GalleryMenuType::class));
         self::assertTrue(class_exists(FieldReportImporter::class));
+        self::assertTrue(class_exists(FieldReportFeedSync::class));
+        self::assertTrue(class_exists(FieldReportFeedTask::class));
         self::assertTrue(class_exists(FieldReportPlayerLink::class));
         self::assertTrue(class_exists(FieldReportPlayerIdentity::class));
         self::assertTrue(class_exists(FieldReportPlayerProfileResolver::class));
@@ -57,6 +61,9 @@ final class PackageIntegrityTest extends TestCase
         self::assertFileExists($root . '/templates/frontend/field_report/campaign.html.twig');
         self::assertStringContainsString('cc-campaign__hero--image', file_get_contents($root . '/templates/frontend/field_report/campaign.html.twig'));
         self::assertStringContainsString('Manage campaigns', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
+        self::assertFileExists($root . '/migrations/Version20260819000000.php');
+        self::assertStringContainsString('Check feed now', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
+        self::assertStringContainsString('cc_composite_admin_field_reports_visibility', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
         self::assertStringContainsString('Campanyes', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
         self::assertStringContainsString('campaign.imagePath', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
         self::assertStringContainsString('cc-report-card__campaign', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));

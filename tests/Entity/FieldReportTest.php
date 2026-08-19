@@ -32,4 +32,12 @@ final class FieldReportTest extends TestCase
         self::assertSame(0, $report->getTotalFriendlyKills());
         self::assertSame(0, $report->getTotalShots());
     }
+
+    public function testReportsAreVisibleByDefaultAndCanBeHidden(): void
+    {
+        $report = new FieldReport();
+        self::assertTrue($report->isVisible());
+        $report->setVisible(false);
+        self::assertFalse($report->isVisible());
+    }
 }

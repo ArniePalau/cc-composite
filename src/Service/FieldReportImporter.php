@@ -28,7 +28,7 @@ final class FieldReportImporter
     ) {
     }
 
-    public function import(string $url): FieldReport
+    public function import(string $url, ?bool $newReportVisible = null): FieldReport
     {
         $parsed = $this->urlParser->parse($url);
         $response = $this->httpClient->request('GET', $parsed['api_url'], [
@@ -55,7 +55,12 @@ final class FieldReportImporter
         }
         $this->validatePayload($payload, $parsed['code']);
 
-        $report = $this->reportRepository->findOneBy(['code' => $parsed['code']]) ?? new FieldReport();
+        $report = $this->reportRepository->findOneBy(['code' => $parsed['code']]);
+        $isNew = $report === null;
+        $report ??= new FieldReport();
+        if ($isNew && $newReportVisible !== null) {
+            $report->setVisible($newReportVisible);
+        }
         $previousWorld = isset($report->getPayload()['world']) ? $report->getWorld() : null;
         $previousMapConfig = $report->getPayload()['_ccMap'] ?? null;
         $previousMapSize = $report->getMapSizeMeters();
