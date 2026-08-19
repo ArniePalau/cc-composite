@@ -8,6 +8,7 @@ use ArniePalau\CcComposite\Entity\FieldReportPlayerLink;
 use ArniePalau\CcComposite\Repository\FieldReportPlayerLinkRepository;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
+use ArniePalau\CcComposite\Service\FieldReportCombatRecordSynchronizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
@@ -43,6 +44,7 @@ final class FieldReportPlayerLinkController extends AbstractController
         FieldReportPlayerLinkRepository $linkRepository,
         UserRepository $userRepository,
         FieldReportPlayerIdentity $identity,
+        FieldReportCombatRecordSynchronizer $combatRecordSynchronizer,
         EntityManagerInterface $entityManager,
     ): Response {
         $this->denyAccessUnlessGranted('cc_composite.admin.manage');
@@ -78,7 +80,8 @@ final class FieldReportPlayerLinkController extends AbstractController
         }
 
         $entityManager->flush();
-        $this->addFlash('success', 'Field-report player links saved.');
+        $created = $combatRecordSynchronizer->syncAllEligible();
+        $this->addFlash('success', sprintf('Field-report player links saved. %d combat record(s) created.', $created));
 
         return $this->redirectToRoute('cc_composite_admin_field_report_players_index');
     }

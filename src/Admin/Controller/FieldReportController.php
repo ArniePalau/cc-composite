@@ -10,6 +10,7 @@ use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Service\FieldReportImporter;
 use ArniePalau\CcComposite\Service\FieldReportFeedSync;
+use ArniePalau\CcComposite\Service\FieldReportCombatRecordSynchronizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +58,7 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/{id}/visibility', name: '_visibility', methods: ['POST'])]
-    public function visibility(FieldReport $report, Request $request, EntityManagerInterface $entityManager): Response
+    public function visibility(FieldReport $report, Request $request, EntityManagerInterface $entityManager, FieldReportCombatRecordSynchronizer $combatRecordSynchronizer): Response
     {
         $this->denyAccessUnlessGranted('cc_composite.admin.manage');
         if (!$this->isCsrfTokenValid('cc-composite-field-report-visibility-' . $report->getId(), (string) $request->request->get('_token'))) {
@@ -66,13 +67,16 @@ final class FieldReportController extends AbstractController
 
         $report->setVisible($request->request->getBoolean('visible'));
         $entityManager->flush();
+        if ($report->isVisible()) {
+            $combatRecordSynchronizer->syncReport($report);
+        }
         $this->addFlash('success', sprintf('Report "%s" is now %s.', $report->getMissionName(), $report->isVisible() ? 'visible' : 'hidden'));
 
         return $this->redirectToRoute('cc_composite_admin_field_reports_index');
     }
 
     #[Route('/{id}/campaign', name: '_campaign', methods: ['POST'])]
-    public function campaign(FieldReport $report, Request $request, CampaignRepository $campaignRepository, EntityManagerInterface $entityManager): Response
+    public function campaign(FieldReport $report, Request $request, CampaignRepository $campaignRepository, EntityManagerInterface $entityManager, FieldReportCombatRecordSynchronizer $combatRecordSynchronizer): Response
     {
         $this->denyAccessUnlessGranted('cc_composite.admin.manage');
         if (!$this->isCsrfTokenValid('cc-composite-field-report-campaign-' . $report->getId(), (string) $request->request->get('_token'))) {
@@ -85,6 +89,7 @@ final class FieldReportController extends AbstractController
         }
         $report->setCampaign($campaign);
         $entityManager->flush();
+        $combatRecordSynchronizer->syncReport($report);
         $this->addFlash('success', 'Report campaign updated.');
 
         return $this->redirectToRoute('cc_composite_admin_field_reports_index');

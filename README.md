@@ -25,6 +25,7 @@ It does not patch Forumify or PERSCOM source code.
 - Admin import and refresh of public Arma Server Manager report URLs. JSON is
   stored locally so published reports do not depend on a live page request.
 - Mission overview, players, rankings, weapons, kill feed and tactical heatmap.
+- Native PERSCOM combat records for linked players with more than 30 minutes in automatically published operations; generated records link back to their field report.
 - On-demand PLANOPS Atlas topographic map cache. A moderate-resolution map is
   assembled once per world and reused by later reports.
 

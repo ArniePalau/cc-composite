@@ -24,6 +24,7 @@ final class FieldReportFeedSync
         private readonly FieldReportRepository $reportRepository,
         private readonly FieldReportImporter $importer,
         private readonly ReportVisibilityPolicy $visibilityPolicy,
+        private readonly FieldReportCombatRecordSynchronizer $combatRecordSynchronizer,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
     ) {
@@ -76,11 +77,14 @@ final class FieldReportFeedSync
         $imported = 0;
         $existing = 0;
         foreach ($urls as $code => $url) {
-            if ($this->reportRepository->findOneBy(['code' => $code]) !== null) {
-                ++$existing;
-                continue;
-            }
             try {
+                $report = $this->reportRepository->findOneBy(['code' => $code]);
+                if ($report !== null) {
+                    $this->combatRecordSynchronizer->syncReport($report);
+                    ++$existing;
+                    continue;
+                }
+
                 $report = $this->importer->import($url, false);
                 $report->setVisible($this->visibilityPolicy->shouldAutoPublish(
                     $report->getStartedAt(),
@@ -88,6 +92,7 @@ final class FieldReportFeedSync
                     $report->getDurationSeconds(),
                 ));
                 $this->entityManager->flush();
+                $this->combatRecordSynchronizer->syncReport($report);
                 ++$imported;
             } catch (Throwable $exception) {
                 ++$failed;

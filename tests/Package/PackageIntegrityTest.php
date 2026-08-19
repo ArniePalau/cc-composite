@@ -19,6 +19,9 @@ use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Service\ArmaBriefingFormatter;
 use ArniePalau\CcComposite\Entity\Campaign;
 use ArniePalau\CcComposite\Entity\GalleryImage;
+use ArniePalau\CcComposite\Entity\FieldReportCombatRecord;
+use ArniePalau\CcComposite\Service\FieldReportCombatRecordSynchronizer;
+use ArniePalau\CcComposite\Service\FieldReportParticipation;
 use ArniePalau\CcComposite\Form\DTO\AdminNewUser;
 use ArniePalau\CcComposite\MenuBuilder\GalleryMenuType;
 use Doctrine\ORM\Event\PostPersistEventArgs;
@@ -51,6 +54,9 @@ final class PackageIntegrityTest extends TestCase
         self::assertTrue(class_exists(AdminNewUser::class));
         self::assertTrue(class_exists(Campaign::class));
         self::assertTrue(class_exists(GalleryImage::class));
+        self::assertTrue(class_exists(FieldReportCombatRecord::class));
+        self::assertTrue(class_exists(FieldReportCombatRecordSynchronizer::class));
+        self::assertTrue(class_exists(FieldReportParticipation::class));
         self::assertTrue(class_exists(PerscomUser::class));
     }
 
@@ -64,6 +70,7 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('cc-campaign__hero--image', file_get_contents($root . '/templates/frontend/field_report/campaign.html.twig'));
         self::assertStringContainsString('Manage campaigns', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
         self::assertFileExists($root . '/migrations/Version20260819000000.php');
+        self::assertFileExists($root . '/migrations/Version20260819010000.php');
         self::assertStringContainsString('Check feed now', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
         self::assertStringContainsString('cc_composite_admin_field_reports_visibility', file_get_contents($root . '/templates/admin/field_reports/index.html.twig'));
         self::assertStringContainsString('Campanyes', file_get_contents($root . '/templates/frontend/field_report/index.html.twig'));
