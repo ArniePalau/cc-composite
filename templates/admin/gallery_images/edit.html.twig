@@ -3,7 +3,7 @@
 {% form_theme form _self %}
 
 {% block file_widget %}
-    {% if multiple is defined and multiple %}
+    {% if attr.multiple is defined %}
         <div class="file-upload p-4 rounded-lg" style="border: 2px dashed rgba(229, 172, 0, 0.35); background: rgba(11, 17, 28, 0.85);">
             <div class="flex flex-col items-center justify-center text-center p-3">
                 <i class="ph ph-images text-4xl mb-2" style="color: #e5ac00;"></i>

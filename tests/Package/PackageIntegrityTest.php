@@ -196,4 +196,12 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('FieldReportMediaProxy', file_get_contents(dirname(__DIR__, 2) . '/src/Controller/FieldReportController.php'));
         self::assertStringNotContainsString('text-decoration:underline', $template);
     }
+
+    public function testGalleryUploadUsesSymfonyMultipleFileAttribute(): void
+    {
+        $template = file_get_contents(dirname(__DIR__, 2) . '/templates/admin/gallery_images/edit.html.twig');
+
+        self::assertStringContainsString('attr.multiple is defined', $template);
+        self::assertStringContainsString('multiple="multiple"', $template);
+    }
 }
