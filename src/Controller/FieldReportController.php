@@ -53,7 +53,7 @@ final class FieldReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{code}/media/{kind}/{assetClass}', name: 'media', requirements: ['code' => '[A-Za-z0-9_-]+', 'kind' => 'weapon|vehicle', 'assetClass' => '[A-Za-z0-9_.-]{1,120}'], methods: ['GET'])]
+    #[Route('/{code}/media/{kind}/{assetClass}', name: 'media', requirements: ['code' => '[A-Za-z0-9_-]+', 'kind' => 'weapon|vehicle|item|avatar|marker', 'assetClass' => '[A-Za-z0-9_.-]{1,120}'], methods: ['GET'])]
     public function media(string $code, string $kind, string $assetClass, FieldReportRepository $repository, FieldReportMediaProxy $mediaProxy): Response
     {
         $report = $repository->findOneBy(['code' => $code]);
@@ -121,11 +121,57 @@ final class FieldReportController extends AbstractController
             break;
         }
 
+        $tasks = [];
+        foreach ($payload['tasks'] ?? [] as $task) {
+            if (!is_array($task)) {
+                continue;
+            }
+            $tasks[] = [
+                'title' => (string) ($task['title'] ?? ''),
+                'state' => strtoupper((string) ($task['state'] ?? '')),
+                'descriptionHtml' => $briefingFormatter->format((string) ($task['description'] ?? '')),
+            ];
+        }
+
+        $playerGroups = [];
+        foreach ($payload['players'] ?? [] as $player) {
+            if (!is_array($player)) {
+                continue;
+            }
+            $group = trim((string) ($player['groupName'] ?? '')) ?: 'Sense grup';
+            $playerGroups[$group][] = $player;
+        }
+
         return $this->render('@CcCompositePlugin/frontend/field_report/show.html.twig', [
             'report' => $report,
             'data' => $payload,
             'playerProfiles' => $profileResolver->resolve($payload),
             'frago' => $frago,
+            'tasks' => $tasks,
+            'killTimeline' => $this->buildKillTimeline($payload),
+            'playerGroups' => $playerGroups,
         ]);
+    }
+
+    /** @return array{player: list<int>, hostile: list<int>, max: int} */
+    private function buildKillTimeline(array $payload): array
+    {
+        $buckets = 48;
+        $duration = max(1, (int) ($payload['durationSeconds'] ?? 1));
+        $player = array_fill(0, $buckets, 0);
+        $hostile = array_fill(0, $buckets, 0);
+        foreach ($payload['killFeed'] ?? [] as $kill) {
+            if (!is_array($kill)) {
+                continue;
+            }
+            $index = min($buckets - 1, max(0, (int) floor(((float) ($kill['missionTime'] ?? 0) / $duration) * $buckets)));
+            if ((bool) ($kill['victimIsPlayer'] ?? false)) {
+                ++$player[$index];
+            } elseif ((bool) ($kill['killerIsPlayer'] ?? false)) {
+                ++$hostile[$index];
+            }
+        }
+
+        return ['player' => $player, 'hostile' => $hostile, 'max' => max(1, ...$player, ...$hostile)];
     }
 }

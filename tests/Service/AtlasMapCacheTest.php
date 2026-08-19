@@ -52,4 +52,24 @@ final class AtlasMapCacheTest extends TestCase
         self::assertStringContainsString('/maps/183/187/', $tobruk->config['tilePattern']);
         self::assertNull($cache->knownFallback('unknown_world'));
     }
+
+    public function testPreservesUnderscoreWorldSlugUsedByAtlas(): void
+    {
+        $requestedUrls = [];
+        $client = new MockHttpClient(function (string $method, string $url) use (&$requestedUrls): MockResponse {
+            $requestedUrls[] = $url;
+            if (str_ends_with($url, '/maps/arma3/kunduz_valley')) {
+                return new MockResponse('<a href="/maps/arma3/kunduz_valley/65">Topographic</a>', ['response_headers' => ['content-type: text/html']]);
+            }
+            $config = '{"minZoom":0,"maxZoom":5,"factorX":0.0315,"factorY":0.0315,"tileSize":323,"tilePattern":"/data/1/maps/65/65/{z}/{x}/{y}.png","sizeInMeters":10240,"originX":0,"originY":0}';
+
+            return new MockResponse('<script>mapInit(' . $config . ');</script>', ['response_headers' => ['content-type: text/html']]);
+        });
+
+        $result = (new AtlasMapCache($client, new AsciiSlugger()))->cache('kunduz_valley');
+
+        self::assertSame(10240, $result->sizeMeters);
+        self::assertSame('https://atlas.plan-ops.fr/maps/arma3/kunduz_valley', $requestedUrls[0]);
+        self::assertCount(2, $requestedUrls);
+    }
 }

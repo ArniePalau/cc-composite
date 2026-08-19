@@ -14,6 +14,7 @@
 .cc-field__hero:before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(90deg,rgba(8,13,24,.12) 0,rgba(8,13,24,.18) 52%,rgba(8,13,24,.32) 100%);pointer-events:none}.cc-field__hero:after{content:"";position:absolute;z-index:1;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 .55rem}.cc-field__subtitle{margin:0 0 1rem;color:#a9c9ef;font-size:1.05rem}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1}
 .cc-field__stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
+.cc-kill-chart{padding:1rem 1.25rem}.cc-kill-chart svg{display:block;width:100%;height:150px}.cc-kill-chart__legend{display:flex;gap:1rem;justify-content:flex-end;color:var(--c-text-secondary,#a0a8b0);font-size:.78rem}.cc-kill-chart__legend i{display:inline-block;width:.7rem;height:.7rem;margin-right:.35rem}.cc-tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.85rem}.cc-task{padding:1.15rem;border:1px solid rgba(125,167,218,.22);border-left:3px solid #64748b;border-radius:10px;background:rgba(30,41,55,.72)}.cc-task--SUCCEEDED{border-left-color:#34d399}.cc-task--ASSIGNED{border-left-color:#37d5e6}.cc-task__head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}.cc-task h3{margin:0;color:#fff;font-size:1rem}.cc-task__state{font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8da3bf}.cc-task--SUCCEEDED .cc-task__state{color:#34d399}.cc-task__description{margin:.65rem 0 0;color:#9cb0c9;line-height:1.45}.cc-soldier-groups{display:grid;gap:1.25rem}.cc-soldier-group h3{margin:0 0 .75rem;color:#ff9f1c;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}.cc-soldier-loadouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:.8rem}.cc-soldier{padding:1rem;border:1px solid rgba(125,167,218,.22);border-radius:10px;background:rgba(30,41,55,.72)}.cc-soldier__head{display:flex;align-items:center;gap:.7rem;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.08)}.cc-soldier__head>img{width:2.8rem!important;height:2.8rem!important;border-radius:8px;object-fit:cover}.cc-soldier__name{font-weight:800;color:#fff}.cc-soldier__role{font-size:.78rem;color:#9cb0c9}.cc-soldier__gear{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.8rem}.cc-soldier__item{display:flex;align-items:center;justify-content:center;height:48px;padding:.25rem;border-radius:7px;background:rgba(5,8,15,.55)}.cc-soldier__item img{display:block!important;max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;object-fit:contain!important}.cc-arma-marker{display:flex;align-items:center;gap:3px;white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none}.cc-arma-marker img{display:block;width:24px;height:24px;object-fit:contain;filter:drop-shadow(0 1px 1px #000)}.cc-arma-marker span{color:#fff;font-size:12px;font-weight:800;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000}
 .cc-map{position:relative;width:min(100%,760px);height:min(760px,calc(100vw - 4rem));min-height:360px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map .leaflet-control-attribution{font-size:10px}.cc-map .leaflet-control-container a{color:#1d4ed8}.cc-map__data{display:none}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-map--legacy{aspect-ratio:1/1;height:auto;min-height:0;cursor:grab;touch-action:none;user-select:none}.cc-map--legacy.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map a.cc-map__point{pointer-events:auto;cursor:pointer}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
@@ -93,7 +94,7 @@
                             {% if kill.x is defined and kill.y is defined and not kill.suicide %}{% set mapProfile = playerProfiles[kill.killer|default('')]|default(playerProfiles[kill.victim|default('')]|default(null)) %}<i data-map-point data-kind="kill" data-x="{{ kill.x }}" data-y="{{ kill.y }}" data-event-time="{{ kill.missionTime|default(0) }}" data-title="{{ (kill.killer|default('Desconegut') ~ ' → ' ~ kill.victim|default('Desconegut'))|e('html_attr') }}"{% if mapProfile and mapProfile.id %} data-profile-url="{{ path('perscom_user', {id: mapProfile.id}) }}"{% endif %}></i>{% endif %}
                         {% endfor %}
                         {% for marker in data.markers|default([]) %}
-                            {% if not marker.deleted|default(false) %}<i data-map-point data-kind="marker" data-x="{{ marker.x }}" data-y="{{ marker.y }}" data-shape="{{ marker.shape|default('ICON')|upper }}" data-color="{{ marker.colorHex|default(marker.color|default(''))|e('html_attr') }}" data-polyline="{{ marker.polyline|default([])|json_encode|e('html_attr') }}" data-size-a="{{ marker.sizeA|default(1) }}" data-size-b="{{ marker.sizeB|default(1) }}" data-direction="{{ marker.direction|default(0) }}" data-alpha="{{ marker.alpha|default(1) }}" data-brush="{{ marker.brush|default('')|e('html_attr') }}" data-marker-type="{{ marker.type|default('')|e('html_attr') }}"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} data-title="{{ marker.text|default('')|e('html_attr') }}" data-author="{{ marker.author|default('')|e('html_attr') }}"></i>{% endif %}
+                            {% if not marker.deleted|default(false) %}<i data-map-point data-kind="marker" data-x="{{ marker.x }}" data-y="{{ marker.y }}" data-shape="{{ marker.shape|default('ICON')|upper }}" data-color="{{ marker.colorHex|default(marker.color|default(''))|e('html_attr') }}" data-polyline="{{ marker.polyline|default([])|json_encode|e('html_attr') }}" data-size-a="{{ marker.sizeA|default(1) }}" data-size-b="{{ marker.sizeB|default(1) }}" data-direction="{{ marker.direction|default(0) }}" data-alpha="{{ marker.alpha|default(1) }}" data-brush="{{ marker.brush|default('')|e('html_attr') }}" data-marker-type="{{ marker.type|default('')|e('html_attr') }}"{% if marker.type|default('') %} data-marker-icon="{{ path('cc_composite_field_reports_media', {code: report.code, kind: 'marker', assetClass: marker.type}) }}"{% endif %}{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} data-title="{{ marker.text|default('')|e('html_attr') }}" data-author="{{ marker.author|default('')|e('html_attr') }}"></i>{% endif %}
                         {% endfor %}
                 </div>
                 <div class="cc-map__timeline">
@@ -136,6 +137,17 @@
             </div>
     </section>
 
+    {% if data.killFeed|default([])|length > 2 %}
+    <section class="cc-section">
+        <div class="cc-section__title"><h2><i class="ph ph-chart-bar"></i> Baixes durant la missió</h2><div class="cc-kill-chart__legend"><span><i style="background:#e53d3d"></i>Baixes enemigues</span><span><i style="background:#3fa0ff"></i>Baixes de jugadors</span></div></div>
+        <div class="cc-kill-chart"><svg viewBox="0 0 960 120" preserveAspectRatio="none" role="img" aria-label="Gràfic temporal de baixes">
+            {% for count in killTimeline.hostile %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#e53d3d" opacity=".88"/>{% endif %}{% endfor %}
+            {% for count in killTimeline.player %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#3fa0ff" opacity=".92"/>{% endif %}{% endfor %}
+            <line x1="0" y1="96" x2="960" y2="96" stroke="rgba(255,255,255,.25)"/><text x="0" y="116" fill="rgba(255,255,255,.5)" font-size="13">00:00</text><text x="960" y="116" text-anchor="end" fill="rgba(255,255,255,.5)" font-size="13">{{ report.durationLabel }}</text>
+        </svg></div>
+    </section>
+    {% endif %}
+
     <section class="cc-section">
         <div class="cc-section__title"><h2><i class="ph ph-crosshair"></i> Cronologia de baixes</h2><div class="cc-feed-filters"><label class="cc-feed-filter"><input type="checkbox" data-feed-players-only> Només jugadors</label></div></div>
         <div class="cc-section__body cc-feed" data-kill-feed>
@@ -159,6 +171,26 @@
             <p class="cc-feed__empty-filter" data-feed-empty>No hi ha esdeveniments amb jugadors.</p>
         </div>
     </section>
+
+    {% if tasks is not empty %}
+    <section class="cc-section">
+        <div class="cc-section__title"><h2><i class="ph ph-check-square"></i> Tasques ({{ tasks|length }})</h2></div>
+        <div class="cc-section__body cc-tasks">
+            {% for task in tasks %}<article class="cc-task cc-task--{{ task.state }}"><div class="cc-task__head"><h3>{{ task.title|default('(sense títol)') }}</h3><span class="cc-task__state">{{ task.state == 'SUCCEEDED' ? 'Completada' : (task.state == 'ASSIGNED' ? 'Assignada' : (task.state == 'CREATED' ? 'Creada' : task.state)) }}</span></div>{% if task.descriptionHtml %}<div class="cc-task__description">{{ task.descriptionHtml|raw }}</div>{% endif %}</article>{% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.players|default([]) is not empty %}
+    <section class="cc-section">
+        <div class="cc-section__title"><h2><i class="ph ph-person-simple-run"></i> Equipament dels soldats ({{ data.players|length }})</h2></div>
+        <div class="cc-section__body cc-soldier-groups">
+            {% for groupName, soldiers in playerGroups %}<div class="cc-soldier-group"><h3>{{ groupName }}</h3><div class="cc-soldier-loadouts">
+                {% for player in soldiers %}<article class="cc-soldier"><div class="cc-soldier__head">{% set profile = playerProfiles[player.name]|default(null) %}{% if not profile and player.avatarKey|default(null) %}<img src="{{ path('cc_composite_field_reports_media', {code: report.code, kind: 'avatar', assetClass: player.avatarKey}) }}" alt="">{% endif %}<div><div class="cc-soldier__name">{{ reportUi.player(player.name, playerProfiles, false) }}</div><div class="cc-soldier__role">{{ player.role|default('') }}</div></div></div><div class="cc-soldier__gear">{% for item in player.loadout|default([]) %}<span class="cc-soldier__item" title="{{ item.itemName|default(item.itemClass) }}"><img src="{{ path('cc_composite_field_reports_media', {code: report.code, kind: 'item', assetClass: item.itemClass}) }}" alt="{{ item.itemName|default(item.itemClass) }}" loading="lazy"></span>{% endfor %}</div></article>{% endfor %}
+            </div></div>{% endfor %}
+        </div>
+    </section>
+    {% endif %}
 
     {{ tacticalMap|raw }}
 
@@ -309,6 +341,21 @@ document.querySelectorAll('[data-cc-tiled-map]').forEach(function (mapElement) {
             var alpha = Math.max(0, Math.min(1, Number(point.dataset.alpha || 1)));
             var solid = (point.dataset.brush || '').toUpperCase().indexOf('SOLID') !== -1;
             layer = L.polygon(geometry, { color: markerColor, weight: 2, opacity: alpha, fillColor: markerColor, fillOpacity: solid ? alpha * .25 : 0 });
+        } else if (kind === 'marker' && point.dataset.shape === 'ICON' && point.dataset.markerIcon) {
+            var markerNode = document.createElement('div');
+            markerNode.className = 'cc-arma-marker';
+            markerNode.style.opacity = String(Math.max(0, Math.min(1, Number(point.dataset.alpha || 1))));
+            var markerImage = document.createElement('img');
+            markerImage.src = point.dataset.markerIcon;
+            markerImage.alt = '';
+            markerImage.style.transform = 'rotate(' + Number(point.dataset.direction || 0) + 'deg)';
+            markerNode.appendChild(markerImage);
+            if (point.dataset.title) {
+                var markerLabel = document.createElement('span');
+                markerLabel.textContent = point.dataset.title;
+                markerNode.appendChild(markerLabel);
+            }
+            layer = L.marker([Number(point.dataset.y), Number(point.dataset.x)], { icon: L.divIcon({ className: '', html: markerNode.outerHTML, iconSize: [140, 32], iconAnchor: [12, 16] }), interactive: false });
         } else {
             layer = L.circleMarker([Number(point.dataset.y), Number(point.dataset.x)], options);
         }

@@ -25,12 +25,30 @@ final class AtlasMapCache
 
     public function cache(string $world): MapCacheResult
     {
-        $slug = strtolower((string) $this->slugger->slug(str_replace('_', ' ', $world)));
-        if ($slug === '') {
+        $normalized = strtolower(trim($world));
+        $slugs = array_values(array_unique(array_filter([
+            preg_match('/^[a-z0-9_-]+$/', $normalized) === 1 ? $normalized : null,
+            strtolower((string) $this->slugger->slug(str_replace('_', ' ', $world))),
+            str_replace('-', '_', strtolower((string) $this->slugger->slug(str_replace('_', ' ', $world)))),
+        ])));
+        if ($slugs === []) {
             throw new RuntimeException('The map name is empty.');
         }
 
-        $mapPage = $this->requestText(self::ATLAS_BASE . '/maps/arma3/' . rawurlencode($slug));
+        $mapPage = null;
+        $slug = null;
+        foreach ($slugs as $candidate) {
+            try {
+                $mapPage = $this->requestText(self::ATLAS_BASE . '/maps/arma3/' . rawurlencode($candidate));
+                $slug = $candidate;
+                break;
+            } catch (RuntimeException) {
+                continue;
+            }
+        }
+        if ($mapPage === null || $slug === null) {
+            throw new RuntimeException(sprintf('No Atlas map was found for "%s".', $world));
+        }
         if (!preg_match(sprintf('~href="(/maps/arma3/%s/\d+)"~i', preg_quote($slug, '~')), $mapPage, $layerMatch)) {
             throw new RuntimeException(sprintf('No topographic Atlas layer was found for "%s".', $world));
         }

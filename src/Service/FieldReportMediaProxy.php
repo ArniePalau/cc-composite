@@ -22,7 +22,14 @@ final class FieldReportMediaProxy
 
     public function fetch(FieldReport $report, string $kind, string $assetClass): Response
     {
-        if (!in_array($kind, ['weapon', 'vehicle'], true)) {
+        $endpoints = [
+            'weapon' => 'weapon-icon',
+            'vehicle' => 'vehicle-image',
+            'item' => 'weapon-icon',
+            'avatar' => 'player-avatar',
+            'marker' => 'marker-icon',
+        ];
+        if (!isset($endpoints[$kind])) {
             throw new RuntimeException('Unsupported report media type.');
         }
         if (preg_match('/^[A-Za-z0-9_.-]{1,120}$/', $assetClass) !== 1) {
@@ -35,21 +42,21 @@ final class FieldReportMediaProxy
             throw new RuntimeException('Invalid report media origin.');
         }
         $port = isset($api['port']) ? ':' . $api['port'] : '';
-        $endpoint = $kind === 'weapon' ? 'weapon-icon' : 'vehicle-image';
+        $endpoint = $endpoints[$kind];
         $url = sprintf('%s://%s%s/api/public/%s/%s', $api['scheme'], $api['host'], $port, $endpoint, rawurlencode($assetClass));
 
         $remote = $this->httpClient->request('GET', $url, [
             'max_redirects' => 0,
             'timeout' => 12,
             'max_duration' => 20,
-            'headers' => ['Accept' => 'image/png'],
+            'headers' => ['Accept' => 'image/png, image/jpeg'],
         ]);
         if ($remote->getStatusCode() !== 200) {
             throw new RuntimeException(sprintf('The report media server returned HTTP %d.', $remote->getStatusCode()));
         }
         $headers = $remote->getHeaders(false);
         $contentType = strtolower((string) ($headers['content-type'][0] ?? ''));
-        if (!str_starts_with($contentType, 'image/png')) {
+        if (!in_array($contentType, ['image/png', 'image/jpeg'], true)) {
             throw new RuntimeException('The report media server returned an unexpected content type.');
         }
         $content = $remote->getContent();
@@ -58,7 +65,7 @@ final class FieldReportMediaProxy
         }
 
         return new Response($content, Response::HTTP_OK, [
-            'Content-Type' => 'image/png',
+            'Content-Type' => $contentType,
             'Cache-Control' => 'public, max-age=86400, immutable',
             'X-Content-Type-Options' => 'nosniff',
         ]);
