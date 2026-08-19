@@ -45,6 +45,43 @@ final class FieldReportRepository extends ServiceEntityRepository
         return $this->findBy(['campaign' => $campaign, 'visible' => true], ['startedAt' => 'DESC']);
     }
 
+    /**
+     * Returns the newest visible report for each recently active campaign.
+     *
+     * @return list<FieldReport>
+     */
+    public function findRecentCampaignReports(int $limit = 3): array
+    {
+        $limit = max(1, $limit);
+        $reports = $this->createQueryBuilder('report')
+            ->addSelect('campaign')
+            ->innerJoin('report.campaign', 'campaign')
+            ->andWhere('report.visible = true')
+            ->orderBy('report.startedAt', 'DESC')
+            ->addOrderBy('report.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $recent = [];
+        $seenCampaigns = [];
+
+        foreach ($reports as $report) {
+            $campaignId = $report->getCampaign()?->getId();
+            if ($campaignId === null || isset($seenCampaigns[$campaignId])) {
+                continue;
+            }
+
+            $seenCampaigns[$campaignId] = true;
+            $recent[] = $report;
+
+            if (count($recent) >= $limit) {
+                break;
+            }
+        }
+
+        return $recent;
+    }
+
     public function findOneWithMapForWorld(string $world): ?FieldReport
     {
         $reports = $this->createQueryBuilder('report')
