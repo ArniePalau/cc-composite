@@ -24,6 +24,7 @@
 .cc-mission-gallery{box-sizing:border-box;padding:1.25rem!important}.cc-mission-gallery__header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--cc-line)}.cc-mission-gallery__header h2{margin:0}.cc-mission-gallery__header p{margin:.35rem 0 0}.cc-mission-gallery__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;width:100%}
 .cc-feed-filters{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.cc-feed-filter{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:700;cursor:pointer}.cc-feed-filter input{width:1rem;height:1rem;accent-color:var(--cc-gold)}.cc-feed{display:grid;gap:.65rem;max-height:780px;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:var(--cc-gold) rgba(255,255,255,.05);scrollbar-width:thin}.cc-feed__row{display:grid;grid-template-columns:70px minmax(110px,.8fr) minmax(70px,.65fr) minmax(145px,.85fr) minmax(70px,.65fr) minmax(160px,1.1fr);align-items:center;gap:1rem;min-height:68px;padding:1rem 1.25rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row[hidden]{display:none}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold);font-weight:700}.cc-feed__attacker{font-weight:700}.cc-person--player{color:#facc15}.cc-person--enemy{color:#ff5733}.cc-person--civilian{color:#60a5fa}.cc-feed__arrow{position:relative;display:block;align-self:center;width:100%;height:16px;min-width:55px}.cc-feed__arrow:before{content:"";position:absolute;left:0;right:5px;top:50%;border-top:2px solid #f8fafc;transform:translateY(-50%)}.cc-feed__arrow:after{content:"";position:absolute;right:1px;top:50%;width:8px;height:8px;border-top:2px solid #f8fafc;border-right:2px solid #f8fafc;transform:translateY(-50%) rotate(45deg)}.cc-feed__action{display:flex;align-items:center;justify-content:center;gap:.65rem;color:#fff;font-weight:800;font-size:1.05rem}.cc-feed__icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:rgba(232,67,75,.12);color:#ef233c;font-size:1.4rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__result{min-width:0}.cc-feed__weapon{display:block;margin-top:.2rem;color:var(--c-text-secondary,#a0a8b0);font-size:.78rem;font-weight:400;white-space:normal}.cc-feed__empty-filter{display:none;padding:1.25rem;text-align:center;color:var(--c-text-secondary,#a0a8b0)}.cc-feed__empty-filter.is-visible{display:block}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.3rem 0}.cc-ranking__entry>span{display:flex;align-items:center;gap:.35rem;min-width:0;white-space:nowrap}.cc-ranking__entry>strong{flex:0 0 auto;white-space:nowrap;line-height:1}.cc-ranking__entry .cc-player-link{display:inline-flex;align-items:center;white-space:nowrap}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
 @media(max-width:1000px){.cc-feed__row{grid-template-columns:64px minmax(100px,1fr) 60px minmax(130px,1fr);gap:.75rem}.cc-feed__arrow--after{display:none}.cc-feed__result{grid-column:4}.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2,.cc-logistics{grid-template-columns:1fr}.cc-frago{height:auto!important;min-height:0;max-height:650px}.cc-mission-gallery__header{align-items:flex-start;flex-direction:column}}@media(max-width:650px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-field__hero-art{inset:0 0 0 18%;width:82%;opacity:.32}.cc-feed__row{grid-template-columns:52px 1fr 38px}.cc-feed__arrow{display:none}.cc-feed__action{grid-column:3}.cc-feed__result{grid-column:2/-1}.cc-field__meta{gap:.6rem}.cc-map{min-height:300px}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}.cc-media-grid{grid-template-columns:1fr}.cc-mission-gallery{padding:1rem!important}.cc-mission-gallery__grid{grid-template-columns:1fr}}
+.cc-kill-chart{position:relative;padding-bottom:2rem}.cc-kill-chart svg{overflow:visible}.cc-kill-chart__bar{transition:filter .16s ease,opacity .16s ease,stroke .16s ease}.cc-kill-chart__bar.is-hovered{filter:brightness(.7) saturate(1.2);opacity:1;stroke:rgba(255,255,255,.8);stroke-width:.8}.cc-kill-chart__hover{cursor:crosshair;transition:fill .16s ease;outline:none}.cc-kill-chart__hover:hover,.cc-kill-chart__hover:focus{fill:rgba(229,172,0,.09)}.cc-kill-chart__tooltip{position:absolute;z-index:4;top:.35rem;min-width:245px;padding:.8rem .9rem;border:1px solid rgba(229,172,0,.6);border-radius:9px;background:rgba(7,11,19,.97);box-shadow:0 12px 32px rgba(0,0,0,.48),0 0 18px rgba(229,172,0,.08);pointer-events:none;transform:translateX(-50%);color:#fff}.cc-kill-chart__tooltip[hidden],.cc-kill-chart__axis-time[hidden]{display:none}.cc-kill-chart__tooltip-time{display:block;color:var(--cc-gold);font-size:1.05rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.04em}.cc-kill-chart__tooltip-range{display:block;margin:.12rem 0 .65rem;color:#8fa1b8;font-size:.72rem;font-variant-numeric:tabular-nums}.cc-kill-chart__tooltip-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;border-top:1px solid rgba(255,255,255,.09);padding-top:.6rem}.cc-kill-chart__metric{display:flex;align-items:center;justify-content:space-between;gap:.6rem;color:#aeb9c8;font-size:.72rem}.cc-kill-chart__metric strong{font-size:1rem;font-variant-numeric:tabular-nums}.cc-kill-chart__metric--hostile strong{color:#f05a5a}.cc-kill-chart__metric--player strong{color:#5cadff}.cc-kill-chart__axis-time{position:absolute;bottom:.3rem;padding:.18rem .42rem;border-radius:4px;background:rgba(229,172,0,.13);color:var(--cc-gold);font-size:.72rem;font-weight:800;font-variant-numeric:tabular-nums;transform:translateX(-50%);pointer-events:none}
 </style>
 <article class="cc-field">
     <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
@@ -141,12 +142,12 @@
     {% if data.killFeed|default([])|length > 2 %}
     <section class="cc-section">
         <div class="cc-section__title"><h2><i class="ph ph-chart-bar"></i> Baixes durant la missió</h2><div class="cc-kill-chart__legend"><span><i style="background:#e53d3d"></i>Baixes enemigues</span><span><i style="background:#3fa0ff"></i>Baixes de jugadors</span></div></div>
-        <div class="cc-kill-chart"><svg viewBox="0 0 960 120" preserveAspectRatio="none" role="img" aria-label="Gràfic temporal de baixes">
-            {% for count in killTimeline.hostile %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#e53d3d" opacity=".88"/>{% endif %}{% endfor %}
-            {% for count in killTimeline.player %}{% if count > 0 %}<rect x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#3fa0ff" opacity=".92"/>{% endif %}{% endfor %}
-            {% for bucket in killTimeline.buckets %}<rect class="cc-kill-chart__hover" x="{{ loop.index0 * 20 }}" y="0" width="20" height="96" fill="transparent"><title>Temps mitjà: {{ reportUi.missionTime(bucket.midpoint) }} · Interval: {{ reportUi.missionTime(bucket.start) }}–{{ reportUi.missionTime(bucket.end) }} · Baixes enemigues: {{ bucket.hostile }} · Baixes de jugadors: {{ bucket.player }}</title></rect>{% endfor %}
+        <div class="cc-kill-chart" data-kill-chart><svg viewBox="0 0 960 120" preserveAspectRatio="none" role="img" aria-label="Gràfic temporal de baixes">
+            {% for count in killTimeline.hostile %}{% if count > 0 %}<rect class="cc-kill-chart__bar" data-chart-bar="{{ loop.index0 }}" x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#e53d3d" opacity=".88"/>{% endif %}{% endfor %}
+            {% for count in killTimeline.player %}{% if count > 0 %}<rect class="cc-kill-chart__bar" data-chart-bar="{{ loop.index0 }}" x="{{ loop.index0 * 20 + 1 }}" y="{{ 96 - (count / killTimeline.max * 88) }}" width="18" height="{{ count / killTimeline.max * 88 }}" fill="#3fa0ff" opacity=".92"/>{% endif %}{% endfor %}
+            {% for bucket in killTimeline.buckets %}<rect class="cc-kill-chart__hover" data-chart-bucket="{{ loop.index0 }}" data-midpoint="{{ reportUi.missionTime(bucket.midpoint) }}" data-range="{{ reportUi.missionTime(bucket.start) }}–{{ reportUi.missionTime(bucket.end) }}" data-hostile="{{ bucket.hostile }}" data-player="{{ bucket.player }}" x="{{ loop.index0 * 20 }}" y="0" width="20" height="96" fill="transparent" tabindex="0" aria-label="Temps mitjà {{ reportUi.missionTime(bucket.midpoint) }}, {{ bucket.hostile }} baixes enemigues i {{ bucket.player }} baixes de jugadors"></rect>{% endfor %}
             <line x1="0" y1="96" x2="960" y2="96" stroke="rgba(255,255,255,.25)"/><text x="0" y="116" fill="rgba(255,255,255,.5)" font-size="13">00:00</text><text x="960" y="116" text-anchor="end" fill="rgba(255,255,255,.5)" font-size="13">{{ report.durationLabel }}</text>
-        </svg></div>
+        </svg><div class="cc-kill-chart__tooltip" data-chart-tooltip hidden><strong class="cc-kill-chart__tooltip-time" data-chart-time></strong><span class="cc-kill-chart__tooltip-range" data-chart-range></span><div class="cc-kill-chart__tooltip-metrics"><span class="cc-kill-chart__metric cc-kill-chart__metric--hostile">Enemigues <strong data-chart-hostile></strong></span><span class="cc-kill-chart__metric cc-kill-chart__metric--player">Jugadors <strong data-chart-player></strong></span></div></div><span class="cc-kill-chart__axis-time" data-chart-axis-time hidden></span></div>
     </section>
     {% endif %}
 
@@ -296,6 +297,57 @@
 <script src="https://atlas.plan-ops.fr/lib/leaflet/leaflet.js"></script>
 <script src="https://atlas.plan-ops.fr/js/map-utils.js"></script>
 <script>
+document.querySelectorAll('[data-kill-chart]').forEach(function (chart) {
+    var svg = chart.querySelector('svg');
+    var tooltip = chart.querySelector('[data-chart-tooltip]');
+    var axisTime = chart.querySelector('[data-chart-axis-time]');
+    var activeBucket = null;
+    if (!svg || !tooltip || !axisTime) return;
+
+    function setBucket(bucket) {
+        activeBucket = bucket;
+        var index = bucket.dataset.chartBucket;
+        chart.querySelectorAll('[data-chart-bar]').forEach(function (bar) {
+            bar.classList.toggle('is-hovered', bar.dataset.chartBar === index);
+        });
+        tooltip.querySelector('[data-chart-time]').textContent = bucket.dataset.midpoint;
+        tooltip.querySelector('[data-chart-range]').textContent = 'Interval ' + bucket.dataset.range;
+        tooltip.querySelector('[data-chart-hostile]').textContent = bucket.dataset.hostile;
+        tooltip.querySelector('[data-chart-player]').textContent = bucket.dataset.player;
+        axisTime.textContent = bucket.dataset.midpoint;
+        tooltip.hidden = false;
+        axisTime.hidden = false;
+        positionBucket(bucket);
+    }
+
+    function positionBucket(bucket) {
+        var chartBox = chart.getBoundingClientRect();
+        var svgBox = svg.getBoundingClientRect();
+        var center = Number(bucket.getAttribute('x')) + Number(bucket.getAttribute('width')) / 2;
+        var left = svgBox.left - chartBox.left + center / 960 * svgBox.width;
+        var halfTooltip = tooltip.offsetWidth / 2 + 8;
+        tooltip.style.left = Math.max(halfTooltip, Math.min(chartBox.width - halfTooltip, left)) + 'px';
+        axisTime.style.left = left + 'px';
+    }
+
+    function clearBucket() {
+        activeBucket = null;
+        tooltip.hidden = true;
+        axisTime.hidden = true;
+        chart.querySelectorAll('[data-chart-bar].is-hovered').forEach(function (bar) { bar.classList.remove('is-hovered'); });
+    }
+
+    chart.querySelectorAll('[data-chart-bucket]').forEach(function (bucket) {
+        bucket.addEventListener('mouseenter', function () { setBucket(bucket); });
+        bucket.addEventListener('focus', function () { setBucket(bucket); });
+        bucket.addEventListener('mouseleave', function () { if (document.activeElement !== bucket) clearBucket(); });
+        bucket.addEventListener('blur', clearBucket);
+    });
+    chart.addEventListener('mouseleave', function () {
+        if (!chart.contains(document.activeElement) || !document.activeElement.matches('[data-chart-bucket]')) clearBucket();
+    });
+    window.addEventListener('resize', function () { if (activeBucket) positionBucket(activeBucket); });
+});
 document.querySelectorAll('[data-cc-tiled-map]').forEach(function (mapElement) {
     if (!window.L || !window.GameMapUtils) return;
     var config = JSON.parse(mapElement.dataset.mapConfig);
