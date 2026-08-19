@@ -9,6 +9,7 @@ use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Service\AtlasMapCache;
+use ArniePalau\CcComposite\Service\ArmaBriefingFormatter;
 use ArniePalau\CcComposite\Service\FieldReportMediaProxy;
 use Doctrine\ORM\EntityManagerInterface;
 use Throwable;
@@ -68,7 +69,7 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
-    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, EntityManagerInterface $entityManager): Response
+    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, ArmaBriefingFormatter $briefingFormatter, EntityManagerInterface $entityManager): Response
     {
         $report = $repository->findOneBy(['code' => $code]);
         if (!$report instanceof FieldReport) {
@@ -93,10 +94,23 @@ final class FieldReportController extends AbstractController
             }
         }
 
+        $frago = null;
+        foreach ($payload['briefing'] ?? [] as $entry) {
+            if (!is_array($entry) || !in_array(strtolower((string) ($entry['subject'] ?? '')), ['frago', 'fragord'], true)) {
+                continue;
+            }
+            $frago = [
+                'title' => (string) ($entry['title'] ?? ''),
+                'bodyHtml' => $briefingFormatter->format((string) ($entry['body'] ?? '')),
+            ];
+            break;
+        }
+
         return $this->render('@CcCompositePlugin/frontend/field_report/show.html.twig', [
             'report' => $report,
             'data' => $payload,
             'playerProfiles' => $profileResolver->resolve($payload),
+            'frago' => $frago,
         ]);
     }
 }

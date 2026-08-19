@@ -1,7 +1,7 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 
 {% macro player(name, playerProfiles, strong = false) %}{% set profile = playerProfiles[name]|default(null) %}{% if profile %}{% if profile.id %}<a class="cc-player-link" href="{{ path('perscom_user', {id: profile.id}) }}" title="Obre el perfil del roster">{% else %}<span class="cc-player-link">{% endif %}{% include '@Forumify/components/avatar.html.twig' with {user: profile.user, className: 'avatar-xs cc-player-avatar'} only %}<span>{% if strong %}<strong>{{ name }}</strong>{% else %}{{ name }}{% endif %}</span>{% if profile.id %}</a>{% else %}</span>{% endif %}{% elseif strong %}<strong>{{ name }}</strong>{% else %}{{ name }}{% endif %}{% endmacro %}
-{% macro rankingValue(key, value) %}{% if key in ['kills', 'friendly_fire'] %}{{ value|round }}{% elseif key == 'accuracy' %}{{ (value * 100)|number_format(1) }}%{% elseif key in ['distance', 'longest_kill'] %}{{ value|round }} m{% elseif key == 'survival' %}{{ (value / 60)|round(0, 'floor') }} min {{ value % 60|round }} s{% elseif key == 'kd' %}{{ value|number_format(2) }}:1{% elseif key == 'damage' %}{{ value|number_format(0) }} pts{% else %}{{ value|number_format(2) }}{% endif %}{% endmacro %}
+{% macro rankingValue(key, value) %}{% if key in ['kills', 'friendly_fire'] %}{{ value|round }}{% elseif key == 'accuracy' %}{{ (value * 100)|number_format(1) }}%{% elseif key in ['distance', 'distance_vehicle', 'longest_kill'] %}{{ value|round }} m{% elseif key == 'survival' %}{{ (value / 60)|round(0, 'floor') }} min {{ value % 60|round }} s{% elseif key == 'kd' %}{{ value|number_format(2) }}:1{% elseif key == 'damage' %}{{ value|number_format(0) }} pts{% else %}{{ value|number_format(2) }}{% endif %}{% endmacro %}
 {% import _self as reportUi %}
 
 {% block title_page %}{{ report.missionName|replace({'_':' '}) }}{% endblock %}
@@ -11,14 +11,14 @@
 <style>
 .cc-field{--cc-gold:#e5ac00;--cc-blue:#3f8ce8;--cc-red:#e8434b;--cc-green:#3fae6b;--cc-line:rgba(229,172,0,.22);--cc-panel:rgba(10,14,23,.9);max-width:1400px;margin:2rem auto;padding:0 1rem;color:var(--c-text-primary,#ececec)}
 .cc-field a{color:inherit}.cc-field .cc-player-link{display:inline-flex;align-items:center;gap:.4rem;color:inherit;text-decoration:none}.cc-field .cc-player-link:hover{color:var(--cc-gold)}.cc-player-avatar{width:1.65rem!important;height:1.65rem!important;flex:0 0 1.65rem;border-radius:50%;object-fit:cover;background:#111827}.cc-field__back{display:inline-flex;align-items:center;gap:.4rem;color:var(--cc-gold);margin-bottom:1rem}.cc-field__hero{padding:clamp(1.5rem,4vw,3rem);border:1px solid var(--cc-line);border-radius:16px;background:linear-gradient(135deg,rgba(30,58,138,.35),var(--cc-panel) 60%);position:relative;overflow:hidden}
-.cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 1rem;position:relative;z-index:1}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
-.cc-field__stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
+.cc-field__hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 28px,rgba(255,255,255,.018) 28px 29px);pointer-events:none}.cc-field__eyebrow{color:var(--cc-gold);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}.cc-field h1{font-size:clamp(2rem,5vw,4rem);line-height:1;margin:.4rem 0 .55rem;position:relative;z-index:1}.cc-field__subtitle{position:relative;z-index:1;margin:0 0 1rem;color:#a9c9ef;font-size:1.05rem}.cc-field__meta{display:flex;gap:1.25rem;flex-wrap:wrap;color:#cbd5e1;position:relative;z-index:1}
+.cc-field__stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin:1rem 0}.cc-stat{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--cc-line);border-radius:10px;background:var(--cc-panel)}.cc-stat__icon{flex:0 0 auto;color:var(--cc-gold);font-size:1.65rem}.cc-icon{width:1em;height:1em;display:inline-block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em}.cc-stat span{display:block;color:var(--c-text-secondary,#a0a8b0);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.cc-stat strong{display:block;font-size:1.6rem;color:#fff;overflow-wrap:anywhere}
 .cc-section{margin-top:1rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel);overflow:hidden}.cc-section__title{padding:1rem 1.25rem;border-bottom:1px solid var(--cc-line);display:flex;align-items:center;justify-content:space-between;gap:1rem}.cc-section__title h2{font-size:1.2rem;margin:0}.cc-section__body{padding:1.25rem}.cc-muted{color:var(--c-text-secondary,#a0a8b0)}
 .cc-map{position:relative;width:min(100%,760px);height:min(760px,calc(100vw - 4rem));min-height:360px;margin:auto;background:#05080f;overflow:hidden;border-radius:8px}.cc-map .leaflet-control-attribution{font-size:10px}.cc-map .leaflet-control-container a{color:#1d4ed8}.cc-map__data{display:none}.cc-map__legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--c-text-secondary,#a0a8b0)}.cc-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.3rem}.cc-map__timeline{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:.85rem;margin-top:1rem}.cc-map__timeline label{font-weight:700}.cc-map__timeline input{width:100%;accent-color:var(--cc-gold)}.cc-map__timeline output{min-width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--cc-gold)}
 .cc-map--legacy{aspect-ratio:1/1;height:auto;min-height:0;cursor:grab;touch-action:none;user-select:none}.cc-map--legacy.is-dragging{cursor:grabbing}.cc-map__stage{position:absolute;inset:0;transform-origin:center;will-change:transform}.cc-map__stage>img{width:100%;height:100%;object-fit:contain;display:block}.cc-map__overlay{position:absolute;inset:0}.cc-map__point{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}.cc-map a.cc-map__point{pointer-events:auto;cursor:pointer}.cc-map__movement{background:rgba(63,140,232,.38);border:1px solid rgba(111,174,255,.8)}.cc-map__death{width:14px;height:14px;background:rgba(232,67,75,.72);border:2px solid #ffd0d2}.cc-map__kill{width:9px;height:9px;background:#e5ac00;border:1px solid #fff}.cc-map__marker{width:12px;height:12px;background:#fff;border:2px solid #1e3a8a;transform:translate(-50%,-50%) rotate(45deg)}.cc-map__controls{position:absolute;z-index:3;top:.75rem;right:.75rem;display:grid;gap:.35rem}.cc-map__controls button{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(5,8,15,.9);color:#fff;cursor:pointer}.cc-map__controls button:hover{color:var(--cc-gold);border-color:var(--cc-gold)}
 .cc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.cc-table-wrap{overflow-x:auto}.cc-table{width:100%;border-collapse:collapse}.cc-table th,.cc-table td{padding:.75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}.cc-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--c-text-secondary,#a0a8b0)}.cc-table tbody tr:hover{background:rgba(255,255,255,.025)}
 .cc-mvp{display:grid;grid-template-columns:minmax(260px,1.2fr) minmax(420px,1fr);gap:2rem;align-items:center;margin:1rem 0;padding:1.5rem 1.75rem;border:1px solid rgba(229,172,0,.42);border-radius:12px;background:linear-gradient(110deg,rgba(229,172,0,.13),rgba(30,41,59,.82) 48%,var(--cc-panel));overflow:hidden}.cc-mvp__eyebrow{display:flex;align-items:center;gap:.55rem;margin-bottom:.75rem;color:#ffc400;font-size:.78rem;font-weight:900;letter-spacing:.22em;text-transform:uppercase}.cc-mvp__name{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.05;color:#fff}.cc-mvp__name .cc-player-link{gap:.75rem}.cc-mvp__name .cc-player-avatar{width:3.25rem!important;height:3.25rem!important;flex-basis:3.25rem}.cc-mvp__meta{margin-top:.7rem;color:#a9c9ef}.cc-mvp__metrics{display:grid;grid-template-columns:repeat(3,minmax(90px,1fr));gap:1rem}.cc-mvp__metric{padding-left:.8rem;border-left:2px solid rgba(125,167,218,.42)}.cc-mvp__metric span{display:block;color:#86a7d0;font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.cc-mvp__metric strong{display:block;margin-top:.25rem;color:#fff;font-size:1.35rem;line-height:1.1}
-.cc-logistics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1rem;align-items:start}.cc-frago{padding:1.4rem}.cc-frago__eyebrow,.cc-loadout__eyebrow{color:#ff9f1c;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.cc-frago h2{margin:.65rem 0 .8rem;font-size:1.2rem}.cc-frago__body{margin:0;color:#b7cee9;line-height:1.55;white-space:normal}.cc-loadout{display:grid;gap:1rem}.cc-loadout__group{padding:1.25rem}.cc-loadout__heading{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}.cc-loadout__heading:after{content:"";height:1px;flex:1;background:rgba(125,167,218,.25)}.cc-media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,300px));justify-content:start;gap:.85rem}.cc-media-card{display:grid;grid-template-rows:145px auto;width:100%;max-width:300px;height:100%;border:1px solid rgba(125,167,218,.2);border-radius:10px;background:rgba(30,41,55,.72);overflow:hidden}.cc-media-card__image{display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:.8rem .8rem 0;padding:.65rem;border-radius:7px;background:rgba(255,255,255,.035);overflow:hidden}.cc-media-card__image img{display:block!important;box-sizing:border-box!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important}.cc-media-card__content{padding:1rem}.cc-media-card h3{margin:0;font-size:1rem;color:#fff}.cc-media-card__class{display:block;margin-top:.15rem;color:#7694bd;font-size:.72rem;overflow-wrap:anywhere}.cc-media-card__stats{display:flex;gap:1.5rem;margin-top:.9rem}.cc-media-card__stats strong{display:block;color:#fff;font-size:1.2rem}.cc-media-card__stats span{display:block;color:#9cb8da;font-size:.78rem}.cc-media-card__empty{color:var(--c-text-secondary,#a0a8b0)}
+.cc-logistics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:1rem;align-items:start}.cc-frago{padding:1.4rem}.cc-frago__eyebrow,.cc-loadout__eyebrow{color:#ff9f1c;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.cc-frago h2{margin:.65rem 0 .8rem;font-size:1.2rem}.cc-frago__body{margin:0;color:#b7cee9;line-height:1.55;white-space:normal}.cc-frago__formatted{display:inline}.cc-frago__marker{color:var(--cc-gold);font-weight:700}.cc-loadout{display:grid;gap:1rem}.cc-loadout__group{padding:1.25rem}.cc-loadout__heading{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}.cc-loadout__heading:after{content:"";height:1px;flex:1;background:rgba(125,167,218,.25)}.cc-media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,300px));justify-content:start;gap:.85rem}.cc-media-card{display:grid;grid-template-rows:145px auto;width:100%;max-width:300px;height:100%;border:1px solid rgba(125,167,218,.2);border-radius:10px;background:rgba(30,41,55,.72);overflow:hidden}.cc-media-card__image{display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:.8rem .8rem 0;padding:.65rem;border-radius:7px;background:rgba(255,255,255,.035);overflow:hidden}.cc-media-card__image img{display:block!important;box-sizing:border-box!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important}.cc-media-card__content{padding:1rem}.cc-media-card h3{margin:0;font-size:1rem;color:#fff}.cc-media-card__class{display:block;margin-top:.15rem;color:#7694bd;font-size:.72rem;overflow-wrap:anywhere}.cc-media-card__stats{display:flex;gap:1.5rem;margin-top:.9rem}.cc-media-card__stats strong{display:block;color:#fff;font-size:1.2rem}.cc-media-card__stats span{display:block;color:#9cb8da;font-size:.78rem}.cc-media-card__empty{color:var(--c-text-secondary,#a0a8b0)}
 .cc-feed-filters{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.cc-feed-filter{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:700;cursor:pointer}.cc-feed-filter input{width:1rem;height:1rem;accent-color:var(--cc-gold)}.cc-feed{display:grid;gap:.65rem;max-height:780px;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:var(--cc-gold) rgba(255,255,255,.05);scrollbar-width:thin}.cc-feed__row{display:grid;grid-template-columns:70px minmax(110px,.8fr) minmax(70px,.65fr) minmax(145px,.85fr) minmax(70px,.65fr) minmax(160px,1.1fr);align-items:center;gap:1rem;min-height:68px;padding:1rem 1.25rem;border-left:3px solid var(--cc-blue);background:rgba(255,255,255,.025)}.cc-feed__row[hidden]{display:none}.cc-feed__row--friendly{border-left-color:var(--cc-red)}.cc-feed__time{font-variant-numeric:tabular-nums;color:var(--cc-gold);font-weight:700}.cc-feed__attacker{font-weight:700}.cc-person--player{color:#facc15}.cc-person--enemy{color:#ff5733}.cc-person--civilian{color:#60a5fa}.cc-feed__arrow{position:relative;display:block;align-self:center;width:100%;height:16px;min-width:55px}.cc-feed__arrow:before{content:"";position:absolute;left:0;right:5px;top:50%;border-top:2px solid #f8fafc;transform:translateY(-50%)}.cc-feed__arrow:after{content:"";position:absolute;right:1px;top:50%;width:8px;height:8px;border-top:2px solid #f8fafc;border-right:2px solid #f8fafc;transform:translateY(-50%) rotate(45deg)}.cc-feed__action{display:flex;align-items:center;justify-content:center;gap:.65rem;color:#fff;font-weight:800;font-size:1.05rem}.cc-feed__icon{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:rgba(232,67,75,.12);color:#ef233c;font-size:1.4rem}.cc-feed__row--friendly .cc-feed__icon{background:rgba(232,67,75,.13);color:var(--cc-red)}.cc-feed__icon--suicide{background:rgba(255,255,255,.08);color:#d8dee9}.cc-feed__result{min-width:0}.cc-feed__weapon{display:block;margin-top:.2rem;color:var(--c-text-secondary,#a0a8b0);font-size:.78rem;font-weight:400;white-space:normal}.cc-feed__empty-filter{display:none;padding:1.25rem;text-align:center;color:var(--c-text-secondary,#a0a8b0)}.cc-feed__empty-filter.is-visible{display:block}.cc-ranking{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}.cc-ranking__card{padding:1rem;border:1px solid rgba(255,255,255,.08);border-radius:8px}.cc-ranking__card h3{display:flex;align-items:center;gap:.45rem;font-size:.8rem;text-transform:uppercase;color:var(--cc-gold);margin:0 0 .65rem}.cc-ranking__card h3 i{font-size:1.1rem}.cc-ranking__entry{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.3rem 0}.cc-ranking__entry>span{display:flex;align-items:center;gap:.35rem;min-width:0;white-space:nowrap}.cc-ranking__entry>strong{flex:0 0 auto;white-space:nowrap;line-height:1}.cc-ranking__entry .cc-player-link{display:inline-flex;align-items:center;white-space:nowrap}.cc-field__source{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1rem;color:var(--c-text-secondary,#a0a8b0);font-size:.8rem}
 @media(max-width:1000px){.cc-feed__row{grid-template-columns:64px minmax(100px,1fr) 60px minmax(130px,1fr);gap:.75rem}.cc-feed__arrow--after{display:none}.cc-feed__result{grid-column:4}.cc-field__stats{grid-template-columns:repeat(2,1fr)}.cc-grid-2,.cc-logistics{grid-template-columns:1fr}.cc-mvp{grid-template-columns:1fr}}@media(max-width:650px){.cc-field__stats{grid-template-columns:1fr 1fr}.cc-feed__row{grid-template-columns:52px 1fr 38px}.cc-feed__arrow{display:none}.cc-feed__action{grid-column:3}.cc-feed__result{grid-column:2/-1}.cc-field__meta{gap:.6rem}.cc-map{min-height:300px}.cc-map__timeline{grid-template-columns:1fr auto}.cc-map__timeline input{grid-column:1/-1;grid-row:2}.cc-mvp{padding:1.2rem}.cc-mvp__metrics{grid-template-columns:repeat(2,1fr)}.cc-media-grid{grid-template-columns:1fr}}
 </style>
@@ -35,17 +35,20 @@
         <symbol id="cc-icon-heart" viewBox="0 0 24 24"><path d="M12 21S3 16 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 7-9 12-9 12z"/><path d="m8 12 2-2 2 4 2-4 2 2"/></symbol>
         <symbol id="cc-icon-footprints" viewBox="0 0 24 24"><ellipse cx="8" cy="7" rx="3" ry="5"/><ellipse cx="16" cy="17" rx="3" ry="5"/></symbol>
         <symbol id="cc-icon-binoculars" viewBox="0 0 24 24"><path d="M7 6h3l1 5v6H3l2-9zM17 6h-3l-1 5v6h8l-2-9zM11 12h2"/><circle cx="7" cy="17" r="4"/><circle cx="17" cy="17" r="4"/></symbol>
+        <symbol id="cc-icon-vehicle" viewBox="0 0 24 24"><path d="M4 15V9l2-4h11l3 5v5M3 15h18v4h-2M5 19H3v-4M8 19h8"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></symbol>
     </svg>
     <a class="cc-field__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a>
 
     <header class="cc-field__hero">
         <div class="cc-field__eyebrow">Informe de missió · {{ report.code }}</div>
         <h1>{{ report.missionName|replace({'_':' '}) }}</h1>
+        {% if data.missionTitle|default(null) or data.missionOverview|default(null) %}<p class="cc-field__subtitle">{{ data.missionTitle|default(data.missionOverview) }}{% if data.missionTitle|default(null) and data.missionOverview|default(null) and data.missionOverview != data.missionTitle %} · {{ data.missionOverview }}{% endif %}</p>{% endif %}
         <div class="cc-field__meta">
             <span><i class="ph ph-calendar"></i> {{ report.startedAt|date('d/m/Y · H:i') }}</span>
             <span><i class="ph ph-map-trifold"></i> {{ report.worldDisplayName|default(report.world) }}</span>
             <span><i class="ph ph-clock"></i> {{ report.durationLabel }}</span>
             {% if report.serverName %}<span><i class="ph ph-server"></i> {{ report.serverName }}</span>{% endif %}
+            {% if data.missionAuthor|default(null) %}<span><i class="ph ph-pencil"></i> {{ data.missionAuthor }}</span>{% endif %}
         </div>
     </header>
 
@@ -56,6 +59,8 @@
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-shots"/></svg><div><span>Trets</span><strong>{{ report.totalShots }}</strong></div></div>
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-clock"/></svg><div><span>Durada</span><strong>{{ report.durationLabel }}</strong></div></div>
         <div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-trophy"/></svg><div><span>MVP</span>{{ reportUi.player(data.mvp.name|default('—'), playerProfiles, true) }}</div></div>
+        {% if data.totalCivilianKills is defined %}<div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-users"/></svg><div><span>Civils morts</span><strong>{{ data.totalCivilianKills }}</strong></div></div>{% endif %}
+        {% if data.totalVehicleKills is defined %}<div class="cc-stat"><svg class="cc-stat__icon cc-icon" aria-hidden="true"><use href="#cc-icon-vehicle"/></svg><div><span>Vehicles destruïts</span><strong>{{ data.totalVehicleKills }}</strong></div></div>{% endif %}
     </div>
 
     {% set tacticalMap %}
@@ -68,6 +73,7 @@
                     <span><i class="cc-dot" style="background:#3f8ce8"></i>Moviment</span>
                     <span><i class="cc-dot" style="background:#e8434b"></i>Morts</span>
                     <span><i class="cc-dot" style="background:#e5ac00"></i>Baixes</span>
+                    <span><i class="cc-dot" style="background:#ffffff"></i>Marques</span>
                 </div>
             </div>
             <div class="cc-section__body">
@@ -83,7 +89,7 @@
                             {% if kill.x is defined and kill.y is defined and not kill.suicide %}{% set mapProfile = playerProfiles[kill.killer|default('')]|default(playerProfiles[kill.victim|default('')]|default(null)) %}<i data-map-point data-kind="kill" data-x="{{ kill.x }}" data-y="{{ kill.y }}" data-event-time="{{ kill.missionTime|default(0) }}" data-title="{{ (kill.killer|default('Desconegut') ~ ' → ' ~ kill.victim|default('Desconegut'))|e('html_attr') }}"{% if mapProfile and mapProfile.id %} data-profile-url="{{ path('perscom_user', {id: mapProfile.id}) }}"{% endif %}></i>{% endif %}
                         {% endfor %}
                         {% for marker in data.markers|default([]) %}
-                            {% if not marker.deleted|default(false) %}<i data-map-point data-kind="marker" data-x="{{ marker.x }}" data-y="{{ marker.y }}"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} data-title="{{ marker.text|default(marker.name|default('Marcador'))|e('html_attr') }}"></i>{% endif %}
+                            {% if not marker.deleted|default(false) %}<i data-map-point data-kind="marker" data-x="{{ marker.x }}" data-y="{{ marker.y }}" data-shape="{{ marker.shape|default('ICON')|upper }}" data-color="{{ marker.colorHex|default(marker.color|default(''))|e('html_attr') }}" data-polyline="{{ marker.polyline|default([])|json_encode|e('html_attr') }}" data-size-a="{{ marker.sizeA|default(1) }}" data-size-b="{{ marker.sizeB|default(1) }}" data-direction="{{ marker.direction|default(0) }}" data-alpha="{{ marker.alpha|default(1) }}" data-brush="{{ marker.brush|default('')|e('html_attr') }}" data-marker-type="{{ marker.type|default('')|e('html_attr') }}"{% if marker.missionTime is defined %} data-event-time="{{ marker.missionTime }}"{% endif %} data-title="{{ marker.text|default('')|e('html_attr') }}" data-author="{{ marker.author|default('')|e('html_attr') }}"></i>{% endif %}
                         {% endfor %}
                 </div>
                 <div class="cc-map__timeline">
@@ -136,11 +142,11 @@
             <div class="cc-section__title"><h2><i class="ph ph-users"></i> Participants</h2></div>
             <div class="cc-table-wrap">
                 <table class="cc-table">
-                    <thead><tr><th>Nom</th><th>Baixes</th><th>Morts</th><th>Precisió</th><th>Distància</th><th>Trets</th><th>Punts</th></tr></thead>
+                    <thead><tr><th>Nom</th><th>Baixes</th><th>Morts</th><th>Precisió</th><th>Distància</th><th>A peu</th><th>En vehicle</th><th>Trets</th><th>Punts</th></tr></thead>
                     <tbody>
                     {% for player in data.players|default([]) %}
-                        <tr><td>{{ reportUi.player(player.name, playerProfiles, true) }}</td><td>{{ player.kills|default(0) }}</td><td>{{ player.deaths|default(0) }}</td><td>{{ ((player.accuracy|default(0)) * 100)|number_format(1) }}%</td><td>{{ player.distanceMeters|default(0) }} m</td><td>{{ player.shotsFired|default(player.shots|default(0)) }}</td><td>{{ player.mvpPoints|default(0)|number_format(1) }}</td></tr>
-                    {% else %}<tr><td colspan="7">No hi ha participants registrats.</td></tr>{% endfor %}
+                        <tr><td>{{ reportUi.player(player.name, playerProfiles, true) }}{% if player.role|default(null) or player.groupName|default(null) %}<small class="cc-muted" style="display:block;margin-top:.25rem">{{ player.role|default('') }}{% if player.role|default(null) and player.groupName|default(null) %} · {% endif %}{{ player.groupName|default('') }}</small>{% endif %}</td><td>{{ player.kills|default(0) }}</td><td>{{ player.deaths|default(0) }}</td><td>{{ ((player.accuracy|default(0)) * 100)|number_format(1) }}%</td><td>{{ player.distanceMeters|default(0) }} m</td><td>{% if player.distanceFootMeters is defined %}{{ player.distanceFootMeters }} m{% else %}—{% endif %}</td><td>{% if player.distanceVehicleMeters is defined %}{{ player.distanceVehicleMeters }} m{% else %}—{% endif %}</td><td>{{ player.shotsFired|default(player.shots|default(0)) }}</td><td>{{ player.mvpPoints|default(0)|number_format(1) }}</td></tr>
+                    {% else %}<tr><td colspan="9">No hi ha participants registrats.</td></tr>{% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -149,8 +155,8 @@
         <section class="cc-section">
             <div class="cc-section__title"><h2><i class="ph ph-trophy"></i> Classificacions</h2></div>
             <div class="cc-section__body cc-ranking">
-                {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
-                {% set rankingIcons = {kills:'target', kd:'scales', accuracy:'target', damage:'heart', distance:'footprints', longest_kill:'binoculars', survival:'heart', friendly_fire:'warning'} %}
+                {% set rankingLabels = {kills:'Baixes', kd:'Ràtio B/M', accuracy:'Precisió', damage:'Dany', distance:'Distància', distance_vehicle:'Distància en vehicle', longest_kill:'Baixa més llunyana', survival:'Supervivència', friendly_fire:'Foc amic'} %}
+                {% set rankingIcons = {kills:'target', kd:'scales', accuracy:'target', damage:'heart', distance:'footprints', distance_vehicle:'vehicle', longest_kill:'binoculars', survival:'heart', friendly_fire:'warning'} %}
                 {% for ranking in data.rankings|default([]) %}
                     {% if ranking.entries|default([]) is not empty %}
                         <div class="cc-ranking__card"><h3><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-{{ rankingIcons[ranking.key]|default('trophy') }}"/></svg>{{ rankingLabels[ranking.key]|default(ranking.key|replace({'_':' '})) }}</h3>{% for entry in ranking.entries|slice(0, 3) %}<div class="cc-ranking__entry"><span>{{ entry.rank }}. {{ reportUi.player(entry.name, playerProfiles) }}</span><strong>{{ reportUi.rankingValue(ranking.key, entry.value) }}</strong></div>{% endfor %}</div>
@@ -177,7 +183,7 @@
                         {% if kill.suicide|default(false) %}<span class="cc-feed__icon cc-feed__icon--suicide" title="Suïcidi"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-skull"/></svg></span><span>Suïcidi</span>{% elseif kill.friendlyFire|default(false) %}<span class="cc-feed__icon" title="Foc amic"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-warning"/></svg></span><span>Foc amic</span>{% else %}<span class="cc-feed__icon" title="Baixa"><svg class="cc-icon" aria-hidden="true"><use href="#cc-icon-target"/></svg></span><span>Kill</span>{% endif %}
                     </span>
                     <span class="cc-feed__arrow cc-feed__arrow--after" aria-hidden="true"{% if kill.suicide|default(false) %} style="visibility:hidden"{% endif %}></span>
-                    <span class="cc-feed__result">{% if not kill.suicide|default(false) %}<span class="{{ victimClass }}">{{ reportUi.player(kill.victim|default('Desconegut'), playerProfiles, true) }}</span><small class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('Arma desconeguda')) }}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</small>{% endif %}</span>
+                    <span class="cc-feed__result">{% if not kill.suicide|default(false) %}<span class="{{ victimClass }}">{{ reportUi.player(kill.victim|default('Desconegut'), playerProfiles, true) }}</span><small class="cc-feed__weapon">{{ kill.weaponName|default(kill.weaponClass|default('Arma desconeguda')) }}{% if kill.vehicleName|default(null) %} · {{ kill.vehicleName }}{% endif %}{% if kill.distance|default(0) > 0 %} · {{ kill.distance|round }} m{% endif %}</small>{% endif %}</span>
                 </div>
             {% else %}<p class="cc-muted">No hi ha baixes registrades.</p>{% endfor %}
             <p class="cc-feed__empty-filter" data-feed-empty>No hi ha esdeveniments amb jugadors.</p>
@@ -186,13 +192,12 @@
 
     {{ tacticalMap|raw }}
 
-    {% set frago = data.briefing|default([])|filter(entry => entry.subject|default('')|lower in ['frago', 'fragord'])|first|default(null) %}
     <div class="cc-logistics">
         <section class="cc-section cc-frago">
             <div class="cc-frago__eyebrow">FRAGORD</div>
             {% if frago %}
                 <h2>{{ frago.title|default('Ordre fragmentària') }}</h2>
-                <p class="cc-frago__body">{{ frago.body|default('') }}</p>
+                <div class="cc-frago__body">{{ frago.bodyHtml|raw }}</div>
             {% else %}
                 <h2>Ordre fragmentària</h2>
                 <p class="cc-frago__body cc-muted">Aquest informe no conté cap FRAGO.</p>
@@ -218,11 +223,25 @@
                     {% for vehicle in data.vehicles|default([]) %}
                         <article class="cc-media-card">
                             <div class="cc-media-card__image"><img src="{{ path('cc_composite_field_reports_media', {code: report.code, kind: 'vehicle', assetClass: vehicle.vehicleClass}) }}" alt="{{ vehicle.vehicleName|default(vehicle.vehicleClass) }}" loading="lazy"></div>
-                            <div class="cc-media-card__content"><h3>{{ vehicle.vehicleName|default(vehicle.vehicleClass) }}</h3><span class="cc-media-card__class">{{ vehicle.vehicleClass }}</span><div class="cc-media-card__stats"><div><strong>{{ (vehicle.secondsUsed|default(0) / 60)|round(0, 'ceil') }} min</strong><span>en ús</span></div><div><strong>{{ vehicle.kills|default(0) }}</strong><span>baixes</span></div></div></div>
+                            <div class="cc-media-card__content"><h3>{{ vehicle.vehicleName|default(vehicle.vehicleClass) }}</h3><span class="cc-media-card__class">{{ vehicle.vehicleClass }}</span><div class="cc-media-card__stats"><div><strong>{{ (vehicle.secondsUsed|default(0) / 60)|round(0, 'ceil') }} min</strong><span>en ús</span></div>{% if vehicle.distanceMeters is defined %}<div><strong>{% if vehicle.distanceMeters >= 1000 %}{{ (vehicle.distanceMeters / 1000)|number_format(1, ',', '.') }} km{% else %}{{ vehicle.distanceMeters|round }} m{% endif %}</strong><span>recorregut</span></div>{% endif %}<div><strong>{{ vehicle.kills|default(0) }}</strong><span>baixes</span></div></div></div>
                         </article>
                     {% else %}<p class="cc-media-card__empty">No hi ha vehicles registrats.</p>{% endfor %}
                 </div>
             </section>
+
+            {% if data.destroyedVehicles|default([]) is not empty %}
+                <section class="cc-section cc-loadout__group">
+                    <div class="cc-loadout__heading"><span class="cc-loadout__eyebrow">Vehicles destruïts</span></div>
+                    <div class="cc-media-grid">
+                        {% for vehicle in data.destroyedVehicles %}
+                            <article class="cc-media-card">
+                                <div class="cc-media-card__image"><img src="{{ path('cc_composite_field_reports_media', {code: report.code, kind: 'vehicle', assetClass: vehicle.vehicleClass}) }}" alt="{{ vehicle.vehicleName|default(vehicle.vehicleClass) }}" loading="lazy"></div>
+                                <div class="cc-media-card__content"><h3>{{ vehicle.vehicleName|default(vehicle.vehicleClass) }}</h3><span class="cc-media-card__class">{{ vehicle.side|default(vehicle.vehicleClass) }}</span><div class="cc-media-card__stats"><div><strong>{{ vehicle.destroyed|default(0) }}</strong><span>destruïts</span></div>{% if vehicle.friendlyLosses|default(0) > 0 %}<div><strong>{{ vehicle.friendlyLosses }}</strong><span>propis</span></div>{% endif %}</div></div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
         </div>
     </div>
 
@@ -262,7 +281,7 @@
     {% endif %}
 
     <footer class="cc-field__source">
-        <span>Mapa topogràfic: <a href="https://atlas.plan-ops.fr/maps/arma3" target="_blank" rel="noopener noreferrer">PLANOPS Atlas</a> · Contingut cartogràfic © Bohemia Interactive</span>
+        <span>Mapa topogràfic: <a href="https://atlas.plan-ops.fr/maps/arma3" target="_blank" rel="noopener noreferrer">PLANOPS Atlas</a> · {{ data.mapAttribution|default('Contingut cartogràfic © Bohemia Interactive') }}</span>
         <a href="{{ report.sourceUrl }}" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-square-out"></i> Informe original</a>
     </footer>
 </article>
@@ -287,10 +306,45 @@ document.querySelectorAll('[data-cc-tiled-map]').forEach(function (mapElement) {
         if (kind === 'movement') options = { radius: Math.min(13, 4 + Number(point.dataset.weight || 1)), color: '#6faeff', fillColor: '#3f8ce8', weight: 1, fillOpacity: .38 };
         if (kind === 'death') options = { radius: 7, color: '#ffd0d2', fillColor: '#e8434b', weight: 2, fillOpacity: .72 };
         if (kind === 'kill') options = { radius: 5, color: '#ffffff', fillColor: '#e5ac00', weight: 1, fillOpacity: 1 };
-        if (kind === 'marker') options = { radius: 6, color: '#1e3a8a', fillColor: '#ffffff', weight: 2, fillOpacity: 1 };
+        var markerColors = { ColorRed: '#ba3b2b', ColorOrange: '#d6960d', ColorYellow: '#e5ac00', ColorGreen: '#4b8f4b', ColorBlue: '#3f8ce8', ColorPink: '#edb8c9', ColorWEST: '#3f8ce8', ColorEAST: '#ba3b2b', ColorGUER: '#4b8f4b', Default: '#ffffff' };
+        var markerColor = /^#[0-9a-f]{6}$/i.test(point.dataset.color || '') ? point.dataset.color : (markerColors[point.dataset.color] || '#ffffff');
+        if (kind === 'marker') options = { radius: 6, color: markerColor, fillColor: markerColor, weight: 2, fillOpacity: .9 };
 
-        var layer = L.circleMarker([Number(point.dataset.y), Number(point.dataset.x)], options);
-        if (point.dataset.title) layer.bindTooltip(point.dataset.title);
+        var layer;
+        if (kind === 'marker' && point.dataset.shape === 'POLYLINE') {
+            var coordinates = [];
+            try { coordinates = JSON.parse(point.dataset.polyline || '[]'); } catch (error) { coordinates = []; }
+            var latLngs = [];
+            for (var index = 0; index + 1 < coordinates.length; index += 2) {
+                latLngs.push([Number(coordinates[index + 1]), Number(coordinates[index])]);
+            }
+            if (latLngs.length < 2) return;
+            layer = L.polyline(latLngs, { color: markerColor, weight: 3, opacity: Math.max(0, Math.min(1, Number(point.dataset.alpha || 1))) });
+        } else if (kind === 'marker' && (point.dataset.shape === 'RECTANGLE' || point.dataset.shape === 'ELLIPSE')) {
+            var centerX = Number(point.dataset.x), centerY = Number(point.dataset.y);
+            var sizeA = Math.max(1, Number(point.dataset.sizeA || 1)), sizeB = Math.max(1, Number(point.dataset.sizeB || 1));
+            var angle = Number(point.dataset.direction || 0) * Math.PI / 180;
+            var geometry = [], steps = point.dataset.shape === 'ELLIPSE' ? 40 : 4;
+            for (var step = 0; step < steps; step++) {
+                var dx, dy;
+                if (point.dataset.shape === 'ELLIPSE') {
+                    var theta = step / steps * Math.PI * 2;
+                    dx = Math.cos(theta) * sizeA; dy = Math.sin(theta) * sizeB;
+                } else {
+                    var corners = [[-sizeA, -sizeB], [sizeA, -sizeB], [sizeA, sizeB], [-sizeA, sizeB]];
+                    dx = corners[step][0]; dy = corners[step][1];
+                }
+                geometry.push([centerY + dx * Math.sin(angle) + dy * Math.cos(angle), centerX + dx * Math.cos(angle) - dy * Math.sin(angle)]);
+            }
+            var alpha = Math.max(0, Math.min(1, Number(point.dataset.alpha || 1)));
+            var solid = (point.dataset.brush || '').toUpperCase().indexOf('SOLID') !== -1;
+            layer = L.polygon(geometry, { color: markerColor, weight: 2, opacity: alpha, fillColor: markerColor, fillOpacity: solid ? alpha * .25 : 0 });
+        } else {
+            layer = L.circleMarker([Number(point.dataset.y), Number(point.dataset.x)], options);
+        }
+        var title = point.dataset.title || point.dataset.markerType || (kind === 'marker' ? 'Marca' : '');
+        if (point.dataset.author) title += (title ? ' · ' : '') + point.dataset.author;
+        if (title) layer.bindTooltip(title);
         if (point.dataset.profileUrl) {
             layer.on('click', function () { window.location.href = point.dataset.profileUrl; });
         }
