@@ -7,6 +7,7 @@ namespace ArniePalau\CcComposite\Controller;
 use ArniePalau\CcComposite\Entity\FieldReport;
 use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
+use ArniePalau\CcComposite\Repository\GalleryImageRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
 use ArniePalau\CcComposite\Service\AtlasMapCache;
 use ArniePalau\CcComposite\Service\ArmaBriefingFormatter;
@@ -84,7 +85,7 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/{code}', name: 'show', requirements: ['code' => '[A-Za-z0-9_-]+'], methods: ['GET'])]
-    public function show(string $code, FieldReportRepository $repository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, ArmaBriefingFormatter $briefingFormatter, EntityManagerInterface $entityManager): Response
+    public function show(string $code, FieldReportRepository $repository, GalleryImageRepository $galleryImageRepository, FieldReportPlayerProfileResolver $profileResolver, AtlasMapCache $mapCache, ArmaBriefingFormatter $briefingFormatter, EntityManagerInterface $entityManager): Response
     {
         $report = $repository->findOneBy(['code' => $code]);
         if (!$report instanceof FieldReport) {
@@ -150,6 +151,7 @@ final class FieldReportController extends AbstractController
             'tasks' => $tasks,
             'killTimeline' => $this->buildKillTimeline($payload),
             'playerGroups' => $playerGroups,
+            'galleryImages' => $galleryImageRepository->findByFieldReport($report),
         ]);
     }
 
