@@ -44,7 +44,7 @@ class GalleryImageType extends AbstractType
                 'class' => FieldReport::class,
                 'choice_label' => static function (FieldReport $report): string {
                     $campaignName = $report->getCampaign() ? '[' . $report->getCampaign()->getName() . '] ' : '';
-                    return $campaignName . $report->getMissionName() . ' (' . $report->getStartedAt()->format('d/m/Y') . ')';
+                    return $campaignName . $report->getMissionName() . ' (' . $report->getStartedAt()->format('d/m/Y H:i') . ' · ' . $report->getCode() . ')';
                 },
                 'label' => 'Missió / Informe de combat (opcional)',
                 'required' => false,
