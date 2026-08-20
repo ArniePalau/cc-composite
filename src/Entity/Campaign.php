@@ -27,6 +27,9 @@ class Campaign
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $contextUrl = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
 
@@ -56,6 +59,8 @@ class Campaign
     public function setSlug(string $slug): void { $this->slug = $slug; }
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): void { $this->description = ($description = trim((string) $description)) !== '' ? $description : null; }
+    public function getContextUrl(): ?string { return $this->contextUrl; }
+    public function setContextUrl(?string $contextUrl): void { $this->contextUrl = ($contextUrl = trim((string) $contextUrl)) !== '' ? $contextUrl : null; }
     public function getImagePath(): ?string { return $this->imagePath; }
     public function setImagePath(?string $imagePath): void { $this->imagePath = $imagePath; }
     public function getCreatedAt(): DateTimeImmutable { return $this->createdAt; }

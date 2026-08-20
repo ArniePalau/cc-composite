@@ -6,8 +6,9 @@ namespace ArniePalau\CcComposite\Form;
 
 use ArniePalau\CcComposite\Entity\Campaign;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,6 +20,11 @@ final class CampaignType extends AbstractType
         $builder
             ->add('name', options: ['constraints' => [new Assert\NotBlank(), new Assert\Length(max: 255)]])
             ->add('description', TextareaType::class, ['required' => false])
+            ->add('contextUrl', TextType::class, [
+                'required' => false,
+                'label' => 'Context + info (URL)',
+                'help' => 'Enllaç extern o del fòrum amb la informació i context de la campanya (ex: https://forumify-milsim.duckdns.org/forum/...)',
+            ])
             ->add('image', FileType::class, [
                 'mapped' => false,
                 'required' => false,

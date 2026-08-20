@@ -5,14 +5,14 @@
 {% block body %}
 <div class="box mb-6">
     <h2 class="box-title">Create campaign</h2>
-    <div class="box-content">{{ form_start(form) }}{{ form_row(form.name) }}{{ form_row(form.description) }}{{ form_row(form.image) }}<button class="btn-primary mt-4" type="submit"><i class="ph ph-plus"></i> Create campaign</button>{{ form_rest(form) }}{{ form_end(form) }}</div>
+    <div class="box-content">{{ form_start(form) }}{{ form_row(form.name) }}{{ form_row(form.description) }}{{ form_row(form.contextUrl) }}{{ form_row(form.image) }}<button class="btn-primary mt-4" type="submit"><i class="ph ph-plus"></i> Create campaign</button>{{ form_rest(form) }}{{ form_end(form) }}</div>
 </div>
 <div class="box">
     <h2 class="box-title">Campaigns</h2>
     <div class="box-content overflow-x-auto">
-        <table class="w-full"><thead><tr><th>Image</th><th>Name</th><th>Description</th><th class="text-right">Actions</th></tr></thead><tbody>
-        {% for campaign in campaigns %}<tr><td>{% if campaign.imagePath %}<img src="{{ asset(campaign.imagePath, 'cc_composite.asset') }}" alt="" style="width:96px;height:48px;object-fit:cover;border-radius:6px">{% else %}—{% endif %}</td><td><strong>{{ campaign.name }}</strong></td><td>{{ campaign.description|default('—') }}</td><td><div class="flex justify-end gap-2"><a class="btn-secondary btn-small" href="{{ path('cc_composite_admin_campaigns_edit', {id: campaign.id}) }}"><i class="ph ph-pencil"></i> Edit</a><form action="{{ path('cc_composite_admin_campaigns_delete', {id: campaign.id}) }}" method="post" onsubmit="return confirm('Delete this campaign? Reports will be unassigned, not deleted.')"><input type="hidden" name="_token" value="{{ csrf_token('cc-composite-campaign-delete-' ~ campaign.id) }}"><button class="btn-danger btn-small" type="submit"><i class="ph ph-trash"></i></button></form></div></td></tr>
-        {% else %}<tr><td colspan="4" class="text-center p-6">No campaigns have been created yet.</td></tr>{% endfor %}
+        <table class="w-full"><thead><tr><th>Image</th><th>Name</th><th>Description</th><th>Context + info</th><th class="text-right">Actions</th></tr></thead><tbody>
+        {% for campaign in campaigns %}<tr><td>{% if campaign.imagePath %}<img src="{{ asset(campaign.imagePath, 'cc_composite.asset') }}" alt="" style="width:96px;height:48px;object-fit:cover;border-radius:6px">{% else %}—{% endif %}</td><td><strong>{{ campaign.name }}</strong></td><td>{{ campaign.description|default('—') }}</td><td>{% if campaign.contextUrl %}<a href="{{ campaign.contextUrl }}" target="_blank" class="text-xs text-blue-400 hover:underline inline-flex items-center gap-1"><i class="ph ph-arrow-square-out"></i> Link</a>{% else %}—{% endif %}</td><td><div class="flex justify-end gap-2"><a class="btn-secondary btn-small" href="{{ path('cc_composite_admin_campaigns_edit', {id: campaign.id}) }}"><i class="ph ph-pencil"></i> Edit</a><form action="{{ path('cc_composite_admin_campaigns_delete', {id: campaign.id}) }}" method="post" onsubmit="return confirm('Delete this campaign? Reports will be unassigned, not deleted.')"><input type="hidden" name="_token" value="{{ csrf_token('cc-composite-campaign-delete-' ~ campaign.id) }}"><button class="btn-danger btn-small" type="submit"><i class="ph ph-trash"></i></button></form></div></td></tr>
+        {% else %}<tr><td colspan="5" class="text-center p-6">No campaigns have been created yet.</td></tr>{% endfor %}
         </tbody></table>
     </div>
 </div>

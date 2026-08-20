@@ -258,6 +258,33 @@
         grid-column: 1 / -1;
     }
 }
+.cc-campaign__context-wrap {
+    margin-top: 0.85rem;
+}
+.cc-campaign__context-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 9999px;
+    background: rgba(229, 172, 0, 0.15);
+    border: 1px solid rgba(229, 172, 0, 0.45);
+    color: #fef08a;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.cc-campaign__context-btn:hover {
+    background: #e5ac00;
+    color: #05080f;
+    border-color: #e5ac00;
+    box-shadow: 0 4px 14px rgba(229, 172, 0, 0.4);
+    transform: translateY(-2px);
+}
 </style>
 
 <section class="cc-campaign">
@@ -271,6 +298,13 @@
             <h1>{{ campaign.name }}</h1>
             {% if campaign.description %}
                 <p>{{ campaign.description }}</p>
+            {% endif %}
+            {% if campaign.contextUrl %}
+                <div class="cc-campaign__context-wrap">
+                    <a href="{{ campaign.contextUrl }}" target="_blank" rel="noopener noreferrer" class="cc-campaign__context-btn">
+                        <i class="ph ph-info"></i> Context + info <i class="ph ph-arrow-up-right"></i>
+                    </a>
+                </div>
             {% endif %}
         </div>
     </header>
