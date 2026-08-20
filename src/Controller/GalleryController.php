@@ -66,12 +66,66 @@ final class GalleryController extends AbstractController
             $campaignMissions = $reportRepository->findBy(['campaign' => $selectedCampaign], ['startedAt' => 'DESC']);
         }
 
+        // Group images by mission, or by upload date if not linked to a mission (Google Photos style)
+        $groupedSections = [];
+        $globalIndex = 0;
+
+        foreach ($images as $img) {
+            $report = $img->getFieldReport();
+
+            if ($report !== null) {
+                $groupKey = 'report_' . $report->getId();
+                if (!isset($groupedSections[$groupKey])) {
+                    $groupedSections[$groupKey] = [
+                        'type' => 'mission',
+                        'title' => $report->getMissionName(),
+                        'date' => $report->getStartedAt(),
+                        'world' => $report->getWorldDisplayName() ?: $report->getWorld(),
+                        'campaign' => $report->getCampaign()?->getName(),
+                        'campaignSlug' => $report->getCampaign()?->getSlug(),
+                        'reportCode' => $report->getCode(),
+                        'items' => [],
+                    ];
+                }
+                $groupedSections[$groupKey]['items'][] = [
+                    'image' => $img,
+                    'globalIndex' => $globalIndex++,
+                ];
+            } else {
+                $dayKey = $img->getCreatedAt()->format('Y-m-d');
+                $campaignKey = $img->getEffectiveCampaign()?->getId() ?? 'general';
+                $groupKey = 'day_' . $dayKey . '_' . $campaignKey;
+                if (!isset($groupedSections[$groupKey])) {
+                    $groupedSections[$groupKey] = [
+                        'type' => 'day',
+                        'title' => $img->getEffectiveCampaign() ? $img->getEffectiveCampaign()->getName() : 'Galeria general',
+                        'date' => $img->getCreatedAt(),
+                        'world' => null,
+                        'campaign' => $img->getEffectiveCampaign()?->getName(),
+                        'campaignSlug' => $img->getEffectiveCampaign()?->getSlug(),
+                        'reportCode' => null,
+                        'items' => [],
+                    ];
+                }
+                $groupedSections[$groupKey]['items'][] = [
+                    'image' => $img,
+                    'globalIndex' => $globalIndex++,
+                ];
+            }
+        }
+
+        // Sort sections chronologically (most recent first)
+        uasort($groupedSections, static function (array $a, array $b): int {
+            return $b['date'] <=> $a['date'];
+        });
+
         return $this->render('@CcCompositePlugin/frontend/gallery/index.html.twig', [
             'campaigns' => $campaigns,
             'selectedCampaign' => $selectedCampaign,
             'selectedReport' => $selectedReport,
             'campaignMissions' => $campaignMissions,
             'images' => $images,
+            'sections' => $groupedSections,
         ]);
     }
 }

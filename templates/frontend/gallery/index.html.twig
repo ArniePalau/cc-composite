@@ -89,6 +89,80 @@
         border-color: rgba(255, 255, 255, 0.3);
         font-weight: 600;
     }
+    .cc-gallery-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .cc-gallery-section {
+        position: relative;
+    }
+    .cc-gallery-section__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid rgba(229, 172, 0, 0.22);
+    }
+    .cc-gallery-section__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .cc-gallery-section__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+    }
+    .cc-gallery-section__badge--mission {
+        color: var(--cc-gold, #e5ac00);
+    }
+    .cc-gallery-section__badge--day {
+        color: #60a5fa;
+    }
+    .cc-gallery-section__title {
+        font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #ffffff;
+        margin: 0;
+        line-height: 1.15;
+    }
+    .cc-gallery-section__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.85rem;
+        font-size: 0.82rem;
+        color: #9ca3af;
+        margin-top: 0.2rem;
+    }
+    .cc-gallery-section__meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .cc-gallery-section__count {
+        background: rgba(255, 255, 255, 0.06);
+        padding: 0.15rem 0.55rem;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.75rem;
+        color: #e5e7eb;
+    }
+
     .cc-gallery-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -162,6 +236,15 @@
         font-weight: 600;
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+    }
+    .cc-gallery-pill--title {
+        background: rgba(0, 0, 0, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        max-width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .cc-gallery-pill--mission {
         background: rgba(186, 30, 30, 0.85);
@@ -382,7 +465,7 @@
         </div>
     {% endif %}
 
-    {# Images Grid #}
+    {# Grouped Images Sections #}
     {% if images is empty %}
         <div class="card p-8 text-center bg-[#0d1420] border border-line rounded-lg">
             <i class="ph ph-camera-slash text-5xl text-secondary mb-3 inline-block"></i>
@@ -390,32 +473,79 @@
             <p class="text-secondary mb-0">Encara no s'ha publicat cap fotografia per a aquesta selecció.</p>
         </div>
     {% else %}
-        <div class="cc-gallery-grid" id="galleryGrid">
-            {% for idx, img in images %}
-                <div class="cc-gallery-card" onclick="openGalleryModal({{ idx }})">
-                    <div class="cc-gallery-card__media">
-                        <img class="cc-gallery-card__img" src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Fotografia') }}" loading="lazy">
-                        <div class="cc-gallery-card__overlay"></div>
-                        <div class="cc-gallery-card__media-bottom">
-                            <div class="cc-gallery-card__media-left">
-                                {% if img.fieldReport %}
-                                    <span class="cc-gallery-pill cc-gallery-pill--mission" title="{{ img.fieldReport.missionName }}">
-                                        <i class="ph ph-crosshair"></i> {{ img.fieldReport.missionName }}
-                                    </span>
-                                {% elseif img.effectiveCampaign %}
-                                    <span class="cc-gallery-pill cc-gallery-pill--campaign" title="{{ img.effectiveCampaign.name }}">
-                                        <i class="ph ph-flag"></i> {{ img.effectiveCampaign.name }}
-                                    </span>
+        <div class="cc-gallery-sections" id="gallerySections">
+            {% for section in sections %}
+                <section class="cc-gallery-section">
+                    <div class="cc-gallery-section__header">
+                        <div class="cc-gallery-section__info">
+                            <div class="cc-gallery-section__badge {% if section.type == 'mission' %}cc-gallery-section__badge--mission{% else %}cc-gallery-section__badge--day{% endif %}">
+                                {% if section.type == 'mission' %}
+                                    <i class="ph ph-crosshair"></i> Missió
+                                {% else %}
+                                    <i class="ph ph-calendar-blank"></i> Data de càrrega
                                 {% endif %}
                             </div>
-                            <div class="cc-gallery-card__media-right">
-                                <span class="cc-gallery-pill cc-gallery-pill--date">
-                                    <i class="ph ph-calendar-blank"></i> {{ img.createdAt|date('d/m/Y') }}
+                            <h2 class="cc-gallery-section__title">
+                                {% if section.type == 'mission' %}
+                                    {{ section.title|replace({'_': ' '}) }}
+                                {% else %}
+                                    {{ section.title }} · {{ section.date|date('d/m/Y') }}
+                                {% endif %}
+                            </h2>
+                            <div class="cc-gallery-section__meta">
+                                {% if section.type == 'mission' %}
+                                    <span><i class="ph ph-calendar"></i> {{ section.date|date('d/m/Y') }}</span>
+                                    {% if section.world %}
+                                        <span><i class="ph ph-map-pin"></i> {{ section.world }}</span>
+                                    {% endif %}
+                                {% endif %}
+                                {% if section.campaign and not selectedCampaign %}
+                                    <span><i class="ph ph-flag"></i> {{ section.campaign }}</span>
+                                {% endif %}
+                                <span class="cc-gallery-section__count">
+                                    <i class="ph ph-image"></i> {{ section.items|length }} {{ section.items|length == 1 ? 'fotografia' : 'fotografies' }}
                                 </span>
                             </div>
                         </div>
+                        {% if section.reportCode %}
+                            <div class="cc-gallery-section__action">
+                                <a href="{{ path('cc_composite_field_reports_show', { code: section.reportCode }) }}" class="btn-secondary btn-small">
+                                    <i class="ph ph-file-text"></i> Veure informe de combat
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
+
+                    <div class="cc-gallery-grid">
+                        {% for item in section.items %}
+                            {% set img = item.image %}
+                            <div class="cc-gallery-card" onclick="openGalleryModal({{ item.globalIndex }})">
+                                <div class="cc-gallery-card__media">
+                                    <img class="cc-gallery-card__img" src="{{ asset(img.imagePath, 'cc_composite.asset') }}" alt="{{ img.title|default('Fotografia') }}" loading="lazy">
+                                    <div class="cc-gallery-card__overlay"></div>
+                                    <div class="cc-gallery-card__media-bottom">
+                                        <div class="cc-gallery-card__media-left">
+                                            {% if img.title %}
+                                                <span class="cc-gallery-pill cc-gallery-pill--title" title="{{ img.title }}">
+                                                    {{ img.title }}
+                                                </span>
+                                            {% elseif img.effectiveCampaign and not selectedCampaign %}
+                                                <span class="cc-gallery-pill cc-gallery-pill--campaign" title="{{ img.effectiveCampaign.name }}">
+                                                    <i class="ph ph-flag"></i> {{ img.effectiveCampaign.name }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="cc-gallery-card__media-right">
+                                            <span class="cc-gallery-pill cc-gallery-pill--date">
+                                                <i class="ph ph-calendar-blank"></i> {{ img.createdAt|date('d/m/Y') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
             {% endfor %}
         </div>
     {% endif %}
