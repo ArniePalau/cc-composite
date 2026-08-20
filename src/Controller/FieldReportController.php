@@ -9,6 +9,7 @@ use ArniePalau\CcComposite\Repository\FieldReportRepository;
 use ArniePalau\CcComposite\Repository\CampaignRepository;
 use ArniePalau\CcComposite\Repository\GalleryImageRepository;
 use ArniePalau\CcComposite\Service\FieldReportPlayerProfileResolver;
+use ArniePalau\CcComposite\Service\FieldReportPlayerIdentity;
 use ArniePalau\CcComposite\Service\AtlasMapCache;
 use ArniePalau\CcComposite\Service\ArmaBriefingFormatter;
 use ArniePalau\CcComposite\Service\FieldReportMediaProxy;
@@ -41,16 +42,60 @@ final class FieldReportController extends AbstractController
     }
 
     #[Route('/campaign/{slug}', name: 'campaign', methods: ['GET'])]
-    public function campaign(string $slug, CampaignRepository $campaignRepository, FieldReportRepository $reportRepository): Response
-    {
+    public function campaign(
+        string $slug,
+        CampaignRepository $campaignRepository,
+        FieldReportRepository $reportRepository,
+        GalleryImageRepository $galleryImageRepository,
+        FieldReportPlayerIdentity $playerIdentity
+    ): Response {
         $campaign = $campaignRepository->findOneBy(['slug' => $slug]);
         if ($campaign === null) {
             throw $this->createNotFoundException('Campaign not found.');
         }
 
+        $reports = $reportRepository->findForCampaign($campaign);
+
+        $totalKills = 0;
+        $totalShots = 0;
+        $totalDurationSeconds = 0;
+        $uniquePlayers = [];
+
+        foreach ($reports as $report) {
+            $totalKills += $report->getTotalKills();
+            $totalShots += $report->getTotalShots();
+            $totalDurationSeconds += $report->getDurationSeconds();
+
+            foreach ($report->getPayload()['players'] ?? [] as $player) {
+                $name = trim((string) ($player['name'] ?? ''));
+                if ($name !== '') {
+                    $uniquePlayers[$playerIdentity->key($name)] = true;
+                }
+            }
+        }
+
+        $galleryImages = $galleryImageRepository->findByCampaign($campaign);
+
+        $hours = intdiv($totalDurationSeconds, 3600);
+        $minutes = intdiv($totalDurationSeconds % 3600, 60);
+        $durationFormatted = $hours > 0
+            ? sprintf('%dh %02dmin', $hours, $minutes)
+            : sprintf('%dmin', $minutes);
+
+        $stats = [
+            'kills' => $totalKills,
+            'missions' => count($reports),
+            'participants' => count($uniquePlayers),
+            'duration' => $durationFormatted,
+            'shots' => $totalShots,
+            'reportatge' => count($galleryImages),
+        ];
+
         return $this->render('@CcCompositePlugin/frontend/field_report/campaign.html.twig', [
             'campaign' => $campaign,
-            'reports' => $reportRepository->findForCampaign($campaign),
+            'reports' => $reports,
+            'stats' => $stats,
+            'galleryImages' => $galleryImages,
         ]);
     }
 

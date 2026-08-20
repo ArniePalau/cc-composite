@@ -1,8 +1,348 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block title_page %}{{ campaign.name }}{% endblock %}
+
 {% block body %}
 <style>
-.cc-campaign{--cc-gold:#e5ac00;--cc-line:rgba(229,172,0,.24);--cc-panel:rgba(10,14,23,.88);max-width:1200px;margin:2rem auto;padding:0 1rem}.cc-campaign__back{color:var(--cc-gold)}.cc-campaign__hero{position:relative;margin:1.5rem 0;padding:0;overflow:hidden;border-radius:14px}.cc-campaign__hero--image{min-height:300px;display:flex;align-items:flex-end;padding:clamp(1.5rem,4vw,3rem);background-image:var(--cc-campaign-image);background-position:center;background-size:cover}.cc-campaign__hero--image:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,8,15,.97) 0%,rgba(5,8,15,.76) 48%,rgba(5,8,15,.2) 100%)}.cc-campaign__hero-content{position:relative;z-index:1}.cc-campaign h1{font-size:clamp(2rem,5vw,3.5rem);margin:.35rem 0}.cc-campaign header p{color:var(--c-text-secondary,#a0a8b0)}.cc-campaign__hero--image p{color:#d1d5db}.cc-campaign__list{display:grid;gap:1rem}.cc-campaign__report{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:1rem;padding:1.2rem;border:1px solid var(--cc-line);border-radius:12px;background:var(--cc-panel)}.cc-campaign__report:hover{border-color:var(--cc-gold)}.cc-campaign__date{color:var(--cc-gold);font-weight:700}.cc-campaign__meta{color:var(--c-text-secondary,#a0a8b0);display:flex;gap:1rem;flex-wrap:wrap}.cc-campaign__empty{padding:2rem;border:1px dashed var(--cc-line);border-radius:12px;text-align:center}@media(max-width:700px){.cc-campaign__hero--image{min-height:230px}.cc-campaign__report{grid-template-columns:1fr auto}.cc-campaign__date{grid-column:1/-1}}
+.cc-campaign {
+    --cc-gold: #e5ac00;
+    --cc-line: rgba(229, 172, 0, 0.24);
+    --cc-panel: rgba(10, 14, 23, 0.88);
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+.cc-campaign__back {
+    color: var(--cc-gold);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+.cc-campaign__back:hover {
+    color: #fff;
+}
+.cc-campaign__eyebrow {
+    color: var(--cc-gold);
+    font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+.cc-campaign__hero {
+    position: relative;
+    margin: 1.25rem 0 2rem;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--cc-line);
+    background: linear-gradient(135deg, rgba(13, 20, 32, 0.95), rgba(7, 11, 18, 0.98));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.cc-campaign__hero--image {
+    min-height: 280px;
+    display: flex;
+    align-items: flex-end;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background-image: var(--cc-campaign-image);
+    background-position: center;
+    background-size: cover;
+}
+.cc-campaign__hero--image:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(5, 8, 15, 0.96) 0%, rgba(5, 8, 15, 0.78) 50%, rgba(5, 8, 15, 0.25) 100%);
+}
+.cc-campaign__hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+}
+.cc-campaign h1 {
+    font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0.25rem 0 0.5rem;
+    color: #ffffff;
+    line-height: 1.1;
+}
+.cc-campaign header p {
+    color: var(--c-text-secondary, #a0a8b0);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.cc-campaign__hero--image p {
+    color: #d1d5db;
+}
+
+/* 6 Summary Stat Tiles */
+.cc-campaign__stats {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.25rem;
+}
+.cc-stat-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.25rem 0.6rem;
+    border-radius: 12px;
+    background: var(--cc-panel);
+    border: 1px solid var(--cc-line);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+}
+.cc-stat-tile:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(229, 172, 0, 0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.cc-stat-tile:hover {
+    transform: translateY(-3px);
+    border-color: rgba(229, 172, 0, 0.65);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+.cc-stat-tile:hover:before {
+    opacity: 1;
+}
+.cc-stat-tile__icon {
+    font-size: 1.5rem;
+    color: var(--cc-gold);
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(229, 172, 0, 0.08);
+    border: 1px solid rgba(229, 172, 0, 0.18);
+}
+.cc-stat-tile__value {
+    font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+    font-size: clamp(1.35rem, 2vw, 1.85rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.25rem;
+}
+.cc-stat-tile__label {
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.cc-stat-tile--link:hover .cc-stat-tile__label {
+    color: var(--cc-gold);
+}
+
+/* Missions Section */
+.cc-campaign__section-title {
+    font-family: var(--cdc-font-display, 'Oswald'), 'Barlow Condensed', Impact, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.cc-campaign__list {
+    display: grid;
+    gap: 1rem;
+}
+.cc-campaign__report {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--cc-line);
+    border-radius: 12px;
+    background: var(--cc-panel);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+.cc-campaign__report:hover {
+    border-color: var(--cc-gold);
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+.cc-campaign__date {
+    color: var(--cc-gold);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+.cc-campaign__report h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    margin: 0 0 0.35rem 0;
+}
+.cc-campaign__meta {
+    color: var(--c-text-secondary, #a0a8b0);
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+}
+.cc-campaign__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.cc-campaign__arrow {
+    color: #6b7280;
+    font-size: 1.25rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.cc-campaign__report:hover .cc-campaign__arrow {
+    color: var(--cc-gold);
+    transform: translateX(3px);
+}
+.cc-campaign__empty {
+    padding: 3rem 2rem;
+    border: 1px dashed var(--cc-line);
+    border-radius: 12px;
+    text-align: center;
+    color: #9ca3af;
+    background: rgba(10, 14, 23, 0.5);
+}
+
+@media(max-width: 1024px) {
+    .cc-campaign__stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media(max-width: 640px) {
+    .cc-campaign__stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .cc-campaign__hero--image {
+        min-height: 220px;
+    }
+    .cc-campaign__report {
+        grid-template-columns: 1fr auto;
+    }
+    .cc-campaign__date {
+        grid-column: 1 / -1;
+    }
+}
 </style>
-<section class="cc-campaign"><a class="cc-campaign__back" href="{{ path('cc_composite_field_reports_index') }}"><i class="ph ph-arrow-left"></i> Tots els informes</a><header class="cc-campaign__hero{% if campaign.imagePath %} cc-campaign__hero--image{% endif %}"{% if campaign.imagePath %} style="--cc-campaign-image:url('{{ asset(campaign.imagePath, 'cc_composite.asset')|e('html_attr') }}')"{% endif %}><div class="cc-campaign__hero-content"><div class="cc-campaign__back">Campanya</div><h1>{{ campaign.name }}</h1>{% if campaign.description %}<p>{{ campaign.description }}</p>{% endif %}</div></header><div class="cc-campaign__list">{% for report in reports %}<a class="cc-campaign__report" href="{{ path('cc_composite_field_reports_show', {code: report.code}) }}"><div class="cc-campaign__date">{{ report.startedAt|date('d M Y') }}</div><div><h2>{{ report.missionName|replace({'_':' '}) }}</h2><div class="cc-campaign__meta"><span>{{ report.worldDisplayName|default(report.world) }}</span><span>{{ report.durationLabel }}</span><span>{{ report.playerCount }} participants</span></div></div><i class="ph ph-arrow-right"></i></a>{% else %}<div class="cc-campaign__empty">Aquesta campanya encara no té missions assignades.</div>{% endfor %}</div></section>
+
+<section class="cc-campaign">
+    <a class="cc-campaign__back" href="{{ path('cc_composite_field_reports_index') }}">
+        <i class="ph ph-arrow-left"></i> Tots els informes
+    </a>
+
+    <header class="cc-campaign__hero{% if campaign.imagePath %} cc-campaign__hero--image{% endif %}"{% if campaign.imagePath %} style="--cc-campaign-image:url('{{ asset(campaign.imagePath, 'cc_composite.asset')|e('html_attr') }}')"{% endif %}>
+        <div class="cc-campaign__hero-content">
+            <div class="cc-campaign__eyebrow">Campanya</div>
+            <h1>{{ campaign.name }}</h1>
+            {% if campaign.description %}
+                <p>{{ campaign.description }}</p>
+            {% endif %}
+        </div>
+    </header>
+
+    {# 6 Stat Summary Tiles on top of missions #}
+    <div class="cc-campaign__stats">
+        <div class="cc-stat-tile" title="Total de baixes enemigues">
+            <div class="cc-stat-tile__icon"><i class="ph ph-crosshair"></i></div>
+            <div class="cc-stat-tile__value">{{ (stats.kills|default(0))|number_format(0, ',', '.') }}</div>
+            <div class="cc-stat-tile__label">Baixes</div>
+        </div>
+        <div class="cc-stat-tile" title="Total de missions de la campanya">
+            <div class="cc-stat-tile__icon"><i class="ph ph-flag"></i></div>
+            <div class="cc-stat-tile__value">{{ stats.missions|default(0) }}</div>
+            <div class="cc-stat-tile__label">Missions</div>
+        </div>
+        <div class="cc-stat-tile" title="Participants únics diferents en aquesta campanya">
+            <div class="cc-stat-tile__icon"><i class="ph ph-users"></i></div>
+            <div class="cc-stat-tile__value">{{ stats.participants|default(0) }}</div>
+            <div class="cc-stat-tile__label">Participants</div>
+        </div>
+        <div class="cc-stat-tile" title="Durada acumulada de les operacions">
+            <div class="cc-stat-tile__icon"><i class="ph ph-clock"></i></div>
+            <div class="cc-stat-tile__value">{{ stats.duration|default('0min') }}</div>
+            <div class="cc-stat-tile__label">Durada</div>
+        </div>
+        <div class="cc-stat-tile" title="Total de trets disparats">
+            <div class="cc-stat-tile__icon"><i class="ph ph-target"></i></div>
+            <div class="cc-stat-tile__value">{{ (stats.shots|default(0))|number_format(0, ',', '.') }}</div>
+            <div class="cc-stat-tile__label">Trets</div>
+        </div>
+        {% if stats.reportatge is defined and stats.reportatge > 0 %}
+            <a href="{{ path('cc_composite_galeria', { campaign: campaign.slug }) }}" class="cc-stat-tile cc-stat-tile--link" title="Veure {{ stats.reportatge }} fotografies a la galeria">
+                <div class="cc-stat-tile__icon"><i class="ph ph-images"></i></div>
+                <div class="cc-stat-tile__value">{{ stats.reportatge }}</div>
+                <div class="cc-stat-tile__label">Reportatge <i class="ph ph-arrow-square-out text-xs"></i></div>
+            </a>
+        {% else %}
+            <div class="cc-stat-tile" title="Fotografies publicades">
+                <div class="cc-stat-tile__icon"><i class="ph ph-images"></i></div>
+                <div class="cc-stat-tile__value">0</div>
+                <div class="cc-stat-tile__label">Reportatge</div>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Missions List #}
+    <div class="cc-campaign__section-title">
+        <i class="ph ph-list-bullets" style="color: var(--cc-gold);"></i>
+        Informes de combat ({{ reports|length }})
+    </div>
+
+    <div class="cc-campaign__list">
+        {% for report in reports %}
+            <a class="cc-campaign__report" href="{{ path('cc_composite_field_reports_show', { code: report.code }) }}">
+                <div class="cc-campaign__date">{{ report.startedAt|date('d M Y') }}</div>
+                <div>
+                    <h2>{{ report.missionName|replace({'_':' '}) }}</h2>
+                    <div class="cc-campaign__meta">
+                        <span><i class="ph ph-map-pin"></i> {{ report.worldDisplayName|default(report.world) }}</span>
+                        <span><i class="ph ph-clock"></i> {{ report.durationLabel }}</span>
+                        <span><i class="ph ph-users"></i> {{ report.playerCount }} participants</span>
+                    </div>
+                </div>
+                <i class="ph ph-arrow-right cc-campaign__arrow"></i>
+            </a>
+        {% else %}
+            <div class="cc-campaign__empty">
+                <i class="ph ph-folder-open text-4xl mb-2 inline-block"></i>
+                <p class="mb-0">Aquesta campanya encara no té informes de combat assignats.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}
