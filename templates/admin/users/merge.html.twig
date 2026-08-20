@@ -1,0 +1,304 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+
+{% block title_page %}Unificació d'Usuaris{% endblock %}
+
+{% block body %}
+<style>
+.cc-merge-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+.cc-merge-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-primary, #e5ac00);
+    font-size: 2rem;
+    padding: 1rem 0;
+}
+.cc-user-card {
+    background: rgba(13, 20, 32, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.cc-user-card--source {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.cc-user-card--target {
+    border-color: rgba(34, 197, 94, 0.3);
+}
+.cc-preview-box {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px dashed rgba(229, 172, 0, 0.3);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+}
+@media (max-width: 768px) {
+    .cc-merge-grid {
+        grid-template-columns: 1fr;
+    }
+    .cc-merge-arrow {
+        transform: rotate(90deg);
+        padding: 0.5rem 0;
+    }
+}
+</style>
+
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold">Unificació d'Usuaris (Merge Users)</h1>
+        <p class="text-secondary text-sm">Transferiu fàcilment temes, missatges i dades des d'un compte fantasma o secundari cap a un compte principal d'usuari.</p>
+    </div>
+</div>
+
+<div class="box mb-6">
+    <div class="box-content">
+        <div class="flex items-start gap-3 p-4 bg-opacity-20 bg-blue-500 rounded-lg border border-blue-500/30 mb-6">
+            <i class="ph ph-info text-2xl text-blue-400 mt-0.5"></i>
+            <div class="text-sm">
+                <strong class="text-white block mb-1">Com funciona aquesta eina?</strong>
+                <ul class="list-disc list-inside space-y-1 text-secondary">
+                    <li>Tots els <strong>temes i fils del fòrum</strong> creats per l'usuari d'origen seran reassignats a l'usuari principal.</li>
+                    <li>Tots els <strong>missatges i comentaris</strong> es traspassaran com si els hagués escrit l'usuari principal.</li>
+                    <li>Els <strong>enllaços d'informes de combat</strong> i la fitxa de soldat de PERSCOM quedaran vinculats al nou compte.</li>
+                    <li>El compte d'origen serà <strong>desactivat</strong> i marcat com a unificat de forma segura.</li>
+                </ul>
+            </div>
+        </div>
+
+        <form action="{{ path('cc_composite_admin_user_merge_execute') }}" method="post" id="mergeForm" onsubmit="return confirmMerge()">
+            <input type="hidden" name="_token" value="{{ csrf_token('cc-composite-user-merge') }}">
+
+            <div class="cc-merge-grid">
+                {# Source User Card #}
+                <div class="cc-user-card cc-user-card--source">
+                    <div class="flex items-center gap-2 text-red-400 font-semibold text-sm">
+                        <i class="ph ph-user-minus text-lg"></i>
+                        <span>1. Usuari d'Origen (Ghost / A traspassar)</span>
+                    </div>
+                    <div>
+                        <label for="source_user_id" class="block text-xs font-semibold uppercase text-secondary mb-1">Selecciona el compte d'origen:</label>
+                        <select name="source_user_id" id="source_user_id" class="form-control w-full" required onchange="updatePreview()">
+                            <option value="">— Selecciona usuari d'origen —</option>
+                            {% if ghostUsers is not empty %}
+                                <optgroup label="👻 Usuaris Fantasma pendents">
+                                    {% for u in ghostUsers %}
+                                        <option value="{{ u.id }}" {% if preselectSourceId == u.id %}selected{% endif %}>
+                                            {{ u.displayName }} (@{{ u.username }}) [ID: {{ u.id }}]
+                                        </option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endif %}
+                            <optgroup label="Tots els usuaris">
+                                {% for u in users %}
+                                    <option value="{{ u.id }}" {% if preselectSourceId == u.id and not (ghostUsers|filter(g => g.id == u.id)|length) %}selected{% endif %}>
+                                        {{ u.displayName }} (@{{ u.username }}) [ID: {{ u.id }}]
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div id="sourceDetails" class="text-xs text-secondary">
+                        Seleccioneu un usuari per comprovar les dades a traspassar.
+                    </div>
+                </div>
+
+                {# Arrow Divider #}
+                <div class="cc-merge-arrow">
+                    <i class="ph ph-arrow-fat-lines-right"></i>
+                </div>
+
+                {# Target User Card #}
+                <div class="cc-user-card cc-user-card--target">
+                    <div class="flex items-center gap-2 text-green-400 font-semibold text-sm">
+                        <i class="ph ph-user-check text-lg"></i>
+                        <span>2. Usuari de Destí (Compte Principal)</span>
+                    </div>
+                    <div>
+                        <label for="target_user_id" class="block text-xs font-semibold uppercase text-secondary mb-1">Selecciona el compte principal que rebrà les dades:</label>
+                        <select name="target_user_id" id="target_user_id" class="form-control w-full" required onchange="updatePreview()">
+                            <option value="">— Selecciona usuari principal —</option>
+                            {% for u in users %}
+                                {% if not (u.username starts with 'ghost_') %}
+                                    <option value="{{ u.id }}" {% if preselectTargetId == u.id %}selected{% endif %}>
+                                        {{ u.displayName }} (@{{ u.username }}) [ID: {{ u.id }}]
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                            <optgroup label="Altres usuaris">
+                                {% for u in users %}
+                                    {% if u.username starts with 'ghost_' %}
+                                        <option value="{{ u.id }}" {% if preselectTargetId == u.id %}selected{% endif %}>
+                                            {{ u.displayName }} (@{{ u.username }}) [ID: {{ u.id }}]
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div id="targetDetails" class="text-xs text-secondary">
+                        Aquest compte conservarà els seus missatges i rebrà tot el contingut de l'origen.
+                    </div>
+                </div>
+            </div>
+
+            {# Live Preview Box #}
+            <div id="previewContainer" class="cc-preview-box" style="display: none;">
+                <div class="flex items-center gap-2 font-semibold text-sm text-yellow-400 mb-2">
+                    <i class="ph ph-scales text-lg"></i>
+                    <span>Resum del traspàs de continguts</span>
+                </div>
+                <div id="previewContent" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="p-3 bg-black/40 rounded border border-white/5">
+                        <div class="text-xs text-secondary">Temes a traspassar</div>
+                        <div class="text-lg font-bold text-white" id="statTopics">0</div>
+                    </div>
+                    <div class="p-3 bg-black/40 rounded border border-white/5">
+                        <div class="text-xs text-secondary">Comentaris a traspassar</div>
+                        <div class="text-lg font-bold text-white" id="statComments">0</div>
+                    </div>
+                    <div class="p-3 bg-black/40 rounded border border-white/5">
+                        <div class="text-xs text-secondary">Enllaços de combat</div>
+                        <div class="text-lg font-bold text-white" id="statLinks">0</div>
+                    </div>
+                    <div class="p-3 bg-black/40 rounded border border-white/5">
+                        <div class="text-xs text-secondary">Fitxa PERSCOM</div>
+                        <div class="text-sm font-semibold text-yellow-300 truncate" id="statPerscom">—</div>
+                    </div>
+                </div>
+                <div id="previewError" class="text-red-400 text-xs mt-2" style="display: none;"></div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="submit" class="btn-primary" id="btnSubmit">
+                    <i class="ph ph-arrows-merge"></i> Unificar Usuaris Ara
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# Quick Pending Ghost Users Table #}
+{% if ghostUsers is not empty %}
+<div class="box">
+    <h2 class="box-title flex items-center justify-between">
+        <span>👻 Usuaris Fantasma Pendents d'Unificar ({{ ghostUsers|length }})</span>
+        <span class="text-xs text-secondary font-normal">Feu clic a "Seleccionar com a origen" per preparar la unificació</span>
+    </h2>
+    <div class="box-content overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'usuari</th>
+                    <th>Nom visible</th>
+                    <th>Email</th>
+                    <th>Registrat</th>
+                    <th class="text-right">Acció</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for g in ghostUsers %}
+                <tr>
+                    <td><code>#{{ g.id }}</code></td>
+                    <td><strong>{{ g.username }}</strong></td>
+                    <td>{{ g.displayName }}</td>
+                    <td class="text-secondary text-xs">{{ g.email }}</td>
+                    <td class="text-secondary text-xs">{{ g.createdAt|date('d/m/Y') }}</td>
+                    <td class="text-right">
+                        <button type="button" class="btn-secondary btn-small" onclick="selectAsSource({{ g.id }})">
+                            <i class="ph ph-arrow-up-right"></i> Seleccionar com a origen
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<script>
+function selectAsSource(userId) {
+    const sourceSelect = document.getElementById('source_user_id');
+    if (sourceSelect) {
+        sourceSelect.value = userId;
+        updatePreview();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function updatePreview() {
+    const sourceId = document.getElementById('source_user_id').value;
+    const targetId = document.getElementById('target_user_id').value;
+    const previewContainer = document.getElementById('previewContainer');
+    const previewError = document.getElementById('previewError');
+
+    if (!sourceId) {
+        previewContainer.style.display = 'none';
+        return;
+    }
+
+    fetch('{{ path("cc_composite_admin_user_merge_preview") }}?source=' + sourceId + '&target=' + targetId)
+        .then(response => response.json())
+        .then(data => {
+            previewContainer.style.display = 'block';
+            document.getElementById('statTopics').textContent = data.topics || 0;
+            document.getElementById('statComments').textContent = data.comments || 0;
+            document.getElementById('statLinks').textContent = data.playerLinks || 0;
+            document.getElementById('statPerscom').textContent = data.perscomSoldier || 'Cap / Cap canvi';
+
+            if (data.error) {
+                previewError.textContent = data.error;
+                previewError.style.display = 'block';
+                document.getElementById('btnSubmit').disabled = true;
+            } else {
+                previewError.style.display = 'none';
+                document.getElementById('btnSubmit').disabled = false;
+            }
+        })
+        .catch(() => {
+            previewContainer.style.display = 'none';
+        });
+}
+
+function confirmMerge() {
+    const sourceSelect = document.getElementById('source_user_id');
+    const targetSelect = document.getElementById('target_user_id');
+    const sourceText = sourceSelect.options[sourceSelect.selectedIndex]?.text || '';
+    const targetText = targetSelect.options[targetSelect.selectedIndex]?.text || '';
+
+    if (!sourceSelect.value || !targetSelect.value) {
+        alert('Heu de seleccionar tant l\'usuari d\'origen com l\'usuari principal.');
+        return false;
+    }
+
+    if (sourceSelect.value === targetSelect.value) {
+        alert('L\'usuari d\'origen i el de destí no poden ser el mateix.');
+        return false;
+    }
+
+    return confirm(
+        'ATENCIÓ: Aquesta acció unificarà permanentment les dades!\n\n' +
+        '• Origen: ' + sourceText + '\n' +
+        '• Destí (Principal): ' + targetText + '\n\n' +
+        'Esteu segur que voleu procedir amb la unificació?'
+    );
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('source_user_id').value) {
+        updatePreview();
+    }
+});
+</script>
+{% endblock %}

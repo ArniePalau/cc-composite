@@ -53,6 +53,10 @@ final class CompositeMenuBuilder implements AdminMenuBuilderInterface
                 'icon' => 'ph ph-user-plus',
                 'permission' => 'forumify.admin.users.manage',
             ]),
+            new MenuItem('Merge users', $this->urlGenerator->generate('cc_composite_admin_user_merge_index'), [
+                'icon' => 'ph ph-users-three',
+                'permission' => 'forumify.admin.users.manage',
+            ]),
         ]);
 
         $menu->addItem($composite);
