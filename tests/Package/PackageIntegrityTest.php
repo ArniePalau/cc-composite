@@ -171,6 +171,9 @@ final class PackageIntegrityTest extends TestCase
         self::assertStringContainsString('data-kill-chart', $template);
         self::assertStringContainsString('data-chart-tooltip', $template);
         self::assertStringContainsString("bar.classList.toggle('is-hovered'", $template);
+        self::assertStringContainsString('cc-arma-marker__symbol', $template);
+        self::assertStringContainsString("iconSize: [0, 0]", $template);
+        self::assertStringContainsString('cc-soldier__fallback', $template);
         self::assertStringContainsString("|reverse", $template);
         self::assertStringContainsString('cc-person--civilian', $template);
         self::assertStringContainsString('cc-player-avatar', $template);
